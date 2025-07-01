@@ -41,8 +41,8 @@ case "${2}" in
 		MACHINE_NAME="grinn-astra-1680-ada"
 		;;
 	evb)
-		echo "EVK machine selected"
-		MACHINE_NAME="grinn-astra-1680-evk"
+		echo "EVB machine selected"
+		MACHINE_NAME="grinn-astra-1680-evb"
 		;;
 	*)
 		echo "Invalid machine selected!"
