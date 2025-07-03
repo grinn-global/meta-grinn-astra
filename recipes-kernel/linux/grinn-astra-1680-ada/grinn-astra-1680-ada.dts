@@ -42,17 +42,14 @@
 	};
 };
 
-&pinctrl {
-	sdhci1_pmux: sdhci1-pmux {
-		groups = "SDIO_CDn";
-		function = "sdio";
-		drive-strength = <7>;
-	};
-
-	sdhci1_gpio_pmux: sdhci1-gpio-pmux {
-		groups = "SDIO_WP";
-		function = "gpio";
-	};
+&gmac0 {
+	status = "okay";
+	pinctrl-0 = <&gmac0_pmux>, <&gmac_gpio_pmux>;
+	pinctrl-names = "default";
+	phy-handle = <&phy0>;
+	phy-mode = "rgmii-id";
+	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
+	snps,reset-delays-us = <0 10000 50000>;
 };
 
 &mdio0 {
@@ -64,14 +61,17 @@
 	};
 };
 
-&gmac0 {
-	status = "okay";
-	pinctrl-0 = <&gmac0_pmux>, <&gmac_gpio_pmux>;
-	pinctrl-names = "default";
-	phy-handle = <&phy0>;
-	phy-mode = "rgmii-id";
-	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
-	snps,reset-delays-us = <0 10000 50000>;
+&pinctrl {
+	sdhci1_pmux: sdhci1-pmux {
+		groups = "SDIO_CDn";
+		function = "sdio";
+		drive-strength = <7>;
+	};
+
+	sdhci1_gpio_pmux: sdhci1-gpio-pmux {
+		groups = "SDIO_WP";
+		function = "gpio";
+	};
 };
 
 &sdhci1 {

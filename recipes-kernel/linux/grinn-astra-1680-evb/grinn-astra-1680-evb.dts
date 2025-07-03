@@ -59,21 +59,15 @@
 	};
 };
 
-&pinctrl {
-	usb3_vbus_pmux: usb3_vbus_pmux {
-		groups = "SDIO_WP";
-		function = "gpio";
-	};
-
-	ir_led_en1_pmux: ir-led-en1-pmux {
-		groups = "STS1_SD";
-		function = "gpio";
-	};
-
-	ir_led_en2_pmux: ir-led-en2-pmux {
-		groups = "STS1_VALD";
-		function = "gpio";
-	};
+&gmac0 {
+	status = "okay";
+	pinctrl-0 = <&gmac0_pmux>, <&gmac_gpio_pmux>;
+	pinctrl-names = "default";
+	phy-handle = <&phy0>;
+	phy-mode = "rgmii-id";
+	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
+	snps,reset-delays-us = <0 10000 50000>;
+	snps,reset-active-low;
 };
 
 &mdio0 {
@@ -84,15 +78,21 @@
 	};
 };
 
-&gmac0 {
-	status = "okay";
-	pinctrl-0 = <&gmac0_pmux>, <&gmac_gpio_pmux>;
-	pinctrl-names = "default";
-	phy-handle = <&phy0>;
-	phy-mode = "rgmii-id";
-	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
-	snps,reset-delays-us = <0 10000 50000>;
-	snps,reset-active-low;
+&pinctrl {
+	ir_led_en1_pmux: ir-led-en1-pmux {
+		groups = "STS1_SD";
+		function = "gpio";
+	};
+
+	ir_led_en2_pmux: ir-led-en2-pmux {
+		groups = "STS1_VALD";
+		function = "gpio";
+	};
+
+	usb3_vbus_pmux: usb3_vbus_pmux {
+		groups = "SDIO_WP";
+		function = "gpio";
+	};
 };
 
 &xhci0 {

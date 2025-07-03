@@ -38,14 +38,14 @@
 		i2c3 = &i2cdemux3_i2c;
 	};
 
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
 	cpus {
 		cpu@0 {
 			cpu0-supply = <&vcpu>;
 		};
-	};
-
-	chosen {
-		stdout-path = "serial0:115200n8";
 	};
 
 	memory {
@@ -65,13 +65,14 @@
 		};
 	};
 
-	panel0-backlight {
-		compatible = "pwm-backlight";
-		pwms = <&pwm0 1 1000000 0>;
-		brightness-levels = <0 4 8 16 32 64 128 255>;
-		default-brightness-level = <6>;
-		enable-gpio = <&expander0 1 GPIO_ACTIVE_HIGH>;
-		status = "okay";
+	bluesleep: bluesleep {
+		compatible = "syna,bluesleep";
+		bt-dev-wake-gpio = <&expander1 3 GPIO_ACTIVE_HIGH>;
+	};
+
+	bt_reg_on: bt_reg_on {
+		compatible = "syna,rfkill";
+		bt-power-gpio = <&expander1 5 GPIO_ACTIVE_HIGH>;
 	};
 
 	dmabuf_heap {
@@ -82,31 +83,6 @@
 		      <0 0x7f800000 0 0x00800000>;
 		attributes-num-per-pool = <2>;
 		pool-attributes = <0x00000105 0x00000F3A 0x00000102 0x00000F3D>;
-	};
-
-	regulators {
-		compatible = "simple-bus";
-		#address-cells = <1>;
-		#size-cells = <0>;
-
-		reg_usb0_vbus: usb0_vbus {
-			compatible = "regulator-fixed";
-			regulator-name = "usb0_vbus";
-			regulator-min-microvolt = <5000000>;
-			regulator-max-microvolt = <5000000>;
-			gpio = <&expander0 5 GPIO_ACTIVE_HIGH>;
-			enable-active-high;
-		};
-	};
-
-	bt_reg_on: bt_reg_on {
-		compatible = "syna,rfkill";
-		bt-power-gpio = <&expander1 5 GPIO_ACTIVE_HIGH>;
-	};
-
-	bluesleep: bluesleep {
-		compatible = "syna,bluesleep";
-		bt-dev-wake-gpio = <&expander1 3 GPIO_ACTIVE_HIGH>;
 	};
 
 	gpioi2c3: gpioi2c3 {
@@ -156,95 +132,53 @@
 			#size-cells = <0>;
 		};
 	};
-};
 
-&pinctrl {
-	gmac0_pmux: gmac0-pmux {
-		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0", "RGMII_TXD1", "RGMII_TXD2", "RGMII_TXD3", "RGMII_TXCTL", "RGMII_RXC", "RGMII_RXD0", "RGMII_RXD1", "RGMII_RXD2", "RGMII_RXD3", "RGMII_RXCTL";
-		function = "rgmii";
-		drive-strength = <3>;
+	panel0-backlight {
+		compatible = "pwm-backlight";
+		pwms = <&pwm0 1 1000000 0>;
+		brightness-levels = <0 4 8 16 32 64 128 255>;
+		default-brightness-level = <6>;
+		enable-gpio = <&expander0 1 GPIO_ACTIVE_HIGH>;
+		status = "okay";
 	};
 
-	i2c0_pmux: i2c0-pmux {
-		groups = "TW0_SCL", "TW0_SDA";
-		function = "tw0";
-		drive-strength = <7>;
-	};
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
 
-	i2c1_pmux: i2c1-pmux {
-		groups = "SPI1_SS2n", "SPI1_SS3n";
-		function = "tw1b";
-		drive-strength = <3>;
-	};
-
-	hdmitx5v_pmux: hdmitx5v-pmux {
-		groups = "USB2_DRV_VBUS";
-		function = "gpio";
-	};
-	uart3_pmux: uart3-pmux {
-		groups = "STS0_CLK", "STS0_SOP", "STS0_SD", "STS0_VALD";
-		function = "uart3";
-		drive-strength = <3>;
+		reg_usb0_vbus: usb0_vbus {
+			compatible = "regulator-fixed";
+			regulator-name = "usb0_vbus";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			gpio = <&expander0 5 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+		};
 	};
 };
 
-&sm_pinctrl {
-	i2c2_pmux: i2c2-pmux {
-		groups = "SM_URT1_TXD", "SM_URT1_RXD";
-		function = "tw2b";
-		drive-strength = <7>;
-	};
+&aout {
+	status = "okay";
+};
 
-	i2c3_pmux: i2c3-pmux {
-		groups = "SM_TW3_SCL", "SM_TW3_SDA";
-		function = "tw3";
-		drive-strength = <7>;
+&avio {
+	status = "okay";
+	pinctrl-0 = <&hdmitx5v_pmux>;
+	pinctrl-names = "default";
+	vpp {
+		hdtx5v-gpio = <&portb 23 GPIO_ACTIVE_HIGH>;
 	};
+};
 
-	uart2_pmux: uart2-pmux {
-		groups = "SM_SPI2_SS2n", "SM_SPI2_SS3n", "SM_SPI2_SDI", "SM_SPI2_SDO";
-		function = "uart2";
-		drive-strength = <3>;
-	};
-
-	gpioi2c3_pmux: gpioi2c3-pmux {
-		groups = "SM_TW3_SCL", "SM_TW3_SDA";
-		function = "gpio";
-		drive-strength = <7>;
-	};
-
-	hrx5v_pmux: hrx5v-pmux {
-		groups = "SM_HDMIRX_PWR5V";
-		function = "gpio";
-		drive-strength = <7>;
-	};
-
-	hrxhpd_pmux: hrxhpd-pmux {
-		groups = "SM_HDMI_HPD";
-		function = "gpio";
-	};
-
-	hrxedid_pmux: hrxedid-pmux {
-		groups = "SM_TW2_SCL", "SM_TW2_SDA";
-		function = "rx_edid";
-		drive-strength = <7>;
-	};
-
-	gmac_gpio_pmux: gmac_gpio_pmux {
-		groups = "SM_TDO";
-		function = "gpio";
-	};
-
-	levelshift_pmux: levelshift-pmux {
-		groups = "SM_HDMIRX_HPD";
-		function = "gpio";
-	};
+&axi_mc0 {
+	status = "okay";
 };
 
 &avio_pinctrl {
-	pwm2_pmux: pwm2-pmux {
-		groups = "I2S1_DO2";
-		function = "pwm";
+	falcon_gpio_pmux: falcon_gpio-pmux {
+		groups = "I2S1_DO1";
+		function = "gpio";
 	};
 
 	i2s1_pmux: i2s1-pmux {
@@ -257,11 +191,6 @@
 		function = "i2s2";
 	};
 
-	falcon_gpio_pmux: falcon_gpio-pmux {
-		groups = "I2S1_DO1";
-		function = "gpio";
-	};
-
 	i2s3_pmux: i2s3-pmux {
 		groups = "I2S3_LRCKIO", "I2S3_BCLKIO", "I2S3_DI", "I2S3_DO";
 		function = "i2s3";
@@ -272,197 +201,151 @@
 		function = "pdm";
 	};
 
-	spdifo_pmux: spdifo-pmux {
-		groups = "SPDIFO";
-		function = "spdifo";
+	pwm2_pmux: pwm2-pmux {
+		groups = "I2S1_DO2";
+		function = "pwm";
 	};
 
 	spdifi_pmux: spdifi-pmux {
 		groups = "SPDIFI";
 		function = "spdifi";
 	};
-};
 
-&sdhci0 {
-	status = "okay";
-	sdclkdl-dc = /bits/ 8 <26>;
-	mmc-ddr-1_8v;
-	mmc-hs200-1_8v;
-	mmc-hs400-1_8v;
-	dll-calibration;
-	pad-sp = /bits/ 8 <14>;
-	pad-sn = /bits/ 8 <14>;
-};
-
-&pcie_phy0 {
-	status = "okay";
-};
-
-&pcie0 {
-	status = "okay";
-	reset-gpios = <&expander1 1 GPIO_ACTIVE_LOW>;
-};
-
-&i2c0 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c0_pmux>;
-	clock-frequency = <100000>;
-	no-irq-suspend;
-
-	rpi_panel_regulator: rpi_panel_regulator@45 {
-		compatible = "raspberrypi,7inch-touchscreen-panel-regulator";
-		reg = <0x45>;
-		gpio-controller;
-		#gpio-cells = <2>;
+	spdifo_pmux: spdifo-pmux {
+		groups = "SPDIFO";
+		function = "spdifo";
 	};
-};
-
-&i2c1 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c1_pmux>;
-
-	vcpu: regulator@60 {
-		compatible = "silergy,sy20257n";
-		reg = <0x60>;
-		status = "okay";
-		regulator-boot-on;
-		regulator-always-on;
-		regulator-active-discharge = <0>;
-		regulator-name = "vcpu";
-		regulator-min-microvolt = <700000>;
-		regulator-max-microvolt = <987500>;
-	};
-};
-
-&i2c2 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c2_pmux>;
-
-	vcore: regulator@60 {
-		compatible = "silergy,sy20257n";
-		reg = <0x60>;
-		status = "okay";
-		regulator-boot-on;
-		regulator-always-on;
-		regulator-active-discharge = <0>;
-		regulator-name = "vcore";
-		regulator-min-microvolt = <700000>;
-		regulator-max-microvolt = <987500>;
-	};
-};
-
-&i2c3 {
-	status = "okay";
-	no-irq-suspend;
-};
-
-&uart0 {
-	status = "okay";
-};
-
-&uart2 {
-	status = "okay";
-	pinctrl-0 = <&uart2_pmux>;
-	pinctrl-names = "default";
-};
-
-&uart3 {
-	status = "okay";
-	pinctrl-0 = <&uart3_pmux>;
-	pinctrl-names = "default";
-};
-
-&npu {
-	status = "okay";
-};
-
-&usb0 {
-	vbus-supply = <&reg_usb0_vbus>;
-	status = "okay";
-};
-
-&usb_phy0  {
-	status = "okay";
-};
-
-&xhci0 {
-	status = "okay";
-};
-
-&usb_phy1  {
-	status = "okay";
-};
-
-&sm {
-	status = "okay";
-};
-
-&ir {
-	status = "okay";
-};
-
-&isp {
-	status = "okay";
-	i2c-bus = <&i2c3>;
-	dev-addr = <112>;
-};
-
-&isp_be {
-	status = "okay";
-};
-
-&isp_scaler {
-	status = "okay";
-};
-
-&vpp {
-	status = "okay";
-};
-
-&isp_vsi {
-	status = "okay";
-};
-
-&isp_vsi_video {
-	status = "okay";
-};
-
-&isp_vsi_vb {
-	status = "okay";
-};
-
-&isp_vsi_mipi {
-	status = "okay";
-};
-
-&isp_vsi_subdev {
-	status = "okay";
-};
-
-&fb {
-	status = "okay";
-};
-
-&tsp {
-	status = "okay";
-};
-
-&h1 {
-	status = "okay";
-};
-
-&vxg {
-	status = "okay";
-};
-
-&shm {
-	status = "okay";
 };
 
 &bm {
+	status = "okay";
+};
+
+&cec {
+	status = "okay";
+};
+
+&dmic {
+	status = "okay";
+	pinctrl-0 = <&pdm_pmux>;
+	pinctrl-names = "default";
+	pdm-type = <1>;
+	pdm-clk-sel = <2>;
+	ch-shift-check;
+};
+
+&dolphin_asoc {
+	status = "okay";
+
+	soc_dmic: soc-dmic {
+		status = "okay";
+		stream-name = "soc-dmic";
+		link-name = "soc-dmic";
+		cpu-node = <&dmic>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_hdmii: soc-hdmii {
+		status = "okay";
+		stream-name = "soc-hdmii";
+		link-name = "soc-hdmii";
+		cpu-node = <&hdmi_in>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_hdmio: soc-hdmio {
+		status = "okay";
+		stream-name = "soc-hdmio";
+		link-name = "soc-hdmio";
+		format = "i2s";
+		cpu-node = <&hdmi_out>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2s_hdmi_lpbk: soc-i2s-hdmi-lpbk {
+		status = "okay";
+		stream-name = "soc-i2s-hdmi-lpbk";
+		link-name = "soc-i2s-hdmi-lpbk";
+		format = "i2s";
+		cpu-node = <&i2s_hdmi_lpbk>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2s_pri_lpbk: soc-i2s-pri-lpbk {
+		status = "okay";
+		stream-name = "soc-i2s-pri-lpbk";
+		link-name = "soc-i2s-pri-lpbk";
+		format = "i2s";
+		cpu-node = <&i2s_pri_lpbk>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2si: soc-i2si2 {
+		status = "okay";
+		stream-name = "soc-i2si2";
+		link-name = "soc-i2si2";
+		format = "i2s";
+		bitclock-master;
+		frame-master;
+		cpu-node = <&i2s_mic1>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2si3: soc-i2si3 {
+		status = "okay";
+		stream-name = "btsco-in";
+		link-name = "btsco-in";
+		format = "dsp_b";
+		bitclock-master;
+		frame-master;
+		continuous-clock;
+		cpu-node = <&i2s_mic2>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2so1: soc-i2so1 {
+		status = "okay";
+		stream-name = "soc-i2so1";
+		link-name = "soc-i2so1";
+		format = "i2s";
+		continuous-clock;
+		bitclock-inversion;
+		frame-inversion;
+		cpu-node = <&i2s_pri>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2so3: soc-i2so3 {
+		status = "okay";
+		stream-name = "soc-i2so3";
+		link-name = "soc-i2so3";
+		format = "dsp_b";
+		bitclock-master;
+		frame-master;
+		cpu-node = <&i2s_sec>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+};
+
+&dolphin_pcm {
 	status = "okay";
 };
 
@@ -470,7 +353,7 @@
 	status = "okay";
 
 	/* Supported Modes:	0 - HDMI only
-	 * 			1 - MIPI Only
+	 *			1 - MIPI Only
 	 *			2 - Dual Mode PIP
 	 *
 	 * Supported types:	0 - HDMI
@@ -541,7 +424,7 @@
 		Null_Pkt = <0>;
 		Byte_clk = <84090>;
 
-		/*  COMMAND= Command for initialisation
+		/* COMMAND= Command for initialisation
 		*  Format - <CMD> <Payloadlength-n> <BYTE1> <...> <BYTEn>
 		*  Long write Ex: 39 04 FF 98 81 03
 
@@ -585,20 +468,7 @@
 	};
 };
 
-&avio {
-	status = "okay";
-	pinctrl-0 = <&hdmitx5v_pmux>;
-	pinctrl-names = "default";
-	vpp {
-		hdtx5v-gpio = <&portb 23 GPIO_ACTIVE_HIGH>;
-	};
-};
-
-&cec {
-	status = "okay";
-};
-
-&axi_mc0 {
+&fb {
 	status = "okay";
 };
 
@@ -606,7 +476,15 @@
 	status = "okay";
 };
 
-&aout {
+&h1 {
+	status = "okay";
+};
+
+&hdmi_out {
+	status = "okay";
+};
+
+&hdmi_in {
 	status = "okay";
 };
 
@@ -618,10 +496,64 @@
 	hrx5v-gpio = <&portd 21 GPIO_ACTIVE_HIGH>;
 };
 
-&i2s_pri {
+&i2c0 {
 	status = "okay";
-	pinctrl-0 = <&i2s1_pmux>;
 	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pmux>;
+	clock-frequency = <100000>;
+	no-irq-suspend;
+
+	rpi_panel_regulator: rpi_panel_regulator@45 {
+		compatible = "raspberrypi,7inch-touchscreen-panel-regulator";
+		reg = <0x45>;
+		gpio-controller;
+		#gpio-cells = <2>;
+	};
+};
+
+&i2c1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c1_pmux>;
+
+	vcpu: regulator@60 {
+		compatible = "silergy,sy20257n";
+		reg = <0x60>;
+		status = "okay";
+		regulator-boot-on;
+		regulator-always-on;
+		regulator-active-discharge = <0>;
+		regulator-name = "vcpu";
+		regulator-min-microvolt = <700000>;
+		regulator-max-microvolt = <987500>;
+	};
+};
+
+&i2c2 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c2_pmux>;
+
+	vcore: regulator@60 {
+		compatible = "silergy,sy20257n";
+		reg = <0x60>;
+		status = "okay";
+		regulator-boot-on;
+		regulator-always-on;
+		regulator-active-discharge = <0>;
+		regulator-name = "vcore";
+		regulator-min-microvolt = <700000>;
+		regulator-max-microvolt = <987500>;
+	};
+};
+
+&i2c3 {
+	status = "okay";
+	no-irq-suspend;
+};
+
+&i2s_hdmi_lpbk {
+	status = "okay";
 };
 
 &i2s_mic1 {
@@ -629,15 +561,6 @@
 	pinctrl-0 = <&i2s2_pmux>;
 	pinctrl-names = "default";
 	intlmode;
-};
-
-&dmic {
-	status = "okay";
-	pinctrl-0 = <&pdm_pmux>;
-	pinctrl-names = "default";
-	pdm-type = <1>;
-	pdm-clk-sel = <2>;
-	ch-shift-check;
 };
 
 &i2s_mic2 {
@@ -652,23 +575,13 @@
 	status = "okay";
 };
 
+&i2s_pri {
+	status = "okay";
+	pinctrl-0 = <&i2s1_pmux>;
+	pinctrl-names = "default";
+};
+
 &i2s_pri_lpbk {
-	status = "okay";
-};
-
-&i2s_hdmi_lpbk {
-	status = "okay";
-};
-
-&hdmi_out {
-	status = "okay";
-};
-
-&hdmi_in {
-	status = "okay";
-};
-
-&dolphin_pcm {
 	status = "okay";
 };
 
@@ -680,120 +593,94 @@
 	sample-period = <32>;
 };
 
-
-&dolphin_asoc {
+&ir {
 	status = "okay";
+};
 
-	soc_i2so1: soc-i2so1 {
-		status = "okay";
-		stream-name = "soc-i2so1";
-		link-name = "soc-i2so1";
-		format = "i2s";
-		continuous-clock;
-		bitclock-inversion;
-		frame-inversion;
-		cpu-node = <&i2s_pri>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp {
+	status = "okay";
+	i2c-bus = <&i2c3>;
+	dev-addr = <112>;
+};
 
-	soc_i2so3: soc-i2so3 {
-		status = "okay";
-		stream-name = "soc-i2so3";
-		link-name = "soc-i2so3";
-		format = "dsp_b";
-		bitclock-master;
-		frame-master;
-		cpu-node = <&i2s_sec>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_be {
+	status = "okay";
+};
 
-	soc_dmic: soc-dmic {
-		status = "okay";
-		stream-name = "soc-dmic";
-		link-name = "soc-dmic";
-		cpu-node = <&dmic>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_scaler {
+	status = "okay";
+};
 
-	soc_i2si: soc-i2si2 {
-		status = "okay";
-		stream-name = "soc-i2si2";
-		link-name = "soc-i2si2";
-		format = "i2s";
-		bitclock-master;
-		frame-master;
-		cpu-node = <&i2s_mic1>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_vsi {
+	status = "okay";
+};
 
-	soc_i2si3: soc-i2si3 {
-		status = "okay";
-		stream-name = "btsco-in";
-		link-name = "btsco-in";
-		format = "dsp_b";
-		bitclock-master;
-		frame-master;
-		continuous-clock;
-		cpu-node = <&i2s_mic2>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_vsi_mipi {
+	status = "okay";
+};
 
-	soc_i2s_pri_lpbk: soc-i2s-pri-lpbk {
-		status = "okay";
-		stream-name = "soc-i2s-pri-lpbk";
-		link-name = "soc-i2s-pri-lpbk";
-		format = "i2s";
-		cpu-node = <&i2s_pri_lpbk>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_vsi_subdev {
+	status = "okay";
+};
 
-	soc_i2s_hdmi_lpbk: soc-i2s-hdmi-lpbk {
-		status = "okay";
-		stream-name = "soc-i2s-hdmi-lpbk";
-		link-name = "soc-i2s-hdmi-lpbk";
-		format = "i2s";
-		cpu-node = <&i2s_hdmi_lpbk>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_vsi_vb {
+	status = "okay";
+};
 
-	soc_hdmio: soc-hdmio {
-		status = "okay";
-		stream-name = "soc-hdmio";
-		link-name = "soc-hdmio";
-		format = "i2s";
-		cpu-node = <&hdmi_out>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&isp_vsi_video {
+	status = "okay";
+};
 
-	soc_hdmii: soc-hdmii {
-		status = "okay";
-		stream-name = "soc-hdmii";
-		link-name = "soc-hdmii";
-		cpu-node = <&hdmi_in>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
+&mc_dfc {
+	status = "okay";
+};
+
+&npu {
+	status = "okay";
 };
 
 &ovp {
 	status = "okay";
+};
+
+&pcie0 {
+	status = "okay";
+	reset-gpios = <&expander1 1 GPIO_ACTIVE_LOW>;
+};
+
+&pcie_phy0 {
+	status = "okay";
+};
+
+&pinctrl {
+	gmac0_pmux: gmac0-pmux {
+		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0", "RGMII_TXD1", "RGMII_TXD2", "RGMII_TXD3", "RGMII_TXCTL", "RGMII_RXC", "RGMII_RXD0", "RGMII_RXD1", "RGMII_RXD2", "RGMII_RXD3", "RGMII_RXCTL";
+		function = "rgmii";
+		drive-strength = <3>;
+	};
+
+	hdmitx5v_pmux: hdmitx5v-pmux {
+		groups = "USB2_DRV_VBUS";
+		function = "gpio";
+	};
+
+	i2c0_pmux: i2c0-pmux {
+		groups = "TW0_SCL", "TW0_SDA";
+		function = "tw0";
+		drive-strength = <7>;
+	};
+
+	i2c1_pmux: i2c1-pmux {
+		groups = "SPI1_SS2n", "SPI1_SS3n";
+		function = "tw1b";
+		drive-strength = <3>;
+	};
+
+	uart3_pmux: uart3-pmux {
+		groups = "STS0_CLK", "STS0_SOP", "STS0_SD", "STS0_VALD";
+		function = "uart3";
+		drive-strength = <3>;
+	};
 };
 
 &pwm0 {
@@ -802,7 +689,22 @@
 	status = "okay";
 };
 
-&mc_dfc {
+&sdhci0 {
+	status = "okay";
+	sdclkdl-dc = /bits/ 8 <26>;
+	mmc-ddr-1_8v;
+	mmc-hs200-1_8v;
+	mmc-hs400-1_8v;
+	dll-calibration;
+	pad-sp = /bits/ 8 <14>;
+	pad-sn = /bits/ 8 <14>;
+};
+
+&shm {
+	status = "okay";
+};
+
+&sm {
 	status = "okay";
 };
 
@@ -817,4 +719,102 @@
 			output-low;
 		};
 	};
+};
+
+&sm_pinctrl {
+	gmac_gpio_pmux: gmac_gpio_pmux {
+		groups = "SM_TDO";
+		function = "gpio";
+	};
+
+	gpioi2c3_pmux: gpioi2c3-pmux {
+		groups = "SM_TW3_SCL", "SM_TW3_SDA";
+		function = "gpio";
+		drive-strength = <7>;
+	};
+
+	hrx5v_pmux: hrx5v-pmux {
+		groups = "SM_HDMIRX_PWR5V";
+		function = "gpio";
+		drive-strength = <7>;
+	};
+
+	hrxhpd_pmux: hrxhpd-pmux {
+		groups = "SM_HDMI_HPD";
+		function = "gpio";
+	};
+
+	hrxedid_pmux: hrxedid-pmux {
+		groups = "SM_TW2_SCL", "SM_TW2_SDA";
+		function = "rx_edid";
+		drive-strength = <7>;
+	};
+
+	i2c2_pmux: i2c2-pmux {
+		groups = "SM_URT1_TXD", "SM_URT1_RXD";
+		function = "tw2b";
+		drive-strength = <7>;
+	};
+
+	i2c3_pmux: i2c3-pmux {
+		groups = "SM_TW3_SCL", "SM_TW3_SDA";
+		function = "tw3";
+		drive-strength = <7>;
+	};
+
+	levelshift_pmux: levelshift-pmux {
+		groups = "SM_HDMIRX_HPD";
+		function = "gpio";
+	};
+
+	uart2_pmux: uart2-pmux {
+		groups = "SM_SPI2_SS2n", "SM_SPI2_SS3n", "SM_SPI2_SDI", "SM_SPI2_SDO";
+		function = "uart2";
+		drive-strength = <3>;
+	};
+};
+
+&tsp {
+	status = "okay";
+};
+
+&uart0 {
+	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+	pinctrl-0 = <&uart2_pmux>;
+	pinctrl-names = "default";
+};
+
+&uart3 {
+	status = "okay";
+	pinctrl-0 = <&uart3_pmux>;
+	pinctrl-names = "default";
+};
+
+&usb0 {
+	vbus-supply = <&reg_usb0_vbus>;
+	status = "okay";
+};
+
+&usb_phy0  {
+	status = "okay";
+};
+
+&usb_phy1  {
+	status = "okay";
+};
+
+&vpp {
+	status = "okay";
+};
+
+&vxg {
+	status = "okay";
+};
+
+&xhci0 {
+	status = "okay";
 };
