@@ -94,6 +94,12 @@
 };
 
 &pinctrl {
+	gpio_port_d: gpio-port-d {
+		groups = "SM_SPI2_SS1n";
+		function = "gpio";
+		drive-strength = <7>;
+	};
+
 	ir_led_en1_pmux: ir-led-en1-pmux {
 		groups = "STS1_SD";
 		function = "gpio";
@@ -106,6 +112,27 @@
 
 	usb3_vbus_pmux: usb3_vbus_pmux {
 		groups = "SDIO_WP";
+		function = "gpio";
+	};
+};
+
+&portd {
+	pinctrl-0 = <&gpio_port_d>;
+
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"LED_ENn", "PWR_ENn", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "";
+};
+
+&sm_gpio0 {
+	pinctrl-0 = <&levelshift_pmux>, <&sm_gpio_pmux>;
+};
+
+&sm_pinctrl {
+	sm_gpio_pmux: sm_gpio-pmux {
+		groups = "SM_SPI2_SS0n";
 		function = "gpio";
 	};
 };
