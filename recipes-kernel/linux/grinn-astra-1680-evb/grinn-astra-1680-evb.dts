@@ -48,6 +48,10 @@
 	};
 
 	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
 		usb3_vbus: usb3_vbus {
 			compatible = "regulator-fixed";
 			regulator-min-microvolt = <5000000>;
@@ -68,6 +72,17 @@
 	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
 	snps,reset-delays-us = <0 10000 50000>;
 	snps,reset-active-low;
+};
+
+&i2cdemux3_i2c {
+	expander0: gpio@43 {
+		compatible = "fcs,fxl6408";
+		reg = <0x43>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		gpio-line-names = "PWR_SOC_VCORE_EN", "", "VDDM_ON", "VDDM_LPQ_OFF",
+				  "STAND_BY_EN", "", "", "";
+	};
 };
 
 &mdio0 {
