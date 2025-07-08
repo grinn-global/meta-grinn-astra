@@ -116,6 +116,8 @@
 				reg = <0x43>;
 				gpio-controller;
 				#gpio-cells = <2>;
+				gpio-line-names = "PWR_SOC_VCORE_EN", "PWR_ON_DSI", "VDDM_ON", "VDDM_LPQ_OFF",
+						  "STAND_BY_EN", "USB2.0_PWR_EN", "M2_PCIe_CLK_REQ", "GPIO_DSI";
 			};
 
 			expander1: gpio@44 {
@@ -123,6 +125,8 @@
 				reg = <0x44>;
 				gpio-controller;
 				#gpio-cells = <2>;
+				gpio-line-names = "GPIO_CSI0", "M2_PCIe_RST", "M2_SDIO_DISABLE1", "M2_SDIO_HOST_WAKE",
+						  "PWR_ON_CSI0", "M2_SDIO_HOST_DISABLE2", "GPIO_CSI1", "PWR_ON_CSI1";
 			};
 		};
 
