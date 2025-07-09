@@ -1,0 +1,4 @@
+IMAGE_INSTALL:append = " \
+	libgpiod \
+	libgpiod-tools \
+"
