@@ -1,4 +1,3 @@
 IMAGE_INSTALL:append = " \
-	libgpiod \
-	libgpiod-tools \
+	image-sensor-demo \
 "
