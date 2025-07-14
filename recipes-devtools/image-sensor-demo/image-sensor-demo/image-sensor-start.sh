@@ -7,6 +7,31 @@ PLATFORM="none"
 CSI0_DEV="none"
 CSI1_DEV="none"
 
+show_usage() {
+    echo "Usage:"
+    echo "  $0 <csi_selector>"
+    echo ""
+    echo "csi_selector:"
+    echo "  0    CSI0 interface"
+    echo "  1    CSI1 interface"
+}
+
+get_csi_selector() {
+    case "$ARG" in
+        0)
+            CSI_SEL="CSI0"
+            ;;
+        1)
+            CSI_SEL="CSI1"
+            ;;
+        *)
+            echo "Invalid CSI interface selected!"
+            show_usage
+            exit 1
+            ;;
+    esac
+}
+
 get_video_devices() {
     eval "$(v4l2-ctl --list-devices | awk '
         BEGIN {
@@ -52,21 +77,14 @@ get_platform() {
 start_pipeline() {
     local VIDEO_DEV
 
-    case "$PLATFORM" in
-        ADA)
-            VIDEO_DEV=$CSI1_DEV
-            ;;
-        EVB)
-            VIDEO_DEV=$CSI0_DEV
-            ;;
-        *)
-            echo "Unknown platform - cannot start pipeline"
-            exit 1
-            ;;
-    esac
+    if [ "$CSI_SEL" = "CSI0" ]; then
+        VIDEO_DEV=$CSI0_DEV
+    else
+        VIDEO_DEV=$CSI1_DEV
+    fi
 
     if [ "$VIDEO_DEV" = "none" ]; then
-        echo "No video device detected - cannot start pipeline"
+        echo "Video device not available - cannot start pipeline"
         exit 1
     fi
 
@@ -77,16 +95,28 @@ enable_sensor() {
     local LED_GPIO
     local PWR_GPIO
     local EN_STATE
+    local DO_ENABLE="false"
 
     case "$PLATFORM" in
         ADA)
-            LED_GPIO="GPIO_CSI1"
-            PWR_GPIO="PWR_ON_CSI1"
+            if [ "$CSI_SEL" = "CSI0" ]; then
+                LED_GPIO="GPIO_CSI0"
+                PWR_GPIO="PWR_ON_CSI0"
+            else
+                LED_GPIO="GPIO_CSI1"
+                PWR_GPIO="PWR_ON_CSI1"
+            fi
+
             EN_STATE="1"
+            DO_ENABLE="true"
             ;;
         EVB)
-            LED_GPIO="LED_ENn"
-            PWR_GPIO="PWR_ENn"
+            if [ "$CSI_SEL" = "CSI0" ]; then
+                LED_GPIO="LED_ENn"
+                PWR_GPIO="PWR_ENn"
+                DO_ENABLE="true"
+            fi
+
             EN_STATE="0"
             ;;
         *)
@@ -95,16 +125,27 @@ enable_sensor() {
             ;;
     esac
 
-    gpioset `gpiofind $PWR_GPIO`=$EN_STATE
-    gpioset `gpiofind $LED_GPIO`=$EN_STATE
+    if [ "$DO_ENABLE" = "true" ]; then
+        gpioset `gpiofind $PWR_GPIO`=$EN_STATE
+        gpioset `gpiofind $LED_GPIO`=$EN_STATE
+    fi
 }
 
+ARG=$1
+
+if [ -z $ARG ]; then
+    show_usage
+    exit 1
+fi
+
+get_csi_selector
 get_video_devices
 get_platform
 
 echo "PLATFORM=$PLATFORM"
 echo "CSI0_DEV=$CSI0_DEV"
 echo "CSI1_DEV=$CSI1_DEV"
+echo "CSI_SEL=$CSI_SEL"
 
 enable_sensor
 start_pipeline
