@@ -34,7 +34,8 @@
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
-		pinctrl-0 = <&ir_led_en1_pmux>, <&ir_led_en2_pmux>;
+		pinctrl-0 = <&ir_led_en1_pmux>, <&ir_led_en2_pmux>,
+			    <&led0_pmux>, <&led1_pmux>, <&led2_pmux>, <&led3_pmux>;
 		pinctrl-names = "default";
 
 		ir_led0: led-ir-0 {
@@ -52,6 +53,38 @@
 			function-enumerator = <1>;
 			default-state = "off";
 		};
+
+		status_led0: status-led-0 {
+			gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_POWER;
+			linux,default-trigger = "default-on";
+			default-state = "off";
+		};
+
+		status_led1: status-led-1 {
+			gpios = <&porta 19 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_HEARTBEAT;
+			linux,default-trigger = "heartbeat";
+			default-state = "off";
+		};
+
+		status_led2: status-led-2 {
+			gpios = <&porta 21 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_DISK_ACTIVITY;
+			linux,default-trigger = "mmc0";
+			default-state = "off";
+		};
+
+		status_led3: status-led-3 {
+			gpios = <&porta 20 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_FAULT;
+			linux,default-trigger = "panic";
+			default-state = "off";
+		};
 	};
 
 	regulators {
@@ -67,6 +100,28 @@
 			enable-active-high;
 			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
 		};
+	};
+};
+
+&avio_pinctrl {
+	led0_pmux: led0-pmux {
+		groups = "I2S1_MCLK";
+		function = "gpio";
+	};
+
+	led1_pmux: led1-pmux {
+		groups = "I2S1_DO0";
+		function = "gpio";
+	};
+
+	led2_pmux: led2-pmux {
+		groups = "I2S1_LRCKIO";
+		function = "gpio";
+	};
+
+	led3_pmux: led3-pmux {
+		groups = "I2S1_BCLKIO";
+		function = "gpio";
 	};
 };
 
@@ -121,6 +176,14 @@
 		groups = "SDIO_WP";
 		function = "gpio";
 	};
+};
+
+&porta {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "LED0", "LED1", "LED3", "LED2", "", "",
+		"", "", "", "", "", "", "", "";
 };
 
 &portb {
