@@ -33,6 +33,14 @@
 	model = "Grinn Astra 1680 evb";
 	compatible = "syna,dolphin-evk", "syna,dolphin";
 
+	bt_reg_on: bt_reg_on {
+		compatible = "syna,rfkill";
+		status = "okay";
+		bt-power-gpio = <&porta 13 GPIO_ACTIVE_HIGH>;
+		pinctrl-0 = <&bt_reg_on_pmux>;
+		pinctrl-names = "default";
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
@@ -120,6 +128,11 @@
 };
 
 &avio_pinctrl {
+	bt_reg_on_pmux: bt-reg-on-pmux {
+		groups = "I2S2_LRCKIO";
+		function = "gpio";
+	};
+
 	button_pmux: button-pmux {
 		groups = "I2S1_DO3";
 		function = "gpio";
@@ -207,7 +220,7 @@
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "PCIE_RSTn", "BUTTONn",
+		"", "", "", "", "", "BT_REG_ON", "PCIE_RSTn", "BUTTONn",
 		"", "", "LED0", "LED1", "LED3", "LED2", "", "",
 		"", "", "", "", "", "", "", "";
 };
