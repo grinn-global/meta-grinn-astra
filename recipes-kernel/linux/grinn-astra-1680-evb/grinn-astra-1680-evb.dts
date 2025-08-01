@@ -25,6 +25,7 @@
 /dts-v1/;
 
 #include "grinn-astra-1680.dtsi"
+#include <dt-bindings/leds/common.h>
 
 / {
 	model = "Grinn Astra 1680 evb";
@@ -33,17 +34,23 @@
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
+		pinctrl-0 = <&ir_led_en1_pmux>, <&ir_led_en2_pmux>;
+		pinctrl-names = "default";
 
-		ir_led_en1: led0 {
+		ir_led0: led-ir-0 {
 			gpios = <&portb 5 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_IR>;
+			function = LED_FUNCTION_TORCH;
+			function-enumerator = <0>;
 			default-state = "off";
-			pinctrl-0 = <&ir_led_en1_pmux>;
 		};
 
-		ir_led_en2: led1 {
+		ir_led1: led-ir-1 {
 			gpios = <&portb 4 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_IR>;
+			function = LED_FUNCTION_TORCH;
+			function-enumerator = <1>;
 			default-state = "off";
-			pinctrl-0 = <&ir_led_en2_pmux>;
 		};
 	};
 
