@@ -144,6 +144,11 @@
 		groups = "I2S1_BCLKIO";
 		function = "gpio";
 	};
+
+	pcie_rst_pmux: pcie-rst-pmux {
+		groups = "SPDIFO";
+		function = "gpio";
+	};
 };
 
 &gmac0 {
@@ -176,6 +181,12 @@
 	};
 };
 
+&pcie0 {
+	reset-gpios = <&porta 14 GPIO_ACTIVE_LOW>;
+	pinctrl-0 = <&pcie_rst_pmux>;
+	pinctrl-names = "default";
+};
+
 &pinctrl {
 	gpio_port_d: gpio-port-d {
 		groups = "SM_SPI2_SS1n";
@@ -202,7 +213,7 @@
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "BUTTONn",
+		"", "", "", "", "", "", "PCIE_RSTn", "BUTTONn",
 		"", "", "LED0", "LED1", "LED3", "LED2", "", "",
 		"", "", "", "", "", "", "", "";
 };
