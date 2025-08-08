@@ -188,12 +188,6 @@
 };
 
 &pinctrl {
-	gpio_port_d: gpio-port-d {
-		groups = "SM_SPI2_SS1n";
-		function = "gpio";
-		drive-strength = <7>;
-	};
-
 	ir_led_en1_pmux: ir-led-en1-pmux {
 		groups = "STS1_SD";
 		function = "gpio";
@@ -227,7 +221,8 @@
 };
 
 &portd {
-	pinctrl-0 = <&gpio_port_d>;
+	pinctrl-0 = <&led_en_pmux>, <&pwr_en_pmux>;
+	pinctrl-names = "default";
 
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
@@ -236,12 +231,13 @@
 		"", "", "", "", "", "", "", "";
 };
 
-&sm_gpio0 {
-	pinctrl-0 = <&levelshift_pmux>, <&sm_gpio_pmux>;
-};
-
 &sm_pinctrl {
-	sm_gpio_pmux: sm_gpio-pmux {
+	led_en_pmux: led-en-pmux {
+		groups = "SM_SPI2_SS1n";
+		function = "gpio";
+	};
+
+	pwr_en_pmux: pwr-en-pmux {
 		groups = "SM_SPI2_SS0n";
 		function = "gpio";
 	};
