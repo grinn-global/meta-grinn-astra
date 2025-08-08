@@ -74,6 +74,13 @@
 	};
 };
 
+&avio_pinctrl {
+	i2s1_pmux: i2s1-pmux {
+		groups = "I2S1_BCLKIO", "I2S1_LRCKIO", "I2S1_DO0", "I2S1_MCLK";
+		function = "i2s1";
+	};
+};
+
 &gmac0 {
 	status = "okay";
 	pinctrl-0 = <&gmac0_pmux>, <&gmac_gpio_pmux>;
@@ -102,6 +109,16 @@
 		gpio-line-names = "GPIO_CSI0", "M2_PCIe_RST", "M2_SDIO_DISABLE1", "M2_SDIO_HOST_WAKE",
 				  "PWR_ON_CSI0", "M2_SDIO_HOST_DISABLE2", "GPIO_CSI1", "PWR_ON_CSI1";
 	};
+};
+
+&i2s_pri {
+	status = "okay";
+	pinctrl-0 = <&i2s1_pmux>;
+	pinctrl-names = "default";
+};
+
+&i2s_pri_lpbk {
+	status = "okay";
 };
 
 &mdio0 {
