@@ -24,8 +24,10 @@
 
 /dts-v1/;
 
-#include "grinn-astra-1680.dtsi"
+#include <dt-bindings/input/input.h>
 #include <dt-bindings/leds/common.h>
+
+#include "grinn-astra-1680.dtsi"
 
 / {
 	model = "Grinn Astra 1680 evb";
@@ -87,6 +89,20 @@
 		};
 	};
 
+	keys {
+		compatible = "gpio-keys";
+		status = "okay";
+		pinctrl-0 = <&button_pmux>;
+		pinctrl-names = "default";
+
+		user-button {
+			label = "Enter Button";
+			linux,code = <KEY_ENTER>;
+			gpios = <&porta 15 GPIO_ACTIVE_LOW>;
+			debounce-interval = <50>;
+		};
+	};
+
 	regulators {
 		compatible = "simple-bus";
 		#address-cells = <1>;
@@ -104,6 +120,11 @@
 };
 
 &avio_pinctrl {
+	button_pmux: button-pmux {
+		groups = "I2S1_DO3";
+		function = "gpio";
+	};
+
 	led0_pmux: led0-pmux {
 		groups = "I2S1_MCLK";
 		function = "gpio";
@@ -181,7 +202,7 @@
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "BUTTONn",
 		"", "", "LED0", "LED1", "LED3", "LED2", "", "",
 		"", "", "", "", "", "", "", "";
 };
