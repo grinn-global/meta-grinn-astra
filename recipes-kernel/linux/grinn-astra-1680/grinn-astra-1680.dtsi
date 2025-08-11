@@ -152,16 +152,6 @@
 		groups = "I2S1_DO2";
 		function = "pwm";
 	};
-
-	spdifi_pmux: spdifi-pmux {
-		groups = "SPDIFI";
-		function = "spdifi";
-	};
-
-	spdifo_pmux: spdifo-pmux {
-		groups = "SPDIFO";
-		function = "spdifo";
-	};
 };
 
 &bm {
