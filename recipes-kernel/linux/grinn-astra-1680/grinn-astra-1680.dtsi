@@ -114,15 +114,6 @@
 	status = "okay";
 };
 
-&avio {
-	status = "okay";
-	pinctrl-0 = <&hdmitx5v_pmux>;
-	pinctrl-names = "default";
-	vpp {
-		hdtx5v-gpio = <&portb 23 GPIO_ACTIVE_HIGH>;
-	};
-};
-
 &axi_mc0 {
 	status = "okay";
 };
@@ -755,11 +746,6 @@
 		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0", "RGMII_TXD1", "RGMII_TXD2", "RGMII_TXD3", "RGMII_TXCTL", "RGMII_RXC", "RGMII_RXD0", "RGMII_RXD1", "RGMII_RXD2", "RGMII_RXD3", "RGMII_RXCTL";
 		function = "rgmii";
 		drive-strength = <3>;
-	};
-
-	hdmitx5v_pmux: hdmitx5v-pmux {
-		groups = "USB2_DRV_VBUS";
-		function = "gpio";
 	};
 
 	i2c0_pmux: i2c0-pmux {

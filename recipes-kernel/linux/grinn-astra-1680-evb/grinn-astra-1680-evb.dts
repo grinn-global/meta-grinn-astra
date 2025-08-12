@@ -127,6 +127,16 @@
 	};
 };
 
+&avio {
+	status = "okay";
+	pinctrl-0 = <&hdmitx5v_pmux>;
+	pinctrl-names = "default";
+
+	vpp {
+		hdtx5v-gpio = <&portb 6 GPIO_ACTIVE_HIGH>;
+	};
+};
+
 &avio_pinctrl {
 	bt_reg_on_pmux: bt-reg-on-pmux {
 		groups = "I2S2_LRCKIO";
@@ -201,6 +211,11 @@
 };
 
 &pinctrl {
+	hdmitx5v_pmux: hdmitx5v-pmux {
+		groups = "STS1_SOP";
+		function = "gpio";
+	};
+
 	ir_led_en1_pmux: ir-led-en1-pmux {
 		groups = "STS1_SD";
 		function = "gpio";
@@ -227,7 +242,7 @@
 
 &portb {
 	gpio-line-names =
-		"", "", "", "", "IR_LED_EN2", "IR_LED_EN1", "", "",
+		"", "", "", "", "IR_LED_EN2", "IR_LED_EN1", "HDMI_TX_5V_EN", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
