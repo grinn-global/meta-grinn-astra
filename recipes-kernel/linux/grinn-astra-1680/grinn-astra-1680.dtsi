@@ -138,11 +138,6 @@
 		groups = "I2S2_MCLK", "I2S2_DI3", "I2S2_DI2";
 		function = "pdm";
 	};
-
-	pwm2_pmux: pwm2-pmux {
-		groups = "I2S1_DO2";
-		function = "pwm";
-	};
 };
 
 &bm {
@@ -765,12 +760,6 @@
 		function = "uart3";
 		drive-strength = <3>;
 	};
-};
-
-&pwm0 {
-	pinctrl-0 = <&pwm2_pmux>;
-	pinctrl-names = "default";
-	status = "okay";
 };
 
 &sdhci0 {

@@ -89,6 +89,11 @@
 		groups = "I2S1_BCLKIO", "I2S1_LRCKIO", "I2S1_DO0", "I2S1_MCLK";
 		function = "i2s1";
 	};
+
+	pwm2_pmux: pwm2-pmux {
+		groups = "I2S1_DO2";
+		function = "pwm";
+	};
 };
 
 &gmac0 {
@@ -160,6 +165,12 @@
 		groups = "SDIO_WP";
 		function = "gpio";
 	};
+};
+
+&pwm0 {
+	status = "okay";
+	pinctrl-0 = <&pwm2_pmux>;
+	pinctrl-names = "default";
 };
 
 &sdhci1 {
