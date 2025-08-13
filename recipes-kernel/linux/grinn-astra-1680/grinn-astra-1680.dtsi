@@ -354,11 +354,6 @@
 };
 
 &avio_pinctrl {
-	falcon_gpio_pmux: falcon_gpio-pmux {
-		groups = "I2S1_DO1";
-		function = "gpio";
-	};
-
 	i2s2_pmux: i2s2-pmux {
 		groups = "I2S2_BCLKIO", "I2S2_LRCKIO", "I2S2_DI0";
 		function = "i2s2";
