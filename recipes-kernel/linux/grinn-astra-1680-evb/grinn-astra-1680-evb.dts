@@ -185,6 +185,11 @@
 		groups = "SPDIFO";
 		function = "gpio";
 	};
+
+	usb2_oc_pmux: usb2-oc-pmux {
+		groups = "I2S1_DO2";
+		function = "gpio";
+	};
 };
 
 &gmac0 {
@@ -254,7 +259,7 @@
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "BT_REG_ON", "PCIE_RSTn", "BUTTONn",
-		"", "", "LED0", "LED1", "LED3", "LED2", "", "",
+		"USB2_OCn", "", "LED0", "LED1", "LED3", "LED2", "", "",
 		"", "", "", "", "", "", "", "";
 };
 
@@ -292,6 +297,8 @@
 &usb0 {
 	status = "okay";
 	vbus-supply = <&usb2_vbus>;
+	pinctrl-0 = <&usb2_oc_pmux>;
+	pinctrl-names = "default";
 };
 
 &xhci0 {
