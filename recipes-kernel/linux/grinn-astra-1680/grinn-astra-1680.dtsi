@@ -353,149 +353,12 @@
 	status = "okay";
 };
 
-&avio_pinctrl {
-	i2s2_pmux: i2s2-pmux {
-		groups = "I2S2_BCLKIO", "I2S2_LRCKIO", "I2S2_DI0";
-		function = "i2s2";
-	};
-
-	i2s3_pmux: i2s3-pmux {
-		groups = "I2S3_LRCKIO", "I2S3_BCLKIO", "I2S3_DI", "I2S3_DO";
-		function = "i2s3";
-	};
-
-	pdm_pmux: pdm-pmux {
-		groups = "I2S2_MCLK", "I2S2_DI3", "I2S2_DI2";
-		function = "pdm";
-	};
-};
-
 &bm {
 	status = "okay";
 };
 
 &cec {
 	status = "okay";
-};
-
-&dmic {
-	status = "okay";
-	pinctrl-0 = <&pdm_pmux>;
-	pinctrl-names = "default";
-	pdm-type = <1>;
-	pdm-clk-sel = <2>;
-	ch-shift-check;
-};
-
-&dolphin_asoc {
-	status = "okay";
-
-	soc_dmic: soc-dmic {
-		status = "okay";
-		stream-name = "soc-dmic";
-		link-name = "soc-dmic";
-		cpu-node = <&dmic>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_hdmii: soc-hdmii {
-		status = "okay";
-		stream-name = "soc-hdmii";
-		link-name = "soc-hdmii";
-		cpu-node = <&hdmi_in>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_hdmio: soc-hdmio {
-		status = "okay";
-		stream-name = "soc-hdmio";
-		link-name = "soc-hdmio";
-		format = "i2s";
-		cpu-node = <&hdmi_out>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_i2s_hdmi_lpbk: soc-i2s-hdmi-lpbk {
-		status = "okay";
-		stream-name = "soc-i2s-hdmi-lpbk";
-		link-name = "soc-i2s-hdmi-lpbk";
-		format = "i2s";
-		cpu-node = <&i2s_hdmi_lpbk>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_i2s_pri_lpbk: soc-i2s-pri-lpbk {
-		status = "okay";
-		stream-name = "soc-i2s-pri-lpbk";
-		link-name = "soc-i2s-pri-lpbk";
-		format = "i2s";
-		cpu-node = <&i2s_pri_lpbk>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_i2si: soc-i2si2 {
-		status = "okay";
-		stream-name = "soc-i2si2";
-		link-name = "soc-i2si2";
-		format = "i2s";
-		bitclock-master;
-		frame-master;
-		cpu-node = <&i2s_mic1>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_i2si3: soc-i2si3 {
-		status = "okay";
-		stream-name = "btsco-in";
-		link-name = "btsco-in";
-		format = "dsp_b";
-		bitclock-master;
-		frame-master;
-		continuous-clock;
-		cpu-node = <&i2s_mic2>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_i2so1: soc-i2so1 {
-		status = "okay";
-		stream-name = "soc-i2so1";
-		link-name = "soc-i2so1";
-		format = "i2s";
-		continuous-clock;
-		bitclock-inversion;
-		frame-inversion;
-		cpu-node = <&i2s_pri>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
-
-	soc_i2so3: soc-i2so3 {
-		status = "okay";
-		stream-name = "soc-i2so3";
-		link-name = "soc-i2so3";
-		format = "dsp_b";
-		bitclock-master;
-		frame-master;
-		cpu-node = <&i2s_sec>;
-		codec-name = "snd-soc-dummy";
-		codec-dai-name = "snd-soc-dummy-dai";
-		platform-node = <&dolphin_pcm>;
-	};
 };
 
 &dolphin_pcm {
@@ -703,37 +566,6 @@
 &i2c3 {
 	status = "okay";
 	no-irq-suspend;
-};
-
-&i2s_hdmi_lpbk {
-	status = "okay";
-};
-
-&i2s_mic1 {
-	status = "okay";
-	pinctrl-0 = <&i2s2_pmux>;
-	pinctrl-names = "default";
-	intlmode;
-};
-
-&i2s_mic2 {
-	status = "okay";
-	pinctrl-0 = <&i2s3_pmux>;
-	pinctrl-names = "default";
-	duplex;
-	disablemicmute;
-};
-
-&i2s_mic6 {
-	status = "okay";
-};
-
-&i2s_sec {
-	status = "okay";
-	pinctrl-0 = <&i2s3_pmux>;
-	pinctrl-names = "default";
-	duplex;
-	sample-period = <32>;
 };
 
 &ir {
