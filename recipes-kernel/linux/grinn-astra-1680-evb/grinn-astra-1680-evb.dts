@@ -116,6 +116,17 @@
 		#address-cells = <1>;
 		#size-cells = <0>;
 
+		usb2_vbus: usb2_vbus {
+			compatible = "regulator-fixed";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			regulator-name = "usb2-vbus";
+			enable-active-high;
+			gpio = <&portb 23 GPIO_ACTIVE_HIGH>;
+			pinctrl-0 = <&usb2_vbus_pmux>;
+			pinctrl-names = "default";
+		};
+
 		usb3_vbus: usb3_vbus {
 			compatible = "regulator-fixed";
 			regulator-min-microvolt = <5000000>;
@@ -228,6 +239,11 @@
 		function = "gpio";
 	};
 
+	usb2_vbus_pmux: usb2-vbus-pmux {
+		groups = "USB2_DRV_VBUS";
+		function = "gpio";
+	};
+
 	usb3_vbus_pmux: usb3_vbus_pmux {
 		groups = "SDIO_WP";
 		function = "gpio";
@@ -246,7 +262,7 @@
 	gpio-line-names =
 		"", "", "", "", "IR_LED_EN2", "IR_LED_EN1", "HDMI_TX_5V_EN", "",
 		"", "", "", "", "USB3_EN", "", "", "",
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "USB2_EN",
 		"", "", "", "", "", "", "", "";
 };
 
@@ -271,6 +287,11 @@
 		groups = "SM_SPI2_SS0n";
 		function = "gpio";
 	};
+};
+
+&usb0 {
+	status = "okay";
+	vbus-supply = <&usb2_vbus>;
 };
 
 &xhci0 {
