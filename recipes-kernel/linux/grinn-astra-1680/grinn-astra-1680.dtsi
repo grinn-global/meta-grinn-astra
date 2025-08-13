@@ -878,10 +878,6 @@
 	pinctrl-names = "default";
 };
 
-&usb0 {
-	status = "okay";
-};
-
 &usb_phy0  {
 	status = "okay";
 };
