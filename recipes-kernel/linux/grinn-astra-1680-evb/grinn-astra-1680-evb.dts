@@ -123,6 +123,8 @@
 			regulator-name = "usb3-vbus";
 			enable-active-high;
 			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
+			pinctrl-0 = <&usb3_vbus_pmux>;
+			pinctrl-names = "default";
 		};
 	};
 };
@@ -274,6 +276,4 @@
 &xhci0 {
 	status = "okay";
 	vbus-supply = <&usb3_vbus>;
-	pinctrl-0 = <&usb3_vbus_pmux>;
-	pinctrl-names = "default";
 };
