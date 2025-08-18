@@ -61,11 +61,6 @@
 };
 
 &pinctrl {
-	emmc_pmux: emmc-pmux {
-		groups = "NAND_IO0", "NAND_IO1", "NAND_IO2", "NAND_IO3", "NAND_IO4", "NAND_IO5", "ND_IO6", "NAND_IO7", "NAND_ALE", "NAND_CLE", "NAND_WPn";
-		function = "emmc";
-	};
-
 	i2c0_pmux: i2c0-pmux {
 		groups = "TW0_SCL", "TW0_SDA";
 		function = "tw0";
