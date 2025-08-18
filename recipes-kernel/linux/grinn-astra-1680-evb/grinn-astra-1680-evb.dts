@@ -186,9 +186,49 @@
 		function = "gpio";
 	};
 
+	pdm_pmux: pdm-pmux {
+		groups = "I2S2_BCLKIO", "I2S2_DI3";
+		function = "pdm";
+	};
+
 	usb2_oc_pmux: usb2-oc-pmux {
 		groups = "I2S1_DO2";
 		function = "gpio";
+	};
+};
+
+&dmic {
+	status = "okay";
+	pinctrl-0 = <&pdm_pmux>;
+	pinctrl-names = "default";
+	pdm-type = <0>;
+	pdm-clk-sel = <0>;
+	ch-shift-check;
+	disablemicmute;
+};
+
+&dolphin_asoc {
+	status = "okay";
+
+	soc_dmic: soc-dmic {
+		status = "okay";
+		stream-name = "soc-dmic";
+		link-name = "soc-dmic";
+		cpu-node = <&dmic>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_hdmio: soc-hdmio {
+		status = "okay";
+		stream-name = "soc-hdmio";
+		link-name = "soc-hdmio";
+		format = "i2s";
+		cpu-node = <&hdmi_out>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
 	};
 };
 
