@@ -75,20 +75,6 @@
 	status = "okay";
 };
 
-&spi0 {
-	status = "okay";
-	max-write-size = <128>;
-	clock-frequency = <100000000>;
-	spi-flash@0 {
-		#address-cells = <1>;
-		#size-cells = <1>;
-		compatible = "jedec,spi-nor";
-		reg = <0>;
-		memory-map = <0x0 0xf0000000 0x0 0x4000000>;
-		spi-max-frequency = <10000000>;
-	};
-};
-
 &phy0 {
 	reg = <0>;
 };
