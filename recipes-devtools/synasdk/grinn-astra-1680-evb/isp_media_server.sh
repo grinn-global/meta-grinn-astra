@@ -25,10 +25,10 @@ set -e
 
 case $1 in
     start)
-        echo "sensor=ov5647 xml=/usr/share/OV5647_480p.xml manu_json=/usr/share/ISP_Manual_IMX258.json \
-        auto_json=/usr/share/ISP_Auto.json i2c_bus_id=0 mipi_id=0 mode=0" > /proc/vsi/isp_subdev0
-        echo "1 sensor=ov5647 1 xml=/usr/share/OV5647_480p.xml 1 manu_json=/usr/share/ISP_Manual_IMX258.json \
-        1 auto_json=/usr/share/ISP_Auto.json 1 i2c_bus_id=2 1 mipi_id=1 1 mode=0" > /proc/vsi/isp_subdev0
+        echo "sensor=ov5647 xml=/usr/share/OV5647_2k.xml manu_json=/usr/share/ISP_Manual_OV5647_2k.json \
+        auto_json=/usr/share/ISP_Auto_OV5647_2k.json i2c_bus_id=0 mipi_id=0 mode=1 csi_clock_rate=300000000" > /proc/vsi/isp_subdev0
+        echo "1 sensor=ov5647 1 xml=/usr/share/OV5647_2k.xml 1 manu_json=/usr/share/ISP_Manual_OV5647_2k.json \
+        1 auto_json=/usr/share/ISP_Auto_OV5647_2k.json 1 i2c_bus_id=2 1 mipi_id=1 1 mode=1 csi_clock_rate=300000000" > /proc/vsi/isp_subdev0
         echo -n "Starting $DESC: "
         start-stop-daemon --start $SSD_OPTIONS  > $LOGFILE &
         echo "${DAEMON##*/}."
