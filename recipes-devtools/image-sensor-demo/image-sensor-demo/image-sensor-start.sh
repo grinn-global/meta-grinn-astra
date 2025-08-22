@@ -88,7 +88,7 @@ start_pipeline() {
         exit 1
     fi
 
-    gst-launch-1.0 v4l2src device=$VIDEO_DEV ! 'video/x-raw, format=(string)NV12, width=(int)640, height=(int)480, framerate=(fraction)30/1' ! waylandsink
+    gst-launch-1.0 v4l2src device=$VIDEO_DEV ! 'video/x-raw, format=(string)NV12, width=(int)800, height=(int)600, framerate=(fraction)30/1' ! waylandsink
 }
 
 enable_sensor() {
