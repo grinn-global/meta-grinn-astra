@@ -5,3 +5,5 @@ IMAGE_INSTALL:append = " \
 IMAGE_INSTALL:append:grinn-astra-1680-ada = " \
 	hdmi-rx-demo \
 "
+
+deltask do_swuimage
