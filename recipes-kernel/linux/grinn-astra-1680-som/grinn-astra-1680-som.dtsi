@@ -1,0 +1,186 @@
+/* SPDX-License-Identifier: GPL-2.0+ */
+/*
+* Copyright (C) 2016~2023 Synaptics Incorporated. All rights reserved.
+*
+* This program is free software; you can redistribute it and/or modify
+* it under the terms of the GNU General Public License version 2 or
+* later as published by the Free Software Foundation.
+*
+* INFORMATION CONTAINED IN THIS DOCUMENT IS PROVIDED "AS-IS," AND
+* SYNAPTICS EXPRESSLY DISCLAIMS ALL EXPRESS AND IMPLIED WARRANTIES,
+* INCLUDING ANY IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR
+* A PARTICULAR PURPOSE, AND ANY WARRANTIES OF NON-INFRINGEMENT OF ANY
+* INTELLECTUAL PROPERTY RIGHTS. IN NO EVENT SHALL SYNAPTICS BE LIABLE
+* FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, PUNITIVE, OR
+* CONSEQUENTIAL DAMAGES ARISING OUT OF OR IN CONNECTION WITH THE USE
+* OF THE INFORMATION CONTAINED IN THIS DOCUMENT, HOWEVER CAUSED AND
+* BASED ON ANY THEORY OF LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* NEGLIGENCE OR OTHER TORTIOUS ACTION, AND EVEN IF SYNAPTICS WAS
+* ADVISED OF THE POSSIBILITY OF SUCH DAMAGE. IF A TRIBUNAL OF
+* COMPETENT JURISDICTION DOES NOT PERMIT THE DISCLAIMER OF DIRECT
+* DAMAGES OR ANY OTHER DAMAGES, SYNAPTICS' TOTAL CUMULATIVE LIABILITY
+* TO ANY PARTY SHALL NOT EXCEED ONE HUNDRED U.S. DOLLARS.
+*/
+
+/dts-v1/;
+
+/memreserve/ 0x7f000000 0x01000000;
+
+#include "dolphin.dtsi"
+
+/ {
+	chosen {
+		stdout-path = "serial0:115200n8";
+	};
+
+	memory {
+		device_type = "memory";
+		reg = <0 0x01000000 0 0x7f000000>;
+	};
+
+	reserved-memory {
+		#address-cells = <2>;
+		#size-cells = <2>;
+		ranges;
+
+		ramoops@f901c000{
+			compatible = "ramoops";
+			reg = <0x0 0xf901c000 0x0 0x4000>;
+			record-size = <0x4000>;
+		};
+	};
+
+	dmabuf_heap {
+		compatible = "syna,berlin-heaps";
+		pool-num = <2>;
+		reg-names = "NonSecure", "Secure";
+		reg = <0 0x7f000000 0 0x00800000>,
+		      <0 0x7f800000 0 0x00800000>;
+		attributes-num-per-pool = <2>;
+		pool-attributes = <0x00000105 0x00000F3A 0x00000102 0x00000F3D>;
+	};
+
+	aliases {
+		i2c3 = &i2cdemux3_i2c;
+	};
+
+	cpus {
+		cpu@0 {
+			cpu0-supply = <&vcpu>;
+		};
+	};
+
+	gpioi2c3: gpioi2c3 {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		compatible = "i2c-gpio";
+		gpios = <&portd 10 GPIO_ACTIVE_HIGH /* sda */
+			 &portd 9 GPIO_ACTIVE_HIGH /* scl */
+			>;
+		i2c-gpio,delay-us = <5>;
+	};
+
+	i2cdemux3 {
+		compatible = "i2c-dyndmx-pinctrl";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		i2c-parent = <&i2c3>, <&gpioi2c3>;
+
+		pinctrl-names = "i2c3", "gpioi2c3";
+		pinctrl-0 = <&i2c3_pmux>;
+		pinctrl-1 = <&gpioi2c3_pmux>;
+
+		i2cdemux3_i2c: i2c@0 {
+			reg = <0>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+
+		i2c@1 {
+			reg = <1>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+		};
+	};
+};
+
+&i2c1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c1_pmux>;
+
+	vcpu: regulator@60 {
+		compatible = "silergy,sy20257n";
+		reg = <0x60>;
+		status = "okay";
+		regulator-boot-on;
+		regulator-always-on;
+		regulator-active-discharge = <0>;
+		regulator-name = "vcpu";
+		regulator-min-microvolt = <700000>;
+		regulator-max-microvolt = <987500>;
+	};
+};
+
+&i2c2 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c2_pmux>;
+
+	vcore: regulator@60 {
+		compatible = "silergy,sy20257n";
+		reg = <0x60>;
+		status = "okay";
+		regulator-boot-on;
+		regulator-always-on;
+		regulator-active-discharge = <0>;
+		regulator-name = "vcore";
+		regulator-min-microvolt = <700000>;
+		regulator-max-microvolt = <987500>;
+	};
+};
+
+&i2c3 {
+	status = "okay";
+	no-irq-suspend;
+};
+
+&i2cdemux3_i2c {
+	expander0: gpio@43 {
+		compatible = "fcs,fxl6408";
+		reg = <0x43>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		gpio-line-names = "PWR_SOC_VCORE_EN", "", "VDDM_ON", "VDDM_LPQ_OFF",
+				  "STAND_BY_EN", "", "", "";
+	};
+};
+
+&pinctrl {
+	i2c1_pmux: i2c1-pmux {
+		groups = "SPI1_SS2n", "SPI1_SS3n";
+		function = "tw1b";
+		drive-strength = <3>;
+	};
+};
+
+&sm_pinctrl {
+	gpioi2c3_pmux: gpioi2c3-pmux {
+		groups = "SM_TW3_SCL", "SM_TW3_SDA";
+		function = "gpio";
+		drive-strength = <7>;
+	};
+
+	i2c2_pmux: i2c2-pmux {
+		groups = "SM_URT1_TXD", "SM_URT1_RXD";
+		function = "tw2b";
+		drive-strength = <7>;
+	};
+
+	i2c3_pmux: i2c3-pmux {
+		groups = "SM_TW3_SCL", "SM_TW3_SDA";
+		function = "tw3";
+		drive-strength = <7>;
+	};
+};
