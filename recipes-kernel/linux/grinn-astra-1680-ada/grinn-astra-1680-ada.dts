@@ -241,6 +241,14 @@
 	snps,reset-delays-us = <0 10000 50000>;
 };
 
+&hrx {
+	status = "okay";
+	pinctrl-0 = <&hrx5v_pmux>, <&hrxhpd_pmux>, <&hrxedid_pmux>;
+	pinctrl-names = "default";
+	hrxhpd-gpio = <&portd 2 GPIO_ACTIVE_HIGH>;
+	hrx5v-gpio = <&portd 21 GPIO_ACTIVE_HIGH>;
+};
+
 &i2cdemux3_i2c {
 	expander0: gpio@43 {
 		compatible = "fcs,fxl6408";
@@ -350,6 +358,34 @@
 	pad-sp = /bits/ 8 <4>;
 	pad-sn = /bits/ 8 <4>;
 	vmmc-supply = <&vmmc_sdhci1>;
+};
+
+&sm_gpio0 {
+	pinctrl-0 = <&levelshift_pmux>;
+};
+
+&sm_pinctrl {
+	hrx5v_pmux: hrx5v-pmux {
+		groups = "SM_HDMIRX_PWR5V";
+		function = "gpio";
+		drive-strength = <7>;
+	};
+
+	hrxhpd_pmux: hrxhpd-pmux {
+		groups = "SM_HDMI_HPD";
+		function = "gpio";
+	};
+
+	hrxedid_pmux: hrxedid-pmux {
+		groups = "SM_TW2_SCL", "SM_TW2_SDA";
+		function = "rx_edid";
+		drive-strength = <7>;
+	};
+
+	levelshift_pmux: levelshift-pmux {
+		groups = "SM_HDMIRX_HPD";
+		function = "gpio";
+	};
 };
 
 &usb0 {

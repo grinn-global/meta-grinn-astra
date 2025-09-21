@@ -504,14 +504,6 @@
 	status = "okay";
 };
 
-&hrx {
-	status = "okay";
-	pinctrl-0 = <&hrx5v_pmux>, <&hrxhpd_pmux>, <&hrxedid_pmux>;
-	pinctrl-names = "default";
-	hrxhpd-gpio = <&portd 2 GPIO_ACTIVE_HIGH>;
-	hrx5v-gpio = <&portd 21 GPIO_ACTIVE_HIGH>;
-};
-
 &i2c0 {
 	status = "okay";
 	pinctrl-names = "default";
@@ -662,7 +654,6 @@
 };
 
 &sm_gpio0 {
-	pinctrl-0 = <&levelshift_pmux>;
 	pinctrl-names = "default";
 
 	portd: gpio-port@4 {
@@ -686,23 +677,6 @@
 		drive-strength = <7>;
 	};
 
-	hrx5v_pmux: hrx5v-pmux {
-		groups = "SM_HDMIRX_PWR5V";
-		function = "gpio";
-		drive-strength = <7>;
-	};
-
-	hrxhpd_pmux: hrxhpd-pmux {
-		groups = "SM_HDMI_HPD";
-		function = "gpio";
-	};
-
-	hrxedid_pmux: hrxedid-pmux {
-		groups = "SM_TW2_SCL", "SM_TW2_SDA";
-		function = "rx_edid";
-		drive-strength = <7>;
-	};
-
 	i2c2_pmux: i2c2-pmux {
 		groups = "SM_URT1_TXD", "SM_URT1_RXD";
 		function = "tw2b";
@@ -713,11 +687,6 @@
 		groups = "SM_TW3_SCL", "SM_TW3_SDA";
 		function = "tw3";
 		drive-strength = <7>;
-	};
-
-	levelshift_pmux: levelshift-pmux {
-		groups = "SM_HDMIRX_HPD";
-		function = "gpio";
 	};
 
 	uart2_pmux: uart2-pmux {
