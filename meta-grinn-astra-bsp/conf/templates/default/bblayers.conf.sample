@@ -19,5 +19,6 @@ BBLAYERS ?= " \
   ##OEROOT##/../meta-qt5 \
   ##OEROOT##/../meta-synaptics \
   ##OEROOT##/../meta-swupdate \
-  ##OEROOT##/../meta-grinn-astra \
+  ##OEROOT##/../meta-grinn-astra/meta-grinn-astra-bsp \
+  ##OEROOT##/../meta-grinn-astra/meta-grinn-astra-fixes \
   "
