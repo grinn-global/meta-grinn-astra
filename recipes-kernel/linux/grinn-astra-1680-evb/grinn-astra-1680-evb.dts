@@ -530,12 +530,6 @@
 		function = "tw0";
 		drive-strength = <7>;
 	};
-
-	uart3_pmux: uart3-pmux {
-		groups = "STS0_CLK", "STS0_SOP", "STS0_SD", "STS0_VALD";
-		function = "uart3";
-		drive-strength = <3>;
-	};
 };
 
 &porta {
@@ -858,12 +852,6 @@
 &uart2 {
 	status = "okay";
 	pinctrl-0 = <&uart2_pmux>;
-	pinctrl-names = "default";
-};
-
-&uart3 {
-	status = "okay";
-	pinctrl-0 = <&uart3_pmux>;
 	pinctrl-names = "default";
 };
 
