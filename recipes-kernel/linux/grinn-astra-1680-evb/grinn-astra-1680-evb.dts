@@ -44,6 +44,20 @@
 		pinctrl-names = "default";
 	};
 
+	keys {
+		compatible = "gpio-keys";
+		status = "okay";
+		pinctrl-0 = <&button_pmux>;
+		pinctrl-names = "default";
+
+		user-button {
+			label = "Enter Button";
+			linux,code = <KEY_ENTER>;
+			gpios = <&porta 15 GPIO_ACTIVE_LOW>;
+			debounce-interval = <50>;
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
@@ -97,20 +111,6 @@
 			function = LED_FUNCTION_FAULT;
 			linux,default-trigger = "panic";
 			default-state = "off";
-		};
-	};
-
-	keys {
-		compatible = "gpio-keys";
-		status = "okay";
-		pinctrl-0 = <&button_pmux>;
-		pinctrl-names = "default";
-
-		user-button {
-			label = "Enter Button";
-			linux,code = <KEY_ENTER>;
-			gpios = <&porta 15 GPIO_ACTIVE_LOW>;
-			debounce-interval = <50>;
 		};
 	};
 
@@ -375,6 +375,10 @@
 	};
 };
 
+&aout {
+	status = "okay";
+};
+
 &avio {
 	status = "okay";
 	pinctrl-0 = <&hdmitx5v_pmux>;
@@ -432,6 +436,18 @@
 	};
 };
 
+&axi_mc0 {
+	status = "okay";
+};
+
+&bm {
+	status = "okay";
+};
+
+&cec {
+	status = "okay";
+};
+
 &dmic {
 	status = "okay";
 	pinctrl-0 = <&pdm_pmux>;
@@ -467,6 +483,47 @@
 	};
 };
 
+&dolphin_pcm {
+	status = "okay";
+};
+
+&drm {
+	status = "okay";
+
+	/* Supported Modes:	0 - HDMI only
+	 *			1 - MIPI Only
+	 *			2 - Dual Mode PIP
+	 *
+	 * Supported types:	0 - HDMI
+	 * 		  	3 - MIPI-DSI
+	 */
+	disp-mode = <0>;
+	disp1-res-id = <24>;
+	disp1-type = <0>;
+	disp2-res-id = <102>;
+	disp2-type = <3>;
+
+	hdmi_tx {
+		status= "okay";
+		/* HDMI_Tx core config array with fields as in below order -
+		   HPD handling - 1:enable sink hotplug handling 0:disable sink hotplug handling
+		   FixedModeset - 1:Enable mode config from within drm driver(on HPD), disable modeset interface to user
+				  0:Expose user interface to set mode, don't control from within drm driver
+		 */
+		hdtx-core-config = /bits/ 8 <1 1>;
+		/* Select format IDs enabled for profile. enter number of entries (inclusive) followed by entries <size, n1, n2..>
+		   ID to res mapping as below
+		   1280x720P30=10 1280x720P60=13
+		   1920x1080P24=22 1920x1080P25=21 1920x1080P30=19 1920x1080P50=26 1920x1080P59.94=25 1920x1080P60=24
+		   3840x2160P24=57 3840x2160P25=59 3840x2160P30=61 3840x2160P50=62 3840x2160P59.94=63 3840x2160P60=64 */
+		hdtx-supported-formats = /bits/ 8 <12 10 13 22 21 19 26 25 24 61 62 64>;
+	};
+};
+
+&fb {
+	status = "okay";
+};
+
 &gmac0 {
 	status = "okay";
 	pinctrl-0 = <&gmac0_pmux>, <&gmac_gpio_pmux>;
@@ -478,12 +535,80 @@
 	snps,reset-active-low;
 };
 
+&gpu {
+	status = "okay";
+};
+
+&h1 {
+	status = "okay";
+};
+
+&hdmi_in {
+	status = "okay";
+};
+
+&hdmi_out {
+	status = "okay";
+};
+
+&i2c0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pmux>;
+	clock-frequency = <100000>;
+	no-irq-suspend;
+};
+
+&ir {
+	status = "okay";
+};
+
+&isp {
+	status = "okay";
+};
+
+&isp_be {
+	status = "okay";
+};
+
+&isp_scaler {
+	status = "okay";
+};
+
+&isp_vsi {
+	status = "okay";
+};
+
+&isp_vsi_mipi {
+	status = "okay";
+};
+
+&isp_vsi_vb {
+	status = "okay";
+};
+
+&mc_dfc {
+	status = "okay";
+};
+
 &mdio0 {
 	phy0: ethernet-phy@0 {
 		reg = <0>;
 		compatible = "ethernet-phy-ieee802.3-c22";
 		device_type = "ethernet-phy";
 	};
+};
+
+&npu {
+	status = "okay";
+};
+
+&ovp {
+	status = "okay";
+};
+
+&pcie_phy0 {
+	status = "okay";
 };
 
 &pcie0 {
@@ -559,6 +684,25 @@
 		"", "", "", "", "", "", "", "";
 };
 
+&sdhci0 {
+	status = "okay";
+	sdclkdl-dc = /bits/ 8 <26>;
+	mmc-ddr-1_8v;
+	mmc-hs200-1_8v;
+	mmc-hs400-1_8v;
+	dll-calibration;
+	pad-sp = /bits/ 8 <14>;
+	pad-sn = /bits/ 8 <14>;
+};
+
+&shm {
+	status = "okay";
+};
+
+&sm {
+	status = "okay";
+};
+
 &sm_pinctrl {
 	led_en_pmux: led-en-pmux {
 		groups = "SM_SPI2_SS1n";
@@ -580,162 +724,6 @@
 		function = "uart2";
 		drive-strength = <3>;
 	};
-};
-
-&usb0 {
-	status = "okay";
-	vbus-supply = <&usb2_vbus>;
-	pinctrl-0 = <&usb2_oc_pmux>;
-	pinctrl-names = "default";
-};
-
-&xhci0 {
-	status = "okay";
-	vbus-supply = <&usb3_vbus>;
-};
-
-&aout {
-	status = "okay";
-};
-
-&axi_mc0 {
-	status = "okay";
-};
-
-&bm {
-	status = "okay";
-};
-
-&cec {
-	status = "okay";
-};
-
-&dolphin_pcm {
-	status = "okay";
-};
-
-&drm {
-	status = "okay";
-
-	/* Supported Modes:	0 - HDMI only
-	 *			1 - MIPI Only
-	 *			2 - Dual Mode PIP
-	 *
-	 * Supported types:	0 - HDMI
-	 * 		  	3 - MIPI-DSI
-	 */
-	disp-mode = <0>;
-	disp1-res-id = <24>;
-	disp1-type = <0>;
-	disp2-res-id = <102>;
-	disp2-type = <3>;
-
-	hdmi_tx {
-		status= "okay";
-		/* HDMI_Tx core config array with fields as in below order -
-		   HPD handling - 1:enable sink hotplug handling 0:disable sink hotplug handling
-		   FixedModeset - 1:Enable mode config from within drm driver(on HPD), disable modeset interface to user
-				  0:Expose user interface to set mode, don't control from within drm driver
-		 */
-		hdtx-core-config = /bits/ 8 <1 1>;
-		/* Select format IDs enabled for profile. enter number of entries (inclusive) followed by entries <size, n1, n2..>
-		   ID to res mapping as below
-		   1280x720P30=10 1280x720P60=13
-		   1920x1080P24=22 1920x1080P25=21 1920x1080P30=19 1920x1080P50=26 1920x1080P59.94=25 1920x1080P60=24
-		   3840x2160P24=57 3840x2160P25=59 3840x2160P30=61 3840x2160P50=62 3840x2160P59.94=63 3840x2160P60=64 */
-		hdtx-supported-formats = /bits/ 8 <12 10 13 22 21 19 26 25 24 61 62 64>;
-	};
-};
-
-&fb {
-	status = "okay";
-};
-
-&gpu {
-	status = "okay";
-};
-
-&h1 {
-	status = "okay";
-};
-
-&hdmi_out {
-	status = "okay";
-};
-
-&hdmi_in {
-	status = "okay";
-};
-
-&i2c0 {
-	status = "okay";
-	pinctrl-names = "default";
-	pinctrl-0 = <&i2c0_pmux>;
-	clock-frequency = <100000>;
-	no-irq-suspend;
-};
-
-&ir {
-	status = "okay";
-};
-
-&isp {
-	status = "okay";
-};
-
-&isp_be {
-	status = "okay";
-};
-
-&isp_scaler {
-	status = "okay";
-};
-
-&isp_vsi {
-	status = "okay";
-};
-
-&isp_vsi_mipi {
-	status = "okay";
-};
-
-&isp_vsi_vb {
-	status = "okay";
-};
-
-&mc_dfc {
-	status = "okay";
-};
-
-&npu {
-	status = "okay";
-};
-
-&ovp {
-	status = "okay";
-};
-
-&pcie_phy0 {
-	status = "okay";
-};
-
-&sdhci0 {
-	status = "okay";
-	sdclkdl-dc = /bits/ 8 <26>;
-	mmc-ddr-1_8v;
-	mmc-hs200-1_8v;
-	mmc-hs400-1_8v;
-	dll-calibration;
-	pad-sp = /bits/ 8 <14>;
-	pad-sn = /bits/ 8 <14>;
-};
-
-&shm {
-	status = "okay";
-};
-
-&sm {
-	status = "okay";
 };
 
 &tsp {
@@ -760,10 +748,22 @@
 	status = "okay";
 };
 
+&usb0 {
+	status = "okay";
+	vbus-supply = <&usb2_vbus>;
+	pinctrl-0 = <&usb2_oc_pmux>;
+	pinctrl-names = "default";
+};
+
 &vpp {
 	status = "okay";
 };
 
 &vxg {
 	status = "okay";
+};
+
+&xhci0 {
+	status = "okay";
+	vbus-supply = <&usb3_vbus>;
 };
