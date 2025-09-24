@@ -738,16 +738,6 @@
 	status = "okay";
 };
 
-&sm_gpio0 {
-	portd: gpio-port@4 {
-		levelshift_en {
-			gpio-hog;
-			gpios = <20 GPIO_ACTIVE_HIGH>;
-			output-low;
-		};
-	};
-};
-
 &tsp {
 	status = "okay";
 };

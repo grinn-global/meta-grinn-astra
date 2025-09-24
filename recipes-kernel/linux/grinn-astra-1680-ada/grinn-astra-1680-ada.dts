@@ -626,19 +626,6 @@
 	vmmc-supply = <&vmmc_sdhci1>;
 };
 
-&sm_gpio0 {
-	pinctrl-0 = <&levelshift_pmux>;
-	pinctrl-names = "default";
-
-	portd: gpio-port@4 {
-		levelshift_en {
-			gpio-hog;
-			gpios = <20 GPIO_ACTIVE_HIGH>;
-			output-low;
-		};
-	};
-};
-
 &sm_pinctrl {
 	hrx5v_pmux: hrx5v-pmux {
 		groups = "SM_HDMIRX_PWR5V";
@@ -895,6 +882,17 @@
 
 &pcie_phy0 {
 	status = "okay";
+};
+
+&portd {
+	pinctrl-0 = <&levelshift_pmux>;
+	pinctrl-names = "default";
+
+	levelshift_en {
+		gpio-hog;
+		gpios = <20 GPIO_ACTIVE_HIGH>;
+		output-low;
+	};
 };
 
 &shm {
