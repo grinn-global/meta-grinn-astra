@@ -796,7 +796,9 @@
 	};
 
 	gmac0_pmux: gmac0-pmux {
-		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0", "RGMII_TXD1", "RGMII_TXD2", "RGMII_TXD3", "RGMII_TXCTL", "RGMII_RXC", "RGMII_RXD0", "RGMII_RXD1", "RGMII_RXD2", "RGMII_RXD3", "RGMII_RXCTL";
+		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0",
+			 "RGMII_TXD1", "RGMII_TXD2", "RGMII_TXD3", "RGMII_TXCTL", "RGMII_RXC",
+			 "RGMII_RXD0", "RGMII_RXD1", "RGMII_RXD2", "RGMII_RXD3", "RGMII_RXCTL";
 		function = "rgmii";
 		drive-strength = <3>;
 	};
