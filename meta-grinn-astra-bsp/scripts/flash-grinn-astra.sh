@@ -52,7 +52,7 @@ case "${2}" in
 esac
 
 if [ -z ${3} ]; then
-	IMAGE_PATH="${THIS_SCRIPT_DIR}/../../../build/tmp/deploy/images/${MACHINE_NAME}/SYNAIMG/"
+	IMAGE_PATH="${THIS_SCRIPT_DIR}/../../../../build/tmp/deploy/images/${MACHINE_NAME}/SYNAIMG/"
 
 	if [ ! -d ${IMAGE_PATH} ]; then
 		echo "Image for ${MACHINE_NAME} is not built!"
