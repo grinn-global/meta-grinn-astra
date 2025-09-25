@@ -19,6 +19,7 @@ show_usage() {
 	echo "machine_selector:"
 	echo "	ada	grinn-astra-1680-ada"
 	echo "	evb	grinn-astra-1680-evb"
+	echo "	sbc	grinn-astra-1680-sbc"
 	echo ""
 	echo "image_path:"
 	echo "	optional path to pre-built image"
@@ -43,6 +44,10 @@ case "${2}" in
 	evb)
 		echo "EVB machine selected"
 		MACHINE_NAME="grinn-astra-1680-evb"
+		;;
+	sbc)
+		echo "SBC machine selected"
+		MACHINE_NAME="grinn-astra-1680-sbc"
 		;;
 	*)
 		echo "Invalid machine selected!"
