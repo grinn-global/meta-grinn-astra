@@ -35,6 +35,62 @@
 / {
 	model = "Grinn AstraSBC-1680";
 	compatible = "grinn,grinn-astra-1680-sbc", "syna,dolphin";
+
+	leds {
+		compatible = "gpio-leds";
+		status = "okay";
+		pinctrl-0 = <&led_red_pmux>, <&led_yellow_pmux>, <&led_green_pmux>;
+		pinctrl-names = "default";
+
+		status_led_red: status-led-red {
+			gpios = <&porta 18 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_RED>;
+			function = LED_FUNCTION_POWER;
+			linux,default-trigger = "default-on";
+			default-state = "off";
+		};
+
+		status_led_yellow: status-led-yellow {
+			gpios = <&porta 20 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_YELLOW>;
+			function = LED_FUNCTION_HEARTBEAT;
+			linux,default-trigger = "heartbeat";
+			default-state = "off";
+		};
+
+		status_led_green: status-led-green {
+			gpios = <&porta 21 GPIO_ACTIVE_HIGH>;
+			color = <LED_COLOR_ID_GREEN>;
+			function = LED_FUNCTION_DISK_ACTIVITY;
+			linux,default-trigger = "mmc0";
+			default-state = "off";
+		};
+	};
+};
+
+&avio_pinctrl {
+	led_red_pmux: led-red-pmux {
+		groups = "I2S1_MCLK";
+		function = "gpio";
+	};
+
+	led_yellow_pmux: led-yellow-pmux {
+		groups = "I2S1_BCLKIO";
+		function = "gpio";
+	};
+
+	led_green_pmux: led-green-pmux {
+		groups = "I2S1_LRCKIO";
+		function = "gpio";
+	};
+};
+
+&porta {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
+		"", "", "", "", "", "", "", "";
 };
 
 &sdhci0 {
