@@ -104,6 +104,18 @@
 	};
 };
 
+&axi_mc0 {
+	status = "okay";
+};
+
+&bm {
+	status = "okay";
+};
+
+&cec {
+	status = "okay";
+};
+
 &gmac0 {
 	status = "okay";
 	pinctrl-0 = <&gmac0_pmux>, <&eth_reset_pmux>, <&eth_int_pmux>;
@@ -115,12 +127,32 @@
 	snps,reset-active-low;
 };
 
+&gpu {
+	status = "okay";
+};
+
+&h1 {
+	status = "okay";
+};
+
+&mc_dfc {
+	status = "okay";
+};
+
 &mdio0 {
 	phy0: ethernet-phy@3 {
 		reg = <3>;
 		compatible = "ethernet-phy-ieee802.3-c22";
 		device_type = "ethernet-phy";
 	};
+};
+
+&npu {
+	status = "okay";
+};
+
+&ovp {
+	status = "okay";
 };
 
 &pinctrl {
@@ -183,6 +215,10 @@
 	pad-sn = /bits/ 8 <14>;
 };
 
+&shm {
+	status = "okay";
+};
+
 &sm {
 	status = "okay";
 };
@@ -197,6 +233,10 @@
 		groups = "SM_TDO";
 		function = "gpio";
 	};
+};
+
+&tsp {
+	status = "okay";
 };
 
 &uart0 {
@@ -214,6 +254,14 @@
 &usb0 {
 	status = "okay";
 	dr_mode = "peripheral";
+};
+
+&vpp {
+	status = "okay";
+};
+
+&vxg {
+	status = "okay";
 };
 
 &xhci0 {
