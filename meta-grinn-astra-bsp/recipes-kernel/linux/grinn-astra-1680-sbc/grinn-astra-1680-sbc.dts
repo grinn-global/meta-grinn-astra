@@ -36,6 +36,20 @@
 	model = "Grinn AstraSBC-1680";
 	compatible = "grinn,grinn-astra-1680-sbc", "syna,dolphin";
 
+	keys {
+		compatible = "gpio-keys";
+		status = "okay";
+		pinctrl-0 = <&user_button_pmux>;
+		pinctrl-names = "default";
+
+		user_button: user-button {
+			label = "Enter Button";
+			linux,code = <KEY_ENTER>;
+			gpios = <&porta 15 GPIO_ACTIVE_LOW>;
+			debounce-interval = <50>;
+		};
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
@@ -83,12 +97,17 @@
 		groups = "I2S1_LRCKIO";
 		function = "gpio";
 	};
+
+	user_button_pmux: user-button-pmux {
+		groups = "I2S1_DO3";
+		function = "gpio";
+	};
 };
 
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "USER_BUTTON",
 		"", "", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
