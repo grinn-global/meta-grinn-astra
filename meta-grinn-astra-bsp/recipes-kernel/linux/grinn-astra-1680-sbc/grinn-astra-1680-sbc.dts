@@ -104,12 +104,37 @@
 	};
 };
 
+&pinctrl {
+	usb_hub_reset_pmux: usb-hub-reset-pmux {
+		groups = "USB2_DRV_VBUS";
+		function = "gpio";
+	};
+};
+
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "USER_BUTTON",
 		"", "", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
+};
+
+&portb {
+	pinctrl-0 = <&usb_hub_reset_pmux>;
+	pinctrl-names = "default";
+
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "USB_HUB_RESET",
+		"", "", "", "", "", "", "", "";
+
+	disable_usb_hub_reset {
+		gpio-hog;
+		gpios = <23 GPIO_ACTIVE_HIGH>;
+		output-low;
+		line-name = "usb_hub_reset";
+	};
 };
 
 &sdhci0 {
@@ -135,7 +160,15 @@
 	status = "okay";
 };
 
+&usb_phy1  {
+	status = "okay";
+};
+
 &usb0 {
 	status = "okay";
 	dr_mode = "peripheral";
+};
+
+&xhci0 {
+	status = "okay";
 };
