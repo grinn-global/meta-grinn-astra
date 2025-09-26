@@ -29,6 +29,7 @@ SRC_URI:append:grinn-astra-1680-evb = " \
 SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://${DTS_SBC}.dts \
 	file://gpio-led.cfg \
+	file://eth.cfg \
 "
 
 do_compile:prepend() {

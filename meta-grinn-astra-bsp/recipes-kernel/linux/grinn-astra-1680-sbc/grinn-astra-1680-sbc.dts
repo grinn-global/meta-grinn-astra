@@ -104,7 +104,34 @@
 	};
 };
 
+&gmac0 {
+	status = "okay";
+	pinctrl-0 = <&gmac0_pmux>, <&eth_reset_pmux>, <&eth_int_pmux>;
+	pinctrl-names = "default";
+	phy-handle = <&phy0>;
+	phy-mode = "rgmii-id";
+	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
+	snps,reset-delays-us = <0 10000 50000>;
+	snps,reset-active-low;
+};
+
+&mdio0 {
+	phy0: ethernet-phy@3 {
+		reg = <3>;
+		compatible = "ethernet-phy-ieee802.3-c22";
+		device_type = "ethernet-phy";
+	};
+};
+
 &pinctrl {
+	gmac0_pmux: gmac0-pmux {
+		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0",
+			 "RGMII_TXD1", "RGMII_TXD2", "RGMII_TXD3", "RGMII_TXCTL", "RGMII_RXC",
+			 "RGMII_RXD0", "RGMII_RXD1", "RGMII_RXD2", "RGMII_RXD3", "RGMII_RXCTL";
+		function = "rgmii";
+		drive-strength = <3>;
+	};
+
 	usb_hub_reset_pmux: usb-hub-reset-pmux {
 		groups = "USB2_DRV_VBUS";
 		function = "gpio";
@@ -137,6 +164,14 @@
 	};
 };
 
+&portd {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "ETH_INTn",
+		"ETH_RESETn", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "";
+};
+
 &sdhci0 {
 	status = "okay";
 	sdclkdl-dc = /bits/ 8 <26>;
@@ -150,6 +185,18 @@
 
 &sm {
 	status = "okay";
+};
+
+&sm_pinctrl {
+	eth_int_pmux: eth-int-pmux {
+		groups = "SM_TDI";
+		function = "gpio";
+	};
+
+	eth_reset_pmux: eth-reset-pmux {
+		groups = "SM_TDO";
+		function = "gpio";
+	};
 };
 
 &uart0 {
