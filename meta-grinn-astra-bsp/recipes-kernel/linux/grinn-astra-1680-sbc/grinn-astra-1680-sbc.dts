@@ -82,6 +82,20 @@
 	};
 };
 
+&aout {
+	status = "okay";
+};
+
+&avio {
+	status = "okay";
+	pinctrl-0 = <&hdmitx5v_pmux>;
+	pinctrl-names = "default";
+
+	vpp {
+		hdtx5v-gpio = <&portb 5 GPIO_ACTIVE_HIGH>;
+	};
+};
+
 &avio_pinctrl {
 	led_red_pmux: led-red-pmux {
 		groups = "I2S1_MCLK";
@@ -116,6 +130,62 @@
 	status = "okay";
 };
 
+&dolphin_asoc {
+	status = "okay";
+
+	soc_hdmio: soc-hdmio {
+		status = "okay";
+		stream-name = "soc-hdmio";
+		link-name = "soc-hdmio";
+		format = "i2s";
+		cpu-node = <&hdmi_out>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+};
+
+&dolphin_pcm {
+	status = "okay";
+};
+
+&drm {
+	status = "okay";
+
+	/* Supported Modes:	0 - HDMI only
+	 *			1 - MIPI Only
+	 *			2 - Dual Mode PIP
+	 *
+	 * Supported types:	0 - HDMI
+	 * 		  	3 - MIPI-DSI
+	 */
+	disp-mode = <0>;
+	disp1-res-id = <24>;
+	disp1-type = <0>;
+	disp2-res-id = <102>;
+	disp2-type = <3>;
+
+	hdmi_tx {
+		status= "okay";
+		/* HDMI_Tx core config array with fields as in below order -
+		   HPD handling - 1:enable sink hotplug handling 0:disable sink hotplug handling
+		   FixedModeset - 1:Enable mode config from within drm driver(on HPD), disable modeset interface to user
+				  0:Expose user interface to set mode, don't control from within drm driver
+		 */
+		hdtx-core-config = /bits/ 8 <1 1>;
+		/* Select format IDs enabled for profile. enter number of entries (inclusive) followed by entries <size, n1, n2..>
+		   ID to res mapping as below
+		   1280x720P30=10 1280x720P60=13
+		   1920x1080P24=22 1920x1080P25=21 1920x1080P30=19 1920x1080P50=26 1920x1080P59.94=25 1920x1080P60=24
+		   3840x2160P24=57 3840x2160P25=59 3840x2160P30=61 3840x2160P50=62 3840x2160P59.94=63 3840x2160P60=64 */
+		hdtx-supported-formats = /bits/ 8 <12 10 13 22 21 19 26 25 24 61 62 64>;
+	};
+};
+
+&fb {
+	status = "okay";
+};
+
 &gmac0 {
 	status = "okay";
 	pinctrl-0 = <&gmac0_pmux>, <&eth_reset_pmux>, <&eth_int_pmux>;
@@ -132,6 +202,14 @@
 };
 
 &h1 {
+	status = "okay";
+};
+
+&hdmi_in {
+	status = "okay";
+};
+
+&hdmi_out {
 	status = "okay";
 };
 
@@ -164,6 +242,11 @@
 		drive-strength = <3>;
 	};
 
+	hdmitx5v_pmux: hdmitx5v-pmux {
+		groups = "STS1_SD";
+		function = "gpio";
+	};
+
 	usb_hub_reset_pmux: usb-hub-reset-pmux {
 		groups = "USB2_DRV_VBUS";
 		function = "gpio";
@@ -183,7 +266,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "HDMI_TX_5V_EN", "", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "USB_HUB_RESET",
 		"", "", "", "", "", "", "", "";
