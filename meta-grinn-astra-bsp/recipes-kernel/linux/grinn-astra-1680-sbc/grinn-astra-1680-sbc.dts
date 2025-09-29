@@ -213,6 +213,14 @@
 	status = "okay";
 };
 
+&i2c0 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c0_pmux>;
+	clock-frequency = <100000>;
+	no-irq-suspend;
+};
+
 &mc_dfc {
 	status = "okay";
 };
@@ -245,6 +253,12 @@
 	hdmitx5v_pmux: hdmitx5v-pmux {
 		groups = "STS1_SD";
 		function = "gpio";
+	};
+
+	i2c0_pmux: i2c0-pmux {
+		groups = "TW0_SCL", "TW0_SDA";
+		function = "tw0";
+		drive-strength = <7>;
 	};
 
 	usb_hub_reset_pmux: usb-hub-reset-pmux {
@@ -280,10 +294,13 @@
 };
 
 &portd {
+	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>;
+	pinctrl-names = "default";
+
 	gpio-line-names =
 		"", "", "", "", "", "", "", "ETH_INTn",
 		"ETH_RESETn", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "",
+		"CAM_LED_EN", "CAM_POWER_EN", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
 };
 
@@ -307,6 +324,16 @@
 };
 
 &sm_pinctrl {
+	cam_gpio0_pmux: cam-gpio0-pmux {
+		groups = "SM_SPI2_SS0n";
+		function = "gpio";
+	};
+
+	cam_gpio1_pmux: cam-gpio1-pmux {
+		groups = "SM_SPI2_SS1n";
+		function = "gpio";
+	};
+
 	eth_int_pmux: eth-int-pmux {
 		groups = "SM_TDI";
 		function = "gpio";
