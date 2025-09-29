@@ -20,7 +20,7 @@ SRC_URI:append:grinn-astra-1680-ada = " \
 "
 
 SRC_URI:append:grinn-astra-1680-evb = " \
-	file://enable-led-gpio.cfg \
+	file://gpio-led.cfg \
 	file://eth.cfg \
 "
 
