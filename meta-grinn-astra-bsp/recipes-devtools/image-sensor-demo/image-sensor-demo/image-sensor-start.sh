@@ -68,6 +68,9 @@ get_platform() {
         *-ada)
             PLATFORM="ADA"
             ;;
+        *-sbc)
+            PLATFORM="SBC"
+            ;;
         *)
             PLATFORM="none"
             ;;
@@ -118,6 +121,14 @@ enable_sensor() {
             fi
 
             EN_STATE="0"
+            ;;
+        SBC)
+            if [ "$CSI_SEL" = "CSI0" ]; then
+                LED_GPIO="CAM_LED_EN"
+                PWR_GPIO="CAM_POWER_EN"
+                EN_STATE="1"
+                DO_ENABLE="true"
+            fi
             ;;
         *)
             echo "Unknown platform - cannot enable sensor"
