@@ -80,6 +80,109 @@
 			default-state = "off";
 		};
 	};
+
+	soc {
+		isp_vsi_subdev: isp_vsi_subdev {
+			id = <0>;
+			status = "okay";
+			compatible = "verisilicon,isp";
+
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_subdev_ep0: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&isp_vsi_video_ep0>;
+					};
+				};
+
+				port@2 {
+					reg = <2>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_subdev_ep1: endpoint@2 {
+						reg = <2>;
+						remote-endpoint = <&isp_vsi_video_ep1>;
+					};
+				};
+
+				port@3 {
+					reg = <3>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_subdev_ep2: endpoint@3 {
+						reg = <3>;
+						remote-endpoint = <&isp_vsi_video_ep2>;
+					};
+				};
+
+				port@4 {
+					reg = <4>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_subdev_ep3: endpoint@4 {
+						reg = <4>;
+						remote-endpoint = <&isp_vsi_video_ep3>;
+					};
+				};
+			};
+		};
+
+		isp_vsi_video: isp_vsi_video {
+			status = "okay";
+			compatible = "verisilicon,video";
+
+			ports {
+				#address-cells = <1>;
+				#size-cells = <0>;
+
+				port@0 {
+					reg = <0>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_video_ep0: endpoint@0 {
+						reg = <0>;
+						remote-endpoint = <&isp_vsi_subdev_ep0>;
+					};
+				};
+
+				port@1 {
+					reg = <1>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_video_ep1: endpoint@1 {
+						reg = <1>;
+						remote-endpoint = <&isp_vsi_subdev_ep1>;
+					};
+				};
+
+				port@2 {
+					reg = <2>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_video_ep2: endpoint@2 {
+						reg = <2>;
+						remote-endpoint = <&isp_vsi_subdev_ep2>;
+					};
+				};
+
+				port@3 {
+					reg = <3>;
+					#address-cells = <1>;
+					#size-cells = <0>;
+					isp_vsi_video_ep3: endpoint@3 {
+						reg = <3>;
+						remote-endpoint = <&isp_vsi_subdev_ep3>;
+					};
+				};
+			};
+		};
+	};
 };
 
 &aout {
@@ -219,6 +322,30 @@
 	pinctrl-0 = <&i2c0_pmux>;
 	clock-frequency = <100000>;
 	no-irq-suspend;
+};
+
+&isp {
+	status = "okay";
+};
+
+&isp_be {
+	status = "okay";
+};
+
+&isp_scaler {
+	status = "okay";
+};
+
+&isp_vsi {
+	status = "okay";
+};
+
+&isp_vsi_mipi {
+	status = "okay";
+};
+
+&isp_vsi_vb {
+	status = "okay";
 };
 
 &mc_dfc {
