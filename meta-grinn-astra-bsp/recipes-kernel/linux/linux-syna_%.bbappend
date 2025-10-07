@@ -1,10 +1,12 @@
 BOARD_PREFIX = "grinn-astra-1680"
 FILES_SOM = "${BOARD_PREFIX}-som"
+FILES_COMMON = "${BOARD_PREFIX}-common"
 FILES_ADA = "${BOARD_PREFIX}-ada"
 FILES_EVB = "${BOARD_PREFIX}-evb"
 FILES_SBC = "${BOARD_PREFIX}-sbc"
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${FILES_SOM}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${FILES_COMMON}:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/${FILES_ADA}:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-evb := "${THISDIR}/${FILES_EVB}:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/${FILES_SBC}:"
@@ -13,6 +15,7 @@ DT_DIR = "${S}/arch/arm64/boot/dts/synaptics"
 
 SRC_URI:append = " \
 	file://${BOARD_PREFIX}-som.dtsi \
+	file://modem.cfg \
 	file://regulator.cfg \
 	file://0001-Add-sy20257-regulator.patch \
 "
