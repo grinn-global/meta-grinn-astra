@@ -1,5 +1,6 @@
 IMAGE_INSTALL:append = " \
 	image-sensor-demo \
+	terrasat-modem \
 "
 
 IMAGE_INSTALL:append:grinn-astra-1680-ada = " \
