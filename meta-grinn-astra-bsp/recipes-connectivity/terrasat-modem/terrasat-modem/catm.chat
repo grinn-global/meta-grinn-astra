@@ -1,0 +1,30 @@
+ABORT		BUSY
+ABORT		VOICE
+ABORT		"NO CARRIER"
+ABORT		"NO DIALTONE"
+ABORT		"NO DIAL TONE"
+ABORT		ERROR
+ABORT		"NO ANSWER"
+
+""		ATZ
+"%BOOTEV:0"	ATE1
+OK		AT%SETACFG=radiom.config.multi_rat_enable,true
+OK		AT%SETACFG=radiom.config.preferred_rat_list,none
+OK		AT%SETACFG=radiom.config.auto_preference_mode,none
+OK		AT%SETACFG=modem_apps.Mode.AutoConnectMode,false
+OK		AT%SETACFG=ntn.modem_pos.isValid,false
+
+OK		AT%RATACT="CATM","1"
+OK		AT%PDNSET=1,"data.mono","IP"
+
+OK		AT+CMEE=1
+OK		AT+CFUN=1
+OK		AT%CMATT=1
+
+OK		AT+CEREG?
+"+CEREG: 0,2"	"\d\d\d\d\d\d\d\d\d\d\d\d\d\d\d\c"
+OK		AT+CEREG?
+"+CEREG: 0,5"	"\d\c"
+OK		AT%PDNACT=1,1
+OK		AT%PDNRDP=1
+OK		ATD*99#

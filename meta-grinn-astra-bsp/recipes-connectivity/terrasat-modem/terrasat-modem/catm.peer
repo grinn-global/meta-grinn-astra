@@ -1,0 +1,9 @@
+/dev/modem 115200
+connect "/usr/sbin/chat -v -f /etc/chatscripts/catm"
+
+noipdefault
+usepeerdns
+defaultroute
+
+persist
+noauth
