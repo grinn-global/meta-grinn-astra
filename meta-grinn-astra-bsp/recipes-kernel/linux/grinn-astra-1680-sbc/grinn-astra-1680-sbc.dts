@@ -215,6 +215,21 @@
 		function = "gpio";
 	};
 
+	pcie_clkreq_pmux: pcie-clkreq-pmux {
+		groups = "I2S2_DI0";
+		function = "gpio";
+	};
+
+	pcie_rst_pmux: pcie-rst-pmux {
+		groups = "I2S2_DI3";
+		function = "gpio";
+	};
+
+	pcie_wake_pmux: pcie-wake-pmux {
+		groups = "I2S2_DI2";
+		function = "gpio";
+	};
+
 	user_button_pmux: user-button-pmux {
 		groups = "I2S1_DO3";
 		function = "gpio";
@@ -368,6 +383,17 @@
 	status = "okay";
 };
 
+&pcie_phy0 {
+	status = "okay";
+};
+
+&pcie0 {
+	status = "okay";
+	reset-gpios = <&porta 8 GPIO_ACTIVE_LOW>;
+	pinctrl-0 = <&pcie_clkreq_pmux>, <&pcie_rst_pmux>, <&pcie_wake_pmux>;
+	pinctrl-names = "default";
+};
+
 &pinctrl {
 	gmac0_pmux: gmac0-pmux {
 		groups = "RGMII_MDC", "RGMII_MDIO", "RGMII_TXC", "RGMII_TXD0",
@@ -397,7 +423,7 @@
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "USER_BUTTON",
+		"PCIE_RSTn", "PCIE_WAKEn", "", "PCIE_CLKREQn", "", "", "", "USER_BUTTON",
 		"", "", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
