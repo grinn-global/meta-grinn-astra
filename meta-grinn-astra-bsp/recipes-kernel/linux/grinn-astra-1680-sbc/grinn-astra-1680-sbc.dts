@@ -36,6 +36,14 @@
 	model = "Grinn AstraSBC-1680";
 	compatible = "grinn,grinn-astra-1680-sbc", "syna,dolphin";
 
+	wifi1_bt_disable: wifi1-bt-disable {
+		compatible = "syna,rfkill";
+		status = "okay";
+		bt-power-gpio = <&porta 12 GPIO_ACTIVE_HIGH>;
+		pinctrl-0 = <&wifi1_bt_disable_pmux>;
+		pinctrl-names = "default";
+	};
+
 	keys {
 		compatible = "gpio-keys";
 		status = "okay";
@@ -234,6 +242,11 @@
 		groups = "I2S1_DO3";
 		function = "gpio";
 	};
+
+	wifi1_bt_disable_pmux: wifi1-bt-disable-pmux {
+		groups = "I2S2_MCLK";
+		function = "gpio";
+	};
 };
 
 &axi_mc0 {
@@ -423,7 +436,7 @@
 &porta {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"PCIE_RSTn", "PCIE_WAKEn", "", "PCIE_CLKREQn", "", "", "", "USER_BUTTON",
+		"PCIE_RSTn", "PCIE_WAKEn", "", "PCIE_CLKREQn", "WIFI1_BT_DISABLEn", "", "", "USER_BUTTON",
 		"", "", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
@@ -496,6 +509,12 @@
 		groups = "SM_TDO";
 		function = "gpio";
 	};
+
+	uart2_pmux: uart2-pmux {
+		groups = "SM_SPI2_SS2n", "SM_SPI2_SS3n", "SM_SPI2_SDI", "SM_SPI2_SDO";
+		function = "uart2";
+		drive-strength = <3>;
+	};
 };
 
 &tsp {
@@ -504,6 +523,12 @@
 
 &uart0 {
 	status = "okay";
+};
+
+&uart2 {
+	status = "okay";
+	pinctrl-0 = <&uart2_pmux>;
+	pinctrl-names = "default";
 };
 
 &usb_phy0  {
