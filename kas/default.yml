@@ -1,0 +1,101 @@
+header:
+  version: 19
+
+distro: poky
+target: astra-media
+machine: unset
+
+local_conf_header:
+  meta-grinn-astra: |
+    PACKAGE_CLASSES ?= "package_deb"
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+    USER_CLASSES ?= "buildstats"
+    PATCHRESOLVE = "noop"
+
+    BB_DISKMON_DIRS ??= "\
+        STOPTASKS,${TMPDIR},1G,100K \
+        STOPTASKS,${DL_DIR},1G,100K \
+        STOPTASKS,${SSTATE_DIR},1G,100K \
+        STOPTASKS,/tmp,100M,100K \
+        HALT,${TMPDIR},100M,1K \
+        HALT,${DL_DIR},100M,1K \
+        HALT,${SSTATE_DIR},100M,1K \
+        HALT,/tmp,10M,1K"
+
+    CONF_VERSION = "2"
+    LICENSE_FLAGS_ACCEPTED = "commercial Synaptics-EULA"
+    DISTRO_FEATURES:remove = "x11 3g nfc"
+    DISTRO_FEATURES_NATIVESDK:remove = "x11"
+    SYNA_SDK_REVISION = ""
+    INHERIT += "image-buildinfo"
+    IMAGE_BUILDINFO_VARS:append = " SYNA_SDK_REVISION"
+
+    DISTRO_FEATURES:append = " systemd sysvinit"
+    VIRTUAL-RUNTIME_init_manager = "systemd"
+    DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
+    VIRTUAL-RUNTIME_initscripts = ""
+
+    INITRAMFS_IMAGE_BUNDLE = "1"
+    INITRAMFS_IMAGE = "core-image-initramfs-boot"
+
+    OPTEE_TA_ENC= "prod"
+
+    PACKAGE_FEED_URIS ?= "https://astra-packages.synaptics.com/${ASTRA_VERSION}"
+    EXTRA_IMAGE_FEATURES += " package-management "
+
+    IMAGE_FSTYPES += " synaimg ext4 ext4.gz"
+
+bblayers_conf_header:
+  meta-grinn-astra: |
+    POKY_BBLAYERS_CONF_VERSION = "2"
+    BBPATH = "${TOPDIR}"
+    BBFILES ?= ""
+
+repos:
+  poky:
+    url: https://git.yoctoproject.org/poky
+    commit: 1e0d58c53b7d9c3feb631e46666ae7a3e3614253
+    layers:
+      meta:
+      meta-poky:
+      meta-yocto-bsp:
+
+  meta-openembedded:
+    url: https://github.com/openembedded/meta-openembedded
+    commit: 8bb16533532b6abc2eded7d9961ab2a108fd7a5b
+    layers:
+      meta-oe:
+      meta-python:
+      meta-multimedia:
+      meta-networking:
+
+  meta-browser:
+    url: https://github.com/OSSystems/meta-browser
+    commit: 01eca11a006d1e84f9370f9a094104e3ee72a848
+    layers:
+      meta-chromium:
+
+  meta-clang:
+    url: https://github.com/kraj/meta-clang
+    commit: 4711dd7d3e0b072e40d04aa3f75f7c1ca38e1ff8
+
+  meta-lts-mixins:
+    url: https://git.yoctoproject.org/meta-lts-mixins
+    commit: 9bc06b6a761f28cf82aae8a99afe27ed5e2ce4c9
+  
+  meta-qt5:
+    url: https://code.qt.io/yocto/meta-qt5
+    commit: 644ebf220245bdc06e7696ccc90acc97a0dd2566
+
+  meta-swupdate:
+    url: https://github.com/sbabic/meta-swupdate
+    commit: 6918be849ddf1fed5b7a0173e51c7a136e8d4101
+
+  meta-synaptics:
+    url: https://github.com/synaptics-astra/meta-synaptics
+    commit: b57815f78a819e8115717c74c8b50d86c82cf78f
+
+  meta-grinn-astra:
+    layers:
+      meta-grinn-astra-bsp:
+      meta-grinn-astra-fixes:
