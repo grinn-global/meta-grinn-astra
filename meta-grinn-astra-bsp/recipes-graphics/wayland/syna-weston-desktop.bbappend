@@ -1,15 +1,11 @@
-ASTRA_ADA = "grinn-astra-1680-ada"
-ASTRA_EVB = "grinn-astra-1680-evb"
-ASTRA_SBC = "grinn-astra-1680-sbc"
+GRINN_ASTRA_1680 = "grinn-astra-1680-common"
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/${ASTRA_ADA}:"
-FILESEXTRAPATHS:prepend := "${THISDIR}/${ASTRA_EVB}:"
-FILESEXTRAPATHS:prepend := "${THISDIR}/${ASTRA_SBC}:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/${GRINN_ASTRA_1680}:"
 
 SRC_URI:append = " \
-	file://weston-${MACHINE}.ini \
+	file://weston-${GRINN_ASTRA_1680}.ini \
 "
 
-do_install:prepend() {
-	cp -r ${WORKDIR}/weston-${MACHINE}.ini ${S}/
+do_install:prepend:grinn-astra-1680() {
+	cp -r ${WORKDIR}/weston-${GRINN_ASTRA_1680}.ini ${S}/weston-${MACHINE}.ini
 }
