@@ -10,3 +10,7 @@ IMAGE_INSTALL:append:grinn-astra-1680-ada = " \
 IMAGE_INSTALL:append:grinn-astra-1680-evb = " \
 	dmic-demo \
 "
+
+IMAGE_INSTALL:append:grinn-astra-1680-sbc = " \
+	i2c-utils-optiga-trust \
+"
