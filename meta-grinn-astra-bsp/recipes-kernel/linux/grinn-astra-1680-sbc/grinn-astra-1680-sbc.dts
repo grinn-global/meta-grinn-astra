@@ -44,6 +44,14 @@
 		pinctrl-names = "default";
 	};
 
+	bcmdhd_wlan: bcmdhd-wlan {
+		compatible = "android,bcmdhd_wlan";
+		status = "okay";
+		wl_host_wake = <&porta 17 GPIO_ACTIVE_HIGH>;
+		pinctrl-0 = <&sdio_wake_pmux>;
+		pinctrl-names = "default";
+	};
+
 	keys {
 		compatible = "gpio-keys";
 		status = "okay";
@@ -87,6 +95,13 @@
 			linux,default-trigger = "mmc0";
 			default-state = "off";
 		};
+	};
+
+	sdhci1_pwrseq: sdhci1-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&wifi1_wf_disable_pmux>;
+		reset-gpios = <&porta 7 GPIO_ACTIVE_LOW>;
 	};
 
 	soc {
@@ -238,6 +253,11 @@
 		function = "gpio";
 	};
 
+	sdio_wake_pmux: sdio-wake-pmux {
+		groups = "I2S1_DO1";
+		function = "gpio";
+	};
+
 	user_button_pmux: user-button-pmux {
 		groups = "I2S1_DO3";
 		function = "gpio";
@@ -245,6 +265,11 @@
 
 	wifi1_bt_disable_pmux: wifi1-bt-disable-pmux {
 		groups = "I2S2_BCLK";
+		function = "gpio";
+	};
+
+	wifi1_wf_disable_pmux: wifi1-wf-disable-pmux {
+		groups = "I2S2_MCLK";
 		function = "gpio";
 	};
 };
@@ -451,9 +476,9 @@
 
 &porta {
 	gpio-line-names =
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "WIFI1_WF_DISABLEn",
 		"PCIE_RSTn", "PCIE_WAKEn", "", "PCIE_CLKREQn", "WIFI1_BT_DISABLEn", "", "", "USER_BUTTON",
-		"", "", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
+		"", "SDIO_WAKEn", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
 
@@ -495,6 +520,19 @@
 	dll-calibration;
 	pad-sp = /bits/ 8 <14>;
 	pad-sn = /bits/ 8 <14>;
+};
+
+&sdhci1 {
+	status = "okay";
+	no-mmc;
+	no-sd;
+	non-removable;
+	disable-wp;
+	keep-power-in-suspend;
+	broken-cd;
+	sd-uhs-ddr50;
+	max-frequency = <25000000>;
+	mmc-pwrseq = <&sdhci1_pwrseq>;
 };
 
 &shm {
