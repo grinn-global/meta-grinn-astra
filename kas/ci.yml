@@ -1,5 +1,5 @@
 header:
-  version: 19
+  version: 14
 
 local_conf_header:
   ci: |

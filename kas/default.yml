@@ -1,5 +1,5 @@
 header:
-  version: 19
+  version: 14
 
 distro: poky
 target: astra-media
