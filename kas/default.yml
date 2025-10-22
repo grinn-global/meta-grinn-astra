@@ -84,7 +84,7 @@ repos:
     commit: 9bc06b6a761f28cf82aae8a99afe27ed5e2ce4c9
   
   meta-qt5:
-    url: https://code.qt.io/yocto/meta-qt5
+    url: https://github.com/meta-qt5/meta-qt5
     commit: 644ebf220245bdc06e7696ccc90acc97a0dd2566
 
   meta-swupdate:
