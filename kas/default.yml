@@ -93,7 +93,7 @@ repos:
 
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
-    commit: b57815f78a819e8115717c74c8b50d86c82cf78f
+    commit: 5cc32c89b07c58c5d00ea6f39877f9b80cd07c46
 
   meta-grinn-astra:
     layers:
