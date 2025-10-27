@@ -490,18 +490,21 @@
 &drm {
 	status = "okay";
 
-	/* Supported Modes:	0 - HDMI only
+	/* Supported Modes:	0 - HDMI Only
 	 *			1 - MIPI Only
 	 *			2 - Dual Mode PIP
 	 *
 	 * Supported types:	0 - HDMI
-	 * 		  	3 - MIPI-DSI
+	 *			3 - MIPI-DSI
 	 */
 	disp-mode = <0>;
-	disp1-res-id = <24>;
+	disp1-res-id = <61>;
 	disp1-type = <0>;
 	disp2-res-id = <102>;
 	disp2-type = <3>;
+	sw_partition = <14>;
+	devnum = <0>;
+	hw_partition = <0>; //0 - Default; 4 - 7 For GP1 to GP4
 
 	hdmi_tx {
 		status= "okay";
