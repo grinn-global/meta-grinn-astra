@@ -2,6 +2,7 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${PN}:"
 
 SRC_URI:append = " \
 	file://09-swupdate-args \
+	file://astra-swupdate.cfg \
 	file://demo.cert.pem \
 	file://swupdate.cfg.custom \
 "
