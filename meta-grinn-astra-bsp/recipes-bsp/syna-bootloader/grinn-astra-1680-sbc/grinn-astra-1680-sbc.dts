@@ -60,6 +60,11 @@
 		groups = "TW0_SCL", "TW0_SDA";
 		function = "tw0";
 	};
+
+	hdmitx5v_pmux: hdmitx5v-pmux {
+		groups = "STS1_SD";
+		function = "gpio";
+	};
 };
 
 &CPU_SLEEP_0 {
@@ -79,6 +84,9 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pmux>;
 	clock-frequency = <100000>;
+	i2c-sda-hold-time-ns = <449>;
+	i2c-scl-rising-time-ns = <120>;
+	i2c-scl-falling-time-ns = <20>;
 };
 
 &gmac0 {
@@ -116,4 +124,19 @@
 
 &xhci0 {
 	status = "okay";
+};
+
+&drm {
+	status = "okay";
+	pinctrl-0 = <&hdmitx5v_pmux>;
+	pinctrl-names = "default";
+	hdtx5v-gpio = <&portb 5 GPIO_ACTIVE_HIGH>;
+
+	disp-mode = <0>;
+	disp1-res-id = <13>;
+	disp2-res-id = <102>;
+
+	hdmi_tx {
+		status= "okay";
+	};
 };
