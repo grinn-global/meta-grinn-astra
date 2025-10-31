@@ -141,7 +141,15 @@ CONFIG_HEXDUMP=y
 CONFIG_OF_LIBFDT_OVERLAY=y
 # CONFIG_EFI_LOADER is not set
 CONFIG_USE_IRQ_SYNA=y
-CONFIG_BACKLIGHT_GPIO=y
+
+#
+# Synaptics Fastboot Setup
+#
+CONFIG_DM_VIDEO=y
+CONFIG_VIDEO_SYNA=y
+CONFIG_PANEL_CFG="waveshare_rpi_800_480"
+CONFIG_USE_PREBOOT=y
+CONFIG_PREBOOT="show_logo;"
 
 #
 # Boot limit/count for altbootcmd
