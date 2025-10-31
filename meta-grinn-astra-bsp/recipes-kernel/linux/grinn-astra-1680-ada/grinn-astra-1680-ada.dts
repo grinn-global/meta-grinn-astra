@@ -375,18 +375,21 @@
 &drm {
 	status = "okay";
 
-	/* Supported Modes:	0 - HDMI only
+	/* Supported Modes:	0 - HDMI Only
 	 *			1 - MIPI Only
 	 *			2 - Dual Mode PIP
 	 *
 	 * Supported types:	0 - HDMI
-	 * 		  	3 - MIPI-DSI
+	 *			3 - MIPI-DSI
 	 */
 	disp-mode = <2>;
-	disp1-res-id = <24>;
+	disp1-res-id = <61>;
 	disp1-type = <0>;
 	disp2-res-id = <102>;
 	disp2-type = <3>;
+	sw_partition = <14>;
+	devnum = <0>;
+	hw_partition = <0>; //0 - Default; 4 - 7 For GP1 to GP4
 
 	dsi_panel {
 		status= "okay";
@@ -448,13 +451,13 @@
 		Byte_clk = <84090>;
 
 		/* COMMAND= Command for initialisation
-		*  Format - <CMD> <Payloadlength-n> <BYTE1> <...> <BYTEn>
-		*  Long write Ex: 39 04 FF 98 81 03
+		 * Format - <CMD> <Payloadlength-n> <BYTE1> <...> <BYTEn>
+		 * Long write Ex: 39 04 FF 98 81 03
 
-		*  Delay in micro seconds Command format: 0xFF <4BYTE delay>
-		*  Delay for 100ms(100000us => 0x000186A0)
-		*  	- FF A0 86 01 00
-		*/
+		 * Delay in micro seconds Command format: 0xFF <4BYTE delay>
+		 * Delay for 100ms(100000us => 0x000186A0)
+		 * 	- FF A0 86 01 00
+		 */
 		command = /bits/ 8 <0x29  0x06 0x10  0x02  0x03  0x00  0x00 0x00
 				0x29  0x06 0x64  0x01  0x0C  0x00  0x00 0x00
 				0x29  0x06 0x68  0x01  0x0C  0x00  0x00 0x00
