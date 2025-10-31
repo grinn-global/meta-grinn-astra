@@ -18,17 +18,17 @@ SRC_URI:append = " \
 	file://${ASTRA_SBC}_defconfig \
 "
 
-do_compile:prepend:grinn-astra-1680-ada() {
+do_configure:append:grinn-astra-1680-ada() {
 	cp ${WORKDIR}/${ASTRA_ADA}.dts ${DT_DIR}/dolphin-rdk.dts
 	cp ${WORKDIR}/${ASTRA_ADA}_defconfig ${CFG_DIR}/dolphin_suboot_defconfig
 }
 
-do_compile:prepend:grinn-astra-1680-evb() {
+do_configure:append:grinn-astra-1680-evb() {
 	cp ${WORKDIR}/${ASTRA_EVB}.dts ${DT_DIR}/dolphin-rdk.dts
 	cp ${WORKDIR}/${ASTRA_EVB}_defconfig ${CFG_DIR}/dolphin_suboot_defconfig
 }
 
-do_compile:prepend:grinn-astra-1680-sbc() {
+do_configure:append:grinn-astra-1680-sbc() {
 	cp ${WORKDIR}/${ASTRA_SBC}.dts ${DT_DIR}/dolphin-rdk.dts
 	cp ${WORKDIR}/${ASTRA_SBC}_defconfig ${CFG_DIR}/dolphin_suboot_defconfig
 }
