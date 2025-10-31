@@ -290,7 +290,7 @@
 	 * Supported types:	0 - HDMI
 	 *			3 - MIPI-DSI
 	 */
-	disp-mode = <0>;
+	disp-mode = <2>;
 	disp1-res-id = <61>;
 	disp1-type = <0>;
 	disp2-res-id = <102>;
@@ -298,6 +298,10 @@
 	sw_partition = <14>;
 	devnum = <0>;
 	hw_partition = <0>; //0 - Default; 4 - 7 For GP1 to GP4
+
+	dsi_panel {
+		status = "okay";
+	};
 
 	hdmi_tx {
 		status= "okay";
