@@ -45,6 +45,8 @@ local_conf_header:
 
     IMAGE_FSTYPES += " synaimg ext4 ext4.gz"
 
+    ENABLE_RESCUE_MODE = "0"
+
 bblayers_conf_header:
   meta-grinn-astra: |
     POKY_BBLAYERS_CONF_VERSION = "2"
