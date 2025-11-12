@@ -105,6 +105,16 @@
 	};
 };
 
+&cpu_opp_table {
+	/delete-node/ opp@2100000000;
+
+	opp@2100000000 {
+		opp-hz = /bits/ 64 <2100000000>;
+		opp-microvolt = <900000>;
+		clock-latency-ns = <12600000>;
+	};
+};
+
 &i2c1 {
 	status = "okay";
 	pinctrl-names = "default";
