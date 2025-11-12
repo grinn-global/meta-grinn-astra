@@ -1,0 +1,25 @@
+From 888e9588e3eba8143265e104dc0e5cb8f75fcf66 Mon Sep 17 00:00:00 2001
+From: Bartosz Bilas <b.bilas@grinn-global.com>
+Date: Wed, 12 Nov 2025 18:58:30 +0000
+Subject: [PATCH] drivers: regulator: sy8824x: remove supply name
+
+This is a standalone regulator so remove parent dependency.
+---
+ drivers/regulator/sy8824x.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/drivers/regulator/sy8824x.c b/drivers/regulator/sy8824x.c
+index f73f57f87727..6f0d4b75444f 100644
+--- a/drivers/regulator/sy8824x.c
++++ b/drivers/regulator/sy8824x.c
+@@ -92,7 +92,6 @@ static int sy8824_regulator_register(struct sy8824_device_info *di,
+ 	struct regulator_dev *rdev;
+ 
+ 	rdesc->name = "sy8824-reg";
+-	rdesc->supply_name = "vin";
+ 	rdesc->ops = &sy8824_regulator_ops;
+ 	rdesc->type = REGULATOR_VOLTAGE;
+ 	rdesc->n_voltages = cfg->vsel_count;
+-- 
+2.39.5
+
