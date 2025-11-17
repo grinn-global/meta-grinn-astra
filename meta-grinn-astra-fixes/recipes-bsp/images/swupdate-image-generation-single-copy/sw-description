@@ -1,0 +1,53 @@
+software =
+{
+    version = "@@SYNA_SDK_VERSION@@";
+    description = "SWUpdate package for Astra platform with rescue mode enabled";
+
+    @@MACHINE@@ = {
+        hardware-compatibility: [ "1.0" ];
+
+        images: (
+            {
+                filename = "preboot.subimg";
+                device = "/dev/mmcblk0boot0";
+                sha256 = "$swupdate_get_sha256(preboot.subimg)";
+            },
+            {
+                filename = "key.subimg";
+                device = "/dev/mmcblk0p3";
+                sha256 = "$swupdate_get_sha256(key.subimg)";
+            },
+            {
+                filename = "tzk.subimg";
+                device = "/dev/mmcblk0p4";
+                sha256 = "$swupdate_get_sha256(tzk.subimg)";
+            },
+            {
+                filename = "bl.subimg";
+                device = "/dev/mmcblk0p5";
+                sha256 = "$swupdate_get_sha256(bl.subimg)";
+            },
+            {
+                filename = "boot.subimg";
+                device = "/dev/mmcblk0p6";
+                sha256 = "$swupdate_get_sha256(boot.subimg)";
+            },
+            {
+                filename = "firmware.subimg";
+                device = "/dev/mmcblk0p7";
+                sha256 = "$swupdate_get_sha256(firmware.subimg)";
+            },
+            {
+                filename = "@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz"
+                compressed = true;
+                device = "/dev/mmcblk0p8";
+                sha256 = "$swupdate_get_sha256(@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz)";
+            },
+            {
+                filename = "fastlogo.subimg";
+                device = "/dev/mmcblk0p9";
+                sha256 = "$swupdate_get_sha256(fastlogo.subimg)";
+            }
+        );
+    }
+}
