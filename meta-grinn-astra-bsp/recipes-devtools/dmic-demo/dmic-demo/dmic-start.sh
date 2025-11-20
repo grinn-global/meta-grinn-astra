@@ -1,6 +1,5 @@
 #!/bin/sh
 
-PLATFORM="none"
 DMIC_HW="none"
 HDMI_HW="none"
 REC_FILE_NAME="dmic_rec"
@@ -26,23 +25,6 @@ get_sink_selector() {
             echo "Invalid DMIC sink selected!"
             show_usage
             exit 1
-            ;;
-    esac
-}
-
-get_platform() {
-    local HOSTNAME
-    HOSTNAME=$(uname -n)
-
-    case "$HOSTNAME" in
-        *-evb)
-            PLATFORM="EVB"
-            ;;
-        *-ada)
-            PLATFORM="ADA"
-            ;;
-        *)
-            PLATFORM="none"
             ;;
     esac
 }
@@ -79,14 +61,6 @@ start_hdmi_pipeline() {
         audio/x-raw,format=S32LE,rate=48000,channels=2 ! \
         alsasink device=hw:$HDMI_HW sync=false async=false buffer-time=40000 latency-time=10000
 }
-
-get_platform
-echo "PLATFORM=$PLATFORM"
-
-if [ "$PLATFORM" != "EVB" ]; then
-    echo "Only the EVB platform is supported!"
-    exit 1
-fi
 
 ARG=$1
 
