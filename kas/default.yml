@@ -7,6 +7,7 @@ machine: unset
 
 local_conf_header:
   meta-grinn-astra: |
+    DISTRO ?= "poky"
     PACKAGE_CLASSES ?= "package_deb"
     EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
     USER_CLASSES ?= "buildstats"
@@ -24,28 +25,35 @@ local_conf_header:
 
     CONF_VERSION = "2"
     LICENSE_FLAGS_ACCEPTED = "commercial Synaptics-EULA"
-    DISTRO_FEATURES:remove = "x11 3g nfc"
-    DISTRO_FEATURES_NATIVESDK:remove = "x11"
+    DISTRO_FEATURES:remove = "3g nfc"
     SYNA_SDK_REVISION = ""
     INHERIT += "image-buildinfo"
     IMAGE_BUILDINFO_VARS:append = " SYNA_SDK_REVISION"
 
-    DISTRO_FEATURES:append = " systemd sysvinit"
-    VIRTUAL-RUNTIME_init_manager = "systemd"
-    DISTRO_FEATURES_BACKFILL_CONSIDERED += "sysvinit"
-    VIRTUAL-RUNTIME_initscripts = ""
+    INIT_MANAGER = "systemd"
+    ROOT_HOME = "home/root"
 
     INITRAMFS_IMAGE_BUNDLE = "1"
     INITRAMFS_IMAGE = "core-image-initramfs-boot"
 
-    OPTEE_TA_ENC= "prod"
+    OPTEE_TA_ENC = "prod"
 
     PACKAGE_FEED_URIS ?= "https://astra-packages.synaptics.com/${ASTRA_VERSION}"
     EXTRA_IMAGE_FEATURES += " package-management "
 
+    ENABLE_RESCUE_MODE = "0"
+
     IMAGE_FSTYPES += " synaimg ext4 ext4.gz"
 
-    ENABLE_RESCUE_MODE = "0"
+    GLIBC_GENERATE_LOCALES = "zh_CN.UTF-8 en_GB.UTF-8 en_US.UTF-8"
+    IMAGE_LINGUAS = "zh-cn en-gb en-us"
+
+    PREFERRED_VERSION_android-tools = "5.1.1.r37"
+    PREFERRED_VERSION_android-tools-native = "5.1.1.r37"
+
+    DISTRO_FEATURES:append = " wayland"
+    DISTRO_FEATURES:remove = " x11"
+    DISTRO_FEATURES_NATIVESDK:remove = "x11"
 
 bblayers_conf_header:
   meta-grinn-astra: |
