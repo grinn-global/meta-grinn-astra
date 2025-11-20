@@ -16,23 +16,6 @@ get_hdmi_rx_device() {
     ')"
 }
 
-get_platform() {
-    local HOSTNAME
-    HOSTNAME=$(uname -n)
-
-    case "$HOSTNAME" in
-        *-evb)
-            PLATFORM="EVB"
-            ;;
-        *-ada)
-            PLATFORM="ADA"
-            ;;
-        *)
-            PLATFORM="none"
-            ;;
-    esac
-}
-
 start_pipeline() {
     if [ "$HDMI_RX_DEV" = "none" ]; then
         echo "HDMI RX device not available - cannot start pipeline"
@@ -43,14 +26,6 @@ start_pipeline() {
 }
 
 get_hdmi_rx_device
-get_platform
-
-echo "PLATFORM=$PLATFORM"
-
-if [ "$PLATFORM" != "ADA" ]; then
-    echo "Only the ADA platform is supported!"
-    exit 1
-fi
 
 echo "HDMI_RX_DEV=$HDMI_RX_DEV"
 
