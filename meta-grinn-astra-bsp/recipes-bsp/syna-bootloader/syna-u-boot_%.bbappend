@@ -6,8 +6,8 @@ FILESEXTRAPATHS:prepend := "${THISDIR}/${ASTRA_ADA}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${ASTRA_EVB}:"
 FILESEXTRAPATHS:prepend := "${THISDIR}/${ASTRA_SBC}:"
 
-DT_DIR = "${S}/boot/u-boot_2019_10/arch/arm/dts"
-CFG_DIR = "${S}/boot/u-boot_2019_10/configs"
+DT_DIR = "${S}/boot/u-boot/arch/arm/dts"
+CFG_DIR = "${S}/boot/u-boot/configs"
 
 SRC_URI:append = " \
 	file://${ASTRA_ADA}.dts \
