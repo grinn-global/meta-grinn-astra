@@ -25,7 +25,7 @@
 /dts-v1/;
 
 #include "dolphin.dtsi"
-#include "include/dt-bindings/gpio/gpio.h"
+#include <dt-bindings/gpio/gpio.h>
 
 / {
 	model = "Grinn Astra 1680 evb";
