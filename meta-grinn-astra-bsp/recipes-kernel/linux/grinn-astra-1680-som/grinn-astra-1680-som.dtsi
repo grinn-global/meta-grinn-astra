@@ -121,7 +121,7 @@
 	pinctrl-0 = <&i2c1_pmux>;
 
 	vcpu: regulator@60 {
-		compatible = "silergy,sy20257n";
+		compatible = "silergy,sy8827n";
 		reg = <0x60>;
 		status = "okay";
 		regulator-boot-on;
@@ -139,7 +139,7 @@
 	pinctrl-0 = <&i2c2_pmux>;
 
 	vcore: regulator@60 {
-		compatible = "silergy,sy20257n";
+		compatible = "silergy,sy8827n";
 		reg = <0x60>;
 		status = "okay";
 		regulator-boot-on;

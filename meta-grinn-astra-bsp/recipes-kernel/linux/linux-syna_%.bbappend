@@ -17,8 +17,6 @@ SRC_URI:append = " \
 	file://${BOARD_PREFIX}-som.dtsi \
 	file://modem.cfg \
 	file://regulator.cfg \
-	file://0001-Add-sy20257-regulator.patch \
-	file://0002-drivers-regulator-sy8824x-remove-supply-name.patch \
 "
 
 SRC_URI:append:grinn-astra-1680-ada = " \
