@@ -56,7 +56,7 @@ bblayers_conf_header:
 repos:
   poky:
     url: https://git.yoctoproject.org/poky
-    commit: 1e0d58c53b7d9c3feb631e46666ae7a3e3614253
+    commit: bab0f9f62af9af580744948dd3240f648a99879a
     layers:
       meta:
       meta-poky:
@@ -64,7 +64,7 @@ repos:
 
   meta-openembedded:
     url: https://github.com/openembedded/meta-openembedded
-    commit: 8bb16533532b6abc2eded7d9961ab2a108fd7a5b
+    commit: b8d1a14f7f3b76457c36752202ea7ae5881b6654
     layers:
       meta-oe:
       meta-python:
@@ -73,29 +73,29 @@ repos:
 
   meta-browser:
     url: https://github.com/OSSystems/meta-browser
-    commit: 01eca11a006d1e84f9370f9a094104e3ee72a848
+    commit: 0c43dd66e951624415516bdefcd7a7a8a641fbc3
     layers:
       meta-chromium:
 
   meta-clang:
     url: https://github.com/kraj/meta-clang
-    commit: 4711dd7d3e0b072e40d04aa3f75f7c1ca38e1ff8
+    commit: 9fbfa9db33131abdf3870a94f00199eb53e276e5
 
   meta-lts-mixins:
-    url: https://git.yoctoproject.org/meta-lts-mixins
-    commit: 9bc06b6a761f28cf82aae8a99afe27ed5e2ce4c9
+    url: https://github.com/jusst-engineering/meta-lts-mixins
+    commit: 1793a1b8fc92cf8688c72b7fd4181e3a2f5ade55
 
   meta-qt5:
     url: https://github.com/meta-qt5/meta-qt5
-    commit: 644ebf220245bdc06e7696ccc90acc97a0dd2566
+    commit: eb828418264a49b8d00035cb3d7b12fcea3be801
 
   meta-swupdate:
     url: https://github.com/sbabic/meta-swupdate
-    commit: 6918be849ddf1fed5b7a0173e51c7a136e8d4101
+    commit: 4a65b1ed36c0b6ee4942d5f23c4984552b17cfe6
 
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
-    commit: 5cc32c89b07c58c5d00ea6f39877f9b80cd07c46
+    commit: 263306adc08c8177940aabbce67375510ddb75c3
 
   meta-grinn-astra:
     layers:
