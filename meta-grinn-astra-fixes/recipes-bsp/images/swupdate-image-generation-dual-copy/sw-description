@@ -11,6 +11,7 @@ software =
                 images: (
                     {
                         filename = "preboot.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0boot0";
                         sha256 = "$swupdate_get_sha256(preboot.subimg)";
                         name = "PREBOOT_A";
@@ -19,6 +20,7 @@ software =
                     },
                     {
                         filename = "key.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p2";
                         sha256 = "$swupdate_get_sha256(key.subimg)";
                         name = "KEY_A";
@@ -27,6 +29,7 @@ software =
                     },
                     {
                         filename = "tzk.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p3";
                         sha256 = "$swupdate_get_sha256(tzk.subimg)";
                         name = "TZKA_A";
@@ -35,6 +38,7 @@ software =
                     },
                     {
                         filename = "bl.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p6";
                         sha256 = "$swupdate_get_sha256(bl.subimg)";
                         name = "BL_A";
@@ -43,6 +47,7 @@ software =
                     },
                     {
                         filename = "boot.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p8";
                         sha256 = "$swupdate_get_sha256(boot.subimg)";
                         name = "boot_A";
@@ -51,6 +56,7 @@ software =
                     },
                     {
                         filename = "firmware.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p10";
                         sha256 = "$swupdate_get_sha256(firmware.subimg)";
                         name = "FIRMWARE_A";
@@ -59,7 +65,8 @@ software =
                     },
                     {
                         filename = "@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz";
-                        compressed = true;
+                        type = "raw";
+                        compressed = "zlib";
                         device = "/dev/mmcblk0p12";
                         sha256 = "$swupdate_get_sha256(@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz)";
                         name = "rootfs_A";
@@ -68,6 +75,7 @@ software =
                     },
                     {
                         filename = "fastlogo.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p14";
                         sha256 = "$swupdate_get_sha256(fastlogo.subimg)";
                         name = "FASTLOGO_A";
@@ -88,6 +96,7 @@ software =
                 images: (
                     {
                         filename = "preboot.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0boot1";
                         sha256 = "$swupdate_get_sha256(preboot.subimg)";
                         name = "PREBOOT_B";
@@ -96,6 +105,7 @@ software =
                     },
                     {
                         filename = "key.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p4";
                         sha256 = "$swupdate_get_sha256(key.subimg)";
                         name = "KEY_B";
@@ -104,6 +114,7 @@ software =
                     },
                     {
                         filename = "tzk.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p5";
                         sha256 = "$swupdate_get_sha256(tzk.subimg)";
                         name = "TZKA_B";
@@ -112,6 +123,7 @@ software =
                     },
                     {
                         filename = "bl.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p7";
                         sha256 = "$swupdate_get_sha256(bl.subimg)";
                         name = "BL_B";
@@ -120,6 +132,7 @@ software =
                     },
                     {
                         filename = "boot.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p9";
                         sha256 = "$swupdate_get_sha256(boot.subimg)";
                         name = "boot_B";
@@ -128,6 +141,7 @@ software =
                     },
                     {
                         filename = "firmware.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p11";
                         sha256 = "$swupdate_get_sha256(firmware.subimg)";
                         name = "FIRMWARE_B";
@@ -136,7 +150,8 @@ software =
                     },
                     {
                         filename = "@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz";
-                        compressed = true;
+                        type = "raw";
+                        compressed = "zlib";
                         device = "/dev/mmcblk0p13";
                         sha256 = "$swupdate_get_sha256(@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz)";
                         name = "rootfs_B";
@@ -145,6 +160,7 @@ software =
                     },
                     {
                         filename = "fastlogo.subimg";
+                        type = "raw";
                         device = "/dev/mmcblk0p15";
                         sha256 = "$swupdate_get_sha256(fastlogo.subimg)";
                         name = "FASTLOGO_B";
@@ -163,4 +179,3 @@ software =
         }
     }
 }
-
