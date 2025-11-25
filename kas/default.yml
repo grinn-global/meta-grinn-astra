@@ -55,6 +55,8 @@ local_conf_header:
     DISTRO_FEATURES:remove = " x11"
     DISTRO_FEATURES_NATIVESDK:remove = "x11"
 
+    PREFERRED_VERSION_libgpiod = "1.6.4"
+
 bblayers_conf_header:
   meta-grinn-astra: |
     POKY_BBLAYERS_CONF_VERSION = "2"
