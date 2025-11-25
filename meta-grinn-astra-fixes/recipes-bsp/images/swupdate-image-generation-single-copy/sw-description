@@ -44,11 +44,11 @@ software =
                 sha256 = "$swupdate_get_sha256(firmware.subimg)";
             },
             {
-                filename = "@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz"
+                filename = "@@SYNA_IMAGE_NAME@@-@@MACHINE@@.rootfs.ext4.gz"
                 type = "raw";
                 compressed = "zlib";
                 device = "/dev/mmcblk0p8";
-                sha256 = "$swupdate_get_sha256(@@SYNA_IMAGE_NAME@@-@@MACHINE@@.ext4.gz)";
+                sha256 = "$swupdate_get_sha256(@@SYNA_IMAGE_NAME@@-@@MACHINE@@.rootfs.ext4.gz)";
             },
             {
                 filename = "fastlogo.subimg";

@@ -49,7 +49,7 @@ SWUPDATE_IMAGES_FSTYPES[fastlogo] = ".subimg"
 
 python () {
     image = d.expand('${SYNA_IMAGE_NAME}-${MACHINE}')
-    d.setVarFlag('SWUPDATE_IMAGES_FSTYPES', image, '.ext4.gz')
+    d.setVarFlag('SWUPDATE_IMAGES_FSTYPES', image, '.rootfs.ext4.gz')
 }
 
 inherit swupdate
