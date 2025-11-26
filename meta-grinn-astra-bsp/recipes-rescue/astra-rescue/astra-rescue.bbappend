@@ -2,7 +2,7 @@ do_install() {
 	install -d ${D}/rescue
 
 	KERNEL_FILE="${DEPLOY_DIR_IMAGE}/Image-${MACHINE}.bin"
-	INITRAMFS_FILE="${DEPLOY_DIR_IMAGE}/swupdate-image-${MACHINE}.cpio.gz"
+	INITRAMFS_FILE=$(find ${DEPLOY_DIR_IMAGE} -name "swupdate-image-${MACHINE}.rootfs-*.cpio.gz" | head -n 1)
 	DTB_FILE=$(find ${DEPLOY_DIR_IMAGE} -type f -name "*.dtb" \
 		 | grep -E "(-rdk-|grinn-astra-1680-(ada|evb|sbc))")
 
