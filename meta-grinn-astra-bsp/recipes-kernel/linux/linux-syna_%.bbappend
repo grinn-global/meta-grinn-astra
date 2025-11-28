@@ -17,6 +17,7 @@ SRC_URI:append = " \
 	file://${BOARD_PREFIX}-som.dtsi \
 	file://modem.cfg \
 	file://regulator.cfg \
+	file://0001-linux-mac-add-support-for-TXC-90-degree-shift.patch \
 "
 
 SRC_URI:append:grinn-astra-1680-ada = " \
