@@ -329,6 +329,7 @@
 	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
 	snps,reset-delays-us = <0 10000 50000>;
 	snps,reset-active-low;
+	syna,txc-90deg;
 };
 
 &gpu {
@@ -388,6 +389,18 @@
 		reg = <3>;
 		compatible = "ethernet-phy-ieee802.3-c22";
 		device_type = "ethernet-phy";
+		rxc-skew-ps = <1500>;
+		rxdv-skew-ps = <420>;
+		rxd0-skew-ps = <420>;
+		rxd1-skew-ps = <420>;
+		rxd2-skew-ps = <420>;
+		rxd3-skew-ps = <420>;
+		txc-skew-ps = <900>;
+		txen-skew-ps = <420>;
+		txd0-skew-ps = <420>;
+		txd1-skew-ps = <420>;
+		txd2-skew-ps = <420>;
+		txd3-skew-ps = <420>;
 	};
 };
 
