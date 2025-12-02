@@ -1,0 +1,38 @@
+From 9a73d7e72e690839b25f5e5902ecc7fc02ef10fa Mon Sep 17 00:00:00 2001
+From: Mateusz Koza <mateusz.koza@grinn-global.com>
+Date: Tue, 2 Dec 2025 15:09:02 +0100
+Subject: [PATCH] uboot mac add support for TXC 90-degree shift
+
+---
+ drivers/net/designware.c | 8 ++++++++
+ 1 file changed, 8 insertions(+)
+
+diff --git a/drivers/net/designware.c b/drivers/net/designware.c
+index 2fde769981..b58dc1f95c 100644
+--- a/drivers/net/designware.c
++++ b/drivers/net/designware.c
+@@ -693,6 +693,9 @@ static int designware_eth_bind(struct udevice *dev)
+ 	return 0;
+ }
+ 
++#define RGMII_TXC_90DEG_SEL	0xF7EA0A04
++#define RGMII_TXC_90DEG_ENABLE	0x1
++
+ int designware_eth_probe(struct udevice *dev)
+ {
+ 	struct eth_pdata *pdata = dev_get_plat(dev);
+@@ -701,6 +704,11 @@ int designware_eth_probe(struct udevice *dev)
+ 	void *ioaddr;
+ 	int ret, err;
+ 	struct reset_ctl_bulk reset_bulk;
++
++	if (dev_read_bool(dev, "syna,txc-90deg")) {
++		writel(RGMII_TXC_90DEG_ENABLE, RGMII_TXC_90DEG_SEL);
++	}
++
+ #ifdef CONFIG_CLK
+ 	int i, clock_nb;
+ 
+-- 
+2.48.1
+
