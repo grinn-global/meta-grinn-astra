@@ -82,6 +82,18 @@
 
 &phy0 {
 	reg = <0>;
+	rxc-skew-ps = <1500>;
+	rxdv-skew-ps = <420>;
+	rxd0-skew-ps = <420>;
+	rxd1-skew-ps = <420>;
+	rxd2-skew-ps = <420>;
+	rxd3-skew-ps = <420>;
+	txc-skew-ps = <900>;
+	txen-skew-ps = <420>;
+	txd0-skew-ps = <420>;
+	txd1-skew-ps = <420>;
+	txd2-skew-ps = <420>;
+	txd3-skew-ps = <420>;
 };
 
 &i2c0 {
@@ -122,6 +134,7 @@
 	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
 	snps,reset-active-high;
 	snps,reset-delays-us = <0 10000 50000>;
+	syna,txc-90deg;
 };
 
 &sdhci0 {
