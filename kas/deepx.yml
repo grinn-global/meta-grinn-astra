@@ -1,0 +1,11 @@
+header:
+  version: 14
+
+local_conf_header:
+  deepx: |
+    MACHINE_FEATURES:append = " deepx"
+
+repos:
+  meta-deepx:
+    url: https://github.com/grinn-global/meta-deepx
+    commit: c6eac446785b95ad3f3ccbbf23a826567acfe4b7
