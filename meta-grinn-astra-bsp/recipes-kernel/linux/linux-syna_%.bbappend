@@ -34,6 +34,7 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://${BOARD_PREFIX}-sbc.dts \
 	file://gpio-led.cfg \
 	file://eth.cfg \
+	${@bb.utils.contains('MACHINE_FEATURES', 'deepx', 'file://deepx.cfg', '', d)} \
 "
 
 do_compile:prepend() {
