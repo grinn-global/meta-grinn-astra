@@ -1,5 +1,6 @@
 IMAGE_INSTALL:append = " \
 	image-sensor-demo \
+	networkmanager-nmtui \
 	terrasat-modem \
 "
 
