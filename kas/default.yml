@@ -31,7 +31,7 @@ local_conf_header:
     IMAGE_BUILDINFO_VARS:append = " SYNA_SDK_REVISION"
 
     INIT_MANAGER = "systemd"
-    ROOT_HOME = "home/root"
+    ROOT_HOME = "/home/root"
 
     INITRAMFS_IMAGE_BUNDLE = "1"
     INITRAMFS_IMAGE = "core-image-initramfs-boot"
