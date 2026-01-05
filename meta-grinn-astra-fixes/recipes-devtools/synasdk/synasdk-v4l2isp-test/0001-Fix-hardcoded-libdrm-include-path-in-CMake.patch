@@ -1,20 +1,22 @@
-From 7529fdbe547f70fb07279ef0d3c9d8d70dc5accd Mon Sep 17 00:00:00 2001
+From bad67434ffe11300a62172e7da92ec296e5fad48 Mon Sep 17 00:00:00 2001
 From: Mateusz Koza <mateusz.koza@grinn-global.com>
-Date: Wed, 22 Oct 2025 11:58:58 +0200
+Date: Mon, 5 Jan 2026 10:32:05 +0100
 Subject: [PATCH] Fix hardcoded libdrm include path in CMake
 
 The Synaptics-maintained CMake configuration previously hardcoded
 /usr/include/drm in include_directories, causing Yocto builds to
 incorrectly use host system headers or fail when the path was missing.
 Replaced the hardcoded path with the ${LIBDRM_INCLUDE_DIRS}.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
 ---
- isp_video_test/CMakeLists.txt | 6 +++---
+ CMakeLists.txt | 6 +++---
  1 file changed, 3 insertions(+), 3 deletions(-)
 
-diff --git a/isp_video_test/CMakeLists.txt b/isp_video_test/CMakeLists.txt
-index 10d684b..2ab27e8 100644
---- a/isp_video_test/CMakeLists.txt
-+++ b/isp_video_test/CMakeLists.txt
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+index b26e107..7f2a556 100644
+--- a/CMakeLists.txt
++++ b/CMakeLists.txt
 @@ -10,9 +10,9 @@ include_directories(.
      display
      display/wayland)
@@ -29,5 +31,5 @@ index 10d684b..2ab27e8 100644
  add_definitions(-DNUM_DISPLAY_BUFFERS=8)
  link_directories(
 -- 
-2.43.0
+2.49.0
 
