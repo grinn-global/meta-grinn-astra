@@ -7,6 +7,7 @@
 #
 
 MACHINEOVERRIDES =. "grinn-astra-1680:"
+IMAGE_FSTYPES:append = " tar.xz"
 
 IMAGE_CMD:synaimg:append () {
     rm ${DEPLOY_DIR_IMAGE}/${SYNAIMG_DEPLOY_SUBDIR}/TAG--${IMAGE_NAME}--TAG
