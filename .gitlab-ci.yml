@@ -1,0 +1,9 @@
+include:
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@1
+    inputs:
+      image-name: ghcr.io/siemens/kas/kas:5.1-debian-bookworm
+
+build:
+  parallel:
+    matrix:
+      - KAS_MACHINE: [grinn-astra-1680-ada, grinn-astra-1680-evb, grinn-astra-1680-sbc]
