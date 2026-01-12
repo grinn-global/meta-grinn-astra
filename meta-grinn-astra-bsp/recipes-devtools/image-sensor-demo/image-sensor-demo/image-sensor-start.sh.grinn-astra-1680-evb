@@ -29,7 +29,7 @@ enable_sensor() {
 }
 
 start_pipeline() {
-    local VIDEO_DEV = $CSI0_DEV
+    local VIDEO_DEV=$CSI0_DEV
 
     if [ "$VIDEO_DEV" = "none" ]; then
         echo "Video device not available - cannot start pipeline"
