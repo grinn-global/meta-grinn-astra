@@ -3,7 +3,67 @@ include:
     inputs:
       image-name: ghcr.io/siemens/kas/kas:5.1-debian-bookworm
 
+stages:
+  - ci-kas
+  - build
+  - test
+
 build:
   parallel:
     matrix:
       - KAS_MACHINE: [grinn-astra-1680-ada, grinn-astra-1680-evb, grinn-astra-1680-sbc]
+
+  variables:
+    KAS_TARGET: astra-media
+
+  script:
+    # Build
+    - >
+      ci-kas/kas-log-filter -o build.log
+      kas build $CI_PROJECT_NAME/kas/default.yml
+
+    # Prepare images/ and lava job template for LAVA testing
+    - rm -rf lava
+    - mkdir -p lava/images
+
+    - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_TARGET}-${KAS_MACHINE}.rootfs.tar.xz lava/images/
+    - cp -L build/tmp/deploy/images/${KAS_MACHINE}/Image-${KAS_MACHINE}.bin lava/images/
+    - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_MACHINE}.dtb lava/images/
+
+    # Save GitLab CI job id and KAS details, used in grinn-astra-media-template.yaml template
+    - echo "BUILD_JOB_ID=$CI_JOB_ID" > build.env
+    - echo "KAS_TARGET=${KAS_TARGET}" >> build.env
+    - echo "KAS_MACHINE=${KAS_MACHINE}" >> build.env
+
+    # Copy the template to artifacts for use in LAVA
+    - cp $CI_PROJECT_NAME/grinn-astra-media-template.yaml lava/grinn-astra-media-template.yaml
+
+  artifacts:
+    expire_in: 1d
+    paths:
+      - lava/
+    reports:
+      dotenv: build.env
+
+.lava:
+  stage: test
+  timeout: 6h
+  tags:
+    - lava-runner
+  script: submit lava/grinn-astra-media-template.yaml
+  artifacts:
+    when: always
+    paths:
+      - "*.yaml"
+
+lava astra_ada:
+  extends: .lava
+  needs: ["build: [grinn-astra-1680-ada]"]
+
+lava astra_evb:
+  extends: .lava
+  needs: ["build: [grinn-astra-1680-evb]"]
+
+lava astra_sbc:
+  extends: .lava
+  needs: ["build: [grinn-astra-1680-sbc]"]
