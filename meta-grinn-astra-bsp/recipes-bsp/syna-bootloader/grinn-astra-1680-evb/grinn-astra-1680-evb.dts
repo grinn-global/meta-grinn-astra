@@ -132,7 +132,7 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&gmac_reset_pmux>;
 	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
-	snps,reset-active-high;
+	snps,reset-active-low;
 	snps,reset-delays-us = <0 10000 50000>;
 	syna,txc-90deg;
 };
