@@ -1,7 +1,22 @@
+spec:
+  inputs:
+    sstate-mirror:
+      type: boolean
+      default: true
+      description: Use shared sstate mirror
+    downloads-mirror:
+      type: boolean
+      default: true
+      description: Use shared downloads mirror
+
+---
+
 include:
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@1
     inputs:
       image-name: ghcr.io/siemens/kas/kas:5.1-debian-bookworm
+      sstate-mirror: $[[ inputs.sstate-mirror ]]
+      downloads-mirror: $[[ inputs.downloads-mirror ]]
 
 stages:
   - ci-kas
