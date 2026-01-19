@@ -48,6 +48,6 @@ actions:
         login_prompt: "login:.*"
         username: root
       prompts:
-        - "root@${{ job.KAS_MACHINE }} login:~#"
+        - "root@{{ job.KAS_MACHINE }} login:~#"
         - "root@.*:~#"
         - "~#"
