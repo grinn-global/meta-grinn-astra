@@ -2,10 +2,12 @@ device_type: {{ job.KAS_MACHINE }}
 job_name: "{{ job.KAS_TARGET }}-{{ job.KAS_MACHINE }}-{{ job.CI_PIPELINE_ID }}"
 timeouts:
   job:
-    minutes: 20
+    minutes: 60
   actions:
     http-download:
-      minutes: 5
+      minutes: 30
+    download-retry:
+      minutes: 35
 priority: medium
 visibility: public
 
@@ -14,7 +16,7 @@ actions:
       name: power_on
   - deploy:
       timeout:
-        minutes: 10
+        minutes: 40
       to: tftp
       kernel:
         url: "{{ job.CI_API_V4_URL }}/projects/{{ job.CI_PROJECT_ID }}/jobs/{{ job.BUILD_JOB_ID }}/artifacts/lava/images/Image-{{ job.KAS_MACHINE }}.bin?job_token={{ job.CI_JOB_TOKEN }}"
@@ -27,7 +29,7 @@ actions:
   - boot:
       method: u-boot
       timeout:
-        minutes: 5
+        minutes: 10
       commands:
         - net_init
         - setenv skip_fdt_update 2
