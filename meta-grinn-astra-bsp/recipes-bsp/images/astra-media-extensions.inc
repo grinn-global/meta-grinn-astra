@@ -1,4 +1,4 @@
-IMAGE_INSTALL:append = " \
+IMAGE_INSTALL:append:grinn-astra-1680-platform = " \
 	image-sensor-demo \
 	networkmanager-nmtui \
 	terrasat-modem \
