@@ -1,3 +1,7 @@
+require conf/machine/include/platforms/grinn-astra-platform.inc
+
+MACHINEOVERRIDES =. "grinn-astra-1680-platform:"
+
 #
 # Modify the Yocto TAG filename by inserting "sl" before "1680",
 # ensuring compatibility with the Synaptics astra-update tool
@@ -5,9 +9,6 @@
 #
 # NOTE: IMAGE_NAME ?= "${IMAGE_BASENAME}-${MACHINE}${IMAGE_VERSION_SUFFIX}"
 #
-
-MACHINEOVERRIDES =. "grinn-astra-1680:"
-IMAGE_FSTYPES:append = " tar.xz"
 
 IMAGE_CMD:synaimg:append () {
     rm ${DEPLOY_DIR_IMAGE}/${SYNAIMG_DEPLOY_SUBDIR}/TAG--${IMAGE_NAME}--TAG
@@ -18,4 +19,3 @@ IMAGE_CMD:synaimg:append () {
     local image_name_fix=${IMAGE_BASENAME}-${machine_fix}${IMAGE_VERSION_SUFFIX}
     touch ${DEPLOY_DIR_IMAGE}/${SYNAIMG_DEPLOY_SUBDIR}/TAG--${image_name_fix}--TAG
 }
-
