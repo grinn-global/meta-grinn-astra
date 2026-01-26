@@ -5,3 +5,12 @@
 		stdout-path = "serial0:115200n8";
 	};
 };
+
+&usb0 {
+	status = "okay";
+	dr_mode = "peripheral";
+};
+
+&usb_phy0 {
+	status = "okay";
+};
