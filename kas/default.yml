@@ -55,6 +55,8 @@ local_conf_header:
     DISTRO_FEATURES:remove = " x11"
     DISTRO_FEATURES_NATIVESDK:remove = "x11"
 
+    DISTRO_FEATURES:append = " virtualization"
+
     PREFERRED_VERSION_libgpiod = "1.6.4"
 
 bblayers_conf_header:
@@ -76,6 +78,7 @@ repos:
     url: https://github.com/openembedded/meta-openembedded
     commit: b8d1a14f7f3b76457c36752202ea7ae5881b6654
     layers:
+      meta-filesystems:
       meta-oe:
       meta-python:
       meta-multimedia:
@@ -106,6 +109,10 @@ repos:
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
     commit: 990a66e0111040ead67b0357a0330c55ca62a602
+
+  meta-virtualization:
+    url: https://github.com/ni/meta-virtualization
+    commit: 450941a1b6df96285691e8c23d4f332d3c88a994
 
   meta-grinn-astra:
     layers:
