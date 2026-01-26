@@ -1,57 +1,38 @@
-BOARD_PREFIX = "grinn-astra-1680"
-FILES_SOM = "${BOARD_PREFIX}-som"
-FILES_COMMON = "${BOARD_PREFIX}-common"
-FILES_ADA = "${BOARD_PREFIX}-ada"
-FILES_EVB = "${BOARD_PREFIX}-evb"
-FILES_SBC = "${BOARD_PREFIX}-sbc"
-
-FILESEXTRAPATHS:prepend := "${THISDIR}/${FILES_SOM}:"
-FILESEXTRAPATHS:prepend := "${THISDIR}/${FILES_COMMON}:"
-FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/${FILES_ADA}:"
-FILESEXTRAPATHS:prepend:grinn-astra-1680-evb := "${THISDIR}/${FILES_EVB}:"
-FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/${FILES_SBC}:"
+FILESEXTRAPATHS:prepend:grinn-astra-1680-platform := "${THISDIR}/grinn-astra-1680/common:"
+FILESEXTRAPATHS:prepend:grinn-astra-1680-som := "${THISDIR}/grinn-astra-1680/som:"
+FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada:"
+FILESEXTRAPATHS:prepend:grinn-astra-1680-evb := "${THISDIR}/grinn-astra-1680/evb:"
+FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
 
 DT_DIR = "${S}/arch/arm64/boot/dts/synaptics"
 
-SRC_URI:append = " \
-	file://${BOARD_PREFIX}-som.dtsi \
+SRC_URI:append:grinn-astra-platform = " \
+	file://${MACHINE}.dts;subdir=${DT_DIR} \
+"
+
+SRC_URI:append:grinn-astra-1680-platform = " \
 	file://modem.cfg \
 	file://nfs.cfg \
-	file://regulator.cfg \
 	file://0001-linux-mac-add-support-for-TXC-90-degree-shift.patch \
 "
 
+SRC_URI:append:grinn-astra-1680-som = " \
+	file://grinn-astra-1680-som.dtsi;subdir=${DT_DIR} \
+	file://regulator.cfg \
+"
+
 SRC_URI:append:grinn-astra-1680-ada = " \
-	file://${BOARD_PREFIX}-ada.dts \
 	file://eth.cfg \
 "
 
 SRC_URI:append:grinn-astra-1680-evb = " \
-	file://${BOARD_PREFIX}-evb.dts \
 	file://gpio-led.cfg \
 	file://eth.cfg \
 "
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
-	file://${BOARD_PREFIX}-sbc.dts \
 	file://bcmdhd.cfg \
 	file://gpio-led.cfg \
 	file://eth.cfg \
 	${@bb.utils.contains('MACHINE_FEATURES', 'deepx', 'file://deepx.cfg', '', d)} \
 "
-
-do_compile:prepend() {
-	cp ${WORKDIR}/${BOARD_PREFIX}-som.dtsi ${DT_DIR}/
-}
-
-do_compile:prepend:grinn-astra-1680-ada() {
-	cp ${WORKDIR}/${BOARD_PREFIX}-ada.dts ${DT_DIR}/
-}
-
-do_compile:prepend:grinn-astra-1680-evb() {
-	cp ${WORKDIR}/${BOARD_PREFIX}-evb.dts ${DT_DIR}/
-}
-
-do_compile:prepend:grinn-astra-1680-sbc() {
-	cp ${WORKDIR}/${BOARD_PREFIX}-sbc.dts ${DT_DIR}/
-}
