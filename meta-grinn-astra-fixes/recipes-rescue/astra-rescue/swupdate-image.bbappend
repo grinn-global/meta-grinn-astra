@@ -8,3 +8,9 @@ IMAGE_INSTALL:remove = " \
 	initscripts \
 	sysvinit \
 "
+
+IMAGE_INSTALL:remove = " \
+	kernel-module-stmmac \
+	kernel-module-stmmac-platform \
+	kernel-module-dwmac-generic \
+"
