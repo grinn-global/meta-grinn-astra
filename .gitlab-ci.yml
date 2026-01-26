@@ -30,13 +30,13 @@ build:
     - cp -L build/tmp/deploy/images/${KAS_MACHINE}/Image-${KAS_MACHINE}.bin lava/images/
     - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_MACHINE}.dtb lava/images/
 
-    # Save GitLab CI job id and KAS details, used in grinn-astra-media-template.yaml template
+    # Save GitLab CI job id and KAS details, used in .lava.yml template
     - echo "BUILD_JOB_ID=$CI_JOB_ID" > build.env
     - echo "KAS_TARGET=${KAS_TARGET}" >> build.env
     - echo "KAS_MACHINE=${KAS_MACHINE}" >> build.env
 
     # Copy the template to artifacts for use in LAVA
-    - cp $CI_PROJECT_NAME/grinn-astra-media-template.yaml lava/grinn-astra-media-template.yaml
+    - cp $CI_PROJECT_NAME/.lava.yml lava/.lava.yml
 
   artifacts:
     expire_in: 1d
@@ -50,7 +50,7 @@ build:
   timeout: 6h
   tags:
     - lava-runner
-  script: submit lava/grinn-astra-media-template.yaml
+  script: submit lava/.lava.yml
   artifacts:
     when: always
     paths:
