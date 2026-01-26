@@ -1,0 +1,10 @@
+/dts-v1/;
+
+#include "sl2619.dtsi"
+#include "grinn-astra-261x-som.dtsi"
+#include "grinn-astra-261x-sbc.dtsi"
+
+/ {
+	model = "Grinn AstraSBC-2619";
+	compatible = "grinn,grinn-astra-2619-sbc", "syna,sl2619";
+};
