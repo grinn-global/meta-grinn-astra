@@ -8,14 +8,15 @@ stages:
   - build
   - test
 
-build:
+.ci_matrix: &ci_matrix
   parallel:
     matrix:
       - KAS_MACHINE: [grinn-astra-1680-ada, grinn-astra-1680-evb, grinn-astra-1680-sbc]
 
+build:
+  <<: *ci_matrix
   variables:
     KAS_TARGET: astra-media
-
   script:
     # Build
     - >
@@ -45,25 +46,20 @@ build:
     reports:
       dotenv: build.env
 
-.lava:
+lava:
   stage: test
   timeout: 6h
   tags:
     - lava-runner
+  <<: *ci_matrix
+  needs:
+    - job: build
+      artifacts: true
+      parallel:
+        matrix:
+          - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
   script: submit lava/.lava.yml
   artifacts:
     when: always
     paths:
       - "*.yaml"
-
-lava astra_ada:
-  extends: .lava
-  needs: ["build: [grinn-astra-1680-ada]"]
-
-lava astra_evb:
-  extends: .lava
-  needs: ["build: [grinn-astra-1680-evb]"]
-
-lava astra_sbc:
-  extends: .lava
-  needs: ["build: [grinn-astra-1680-sbc]"]
