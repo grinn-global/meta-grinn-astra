@@ -11,7 +11,10 @@ stages:
 .ci_matrix: &ci_matrix
   parallel:
     matrix:
-      - KAS_MACHINE: [grinn-astra-1680-ada, grinn-astra-1680-evb, grinn-astra-1680-sbc]
+      - KAS_MACHINE:
+        - grinn-astra-1680-ada
+        - grinn-astra-1680-evb
+        - grinn-astra-1680-sbc
 
 build:
   <<: *ci_matrix
