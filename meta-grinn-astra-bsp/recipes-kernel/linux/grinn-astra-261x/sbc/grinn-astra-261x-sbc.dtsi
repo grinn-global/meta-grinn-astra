@@ -6,6 +6,14 @@
 	};
 };
 
+&pdma1 {
+	status = "okay";
+};
+
+&uart0 {
+	status = "okay";
+};
+
 &usb0 {
 	status = "okay";
 	dr_mode = "peripheral";
