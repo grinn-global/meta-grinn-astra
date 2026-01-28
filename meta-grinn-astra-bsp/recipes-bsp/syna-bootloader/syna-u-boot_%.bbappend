@@ -11,17 +11,27 @@ SRC_URI:append:grinn-astra-platform = " \
 	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch;patchdir=boot/u-boot \
 	file://0002-uboot-Add-Yocto-config-fragment-support.patch;patchdir=build \
 	file://${MACHINE}.dts \
-	file://${MACHINE}_defconfig \
+"
+
+SRC_URI:append:grinn-astra-1680-platform = " \
+	file://eth.cfg \
+	file://misc.cfg \
+"
+
+SRC_URI:append:grinn-astra-1680-evb = " \
+	file://display_disable.cfg \
+"
+
+SRC_URI:append:grinn-astra-1680-sbc = " \
+	file://display_disable.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
 	cp ${WORKDIR}/${MACHINE}.dts ${DT_DIR}/dolphin-rdk.dts
-	cp ${WORKDIR}/${MACHINE}_defconfig ${CFG_DIR}/dolphin_suboot_defconfig
 }
 
 do_configure:append:grinn-astra-261x-platform() {
 	cp ${WORKDIR}/${MACHINE}.dts ${DT_DIR}/klamath-rdk.dts
-	cp ${WORKDIR}/${MACHINE}_defconfig ${CFG_DIR}/klamath_suboot_defconfig
 }
 
 do_compile:prepend() {
