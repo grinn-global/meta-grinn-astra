@@ -45,6 +45,7 @@ build:
     - rm -rf lava
     - mkdir -p lava/images
 
+    - cp -rL build/tmp/deploy/images/${KAS_MACHINE}/SYNAIMG lava/images/
     - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_TARGET}-${KAS_MACHINE}.rootfs.tar.xz lava/images/
     - cp -L build/tmp/deploy/images/${KAS_MACHINE}/Image-${KAS_MACHINE}.bin lava/images/
     - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_MACHINE}.dtb lava/images/
