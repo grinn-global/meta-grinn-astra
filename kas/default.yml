@@ -108,7 +108,7 @@ repos:
 
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
-    commit: 990a66e0111040ead67b0357a0330c55ca62a602
+    commit: a893fa206b8d6878336f5b760c3b46296263a07a
 
   meta-virtualization:
     url: https://github.com/ni/meta-virtualization
