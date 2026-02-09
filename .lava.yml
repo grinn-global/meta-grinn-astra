@@ -16,6 +16,15 @@ actions:
       name: power_on
   - deploy:
       timeout:
+        minutes: 10
+      to: flasher
+      images:
+        image:
+          url: "{{ job.CI_API_V4_URL }}/projects/{{ job.CI_PROJECT_ID }}/jobs/{{ job.BUILD_JOB_ID }}/artifacts/build/tmp/deploy/images/{{ job.KAS_MACHINE }}/{{ job.KAS_TARGET }}-{{ job.KAS_MACHINE }}.rootfs.synaimg_bootloader.tar.zst?job_token={{ job.CI_JOB_TOKEN }}"
+          compression: zstd
+          archive: tar
+  - deploy:
+      timeout:
         minutes: 40
       to: tftp
       kernel:

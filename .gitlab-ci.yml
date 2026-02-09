@@ -76,6 +76,7 @@ build:
       - build/tmp/deploy/images/*/*.rootfs.tar.zst
       - build/tmp/deploy/images/*/*.synaimg.tar.zst
       - build/tmp/deploy/images/*/*.synaimg.tar.zst.sha256sum
+      - build/tmp/deploy/images/*/*.synaimg_bootloader.tar.zst
       - build/tmp/deploy/images/*/Image-*.bin
       - build/tmp/deploy/images/*/*.dtb
 
