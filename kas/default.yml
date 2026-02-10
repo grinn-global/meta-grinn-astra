@@ -99,6 +99,10 @@ repos:
     url: https://github.com/meta-qt5/meta-qt5
     commit: eb828418264a49b8d00035cb3d7b12fcea3be801
 
+  meta-selinux:
+    url: https://github.com/ni/meta-selinux
+    commit: 30a49ab1298d2a081089a9e4c760a9e02f8100f6
+
   meta-swupdate:
     url: https://github.com/sbabic/meta-swupdate
     commit: 4a65b1ed36c0b6ee4942d5f23c4984552b17cfe6
