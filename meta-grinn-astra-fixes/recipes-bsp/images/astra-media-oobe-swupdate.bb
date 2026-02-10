@@ -2,7 +2,7 @@ SUMMARY = "SWUpdate image for astra-media-oobe"
 LICENSE = "MIT"
 LIC_FILES_CHKSUM = "file://${COMMON_LICENSE_DIR}/MIT;md5=0835ade698e0bcf8506ecda2f7b4f302"
 
-SYNA_SDK_VERSION = "2.1.0"
+SYNA_SDK_VERSION = "2.2.0"
 SYNA_IMAGE_NAME = "astra-media-oobe"
 SWU_IMAGE_GENERATION_COMMON = "swupdate-image-generation-common"
 
