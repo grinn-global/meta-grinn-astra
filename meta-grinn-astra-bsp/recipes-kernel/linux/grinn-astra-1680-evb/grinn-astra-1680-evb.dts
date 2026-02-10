@@ -446,6 +446,9 @@
 
 &cec {
 	status = "okay";
+	pinctrl-0 = <&cec_pmux>;
+	pinctrl-names = "default";
+	hdmi-phandle = <&drm>;
 };
 
 &dmic {
@@ -715,6 +718,11 @@
 };
 
 &sm_pinctrl {
+	cec_pmux: cec-pmux {
+		groups = "SM_HDMI_CEC";
+		function = "hdmi";
+	};
+
 	led_en_pmux: led-en-pmux {
 		groups = "SM_SPI2_SS1n";
 		function = "gpio";

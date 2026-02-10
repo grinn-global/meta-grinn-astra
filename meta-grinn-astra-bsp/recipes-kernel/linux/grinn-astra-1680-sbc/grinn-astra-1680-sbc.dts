@@ -284,6 +284,9 @@
 
 &cec {
 	status = "okay";
+	pinctrl-0 = <&cec_pmux>;
+	pinctrl-names = "default";
+	hdmi-phandle = <&drm>;
 };
 
 &dolphin_asoc {
@@ -545,6 +548,11 @@
 	cam_gpio1_pmux: cam-gpio1-pmux {
 		groups = "SM_SPI2_SS1n";
 		function = "gpio";
+	};
+
+	cec_pmux: cec-pmux {
+		groups = "SM_HDMI_CEC";
+		function = "hdmi";
 	};
 
 	eth_int_pmux: eth-int-pmux {

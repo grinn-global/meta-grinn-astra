@@ -361,6 +361,9 @@
 
 &cec {
 	status = "okay";
+	pinctrl-0 = <&cec_pmux>;
+	pinctrl-names = "default";
+	hdmi-phandle = <&drm>;
 };
 
 &dmic {
@@ -858,6 +861,11 @@
 };
 
 &sm_pinctrl {
+	cec_pmux: cec-pmux {
+		groups = "SM_HDMI_CEC";
+		function = "hdmi";
+	};
+
 	hrx5v_pmux: hrx5v-pmux {
 		groups = "SM_HDMIRX_PWR5V";
 		function = "gpio";
