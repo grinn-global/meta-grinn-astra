@@ -110,6 +110,18 @@
 	};
 };
 
+&portb {
+	pinctrl-names = "default";
+	pinctrl-0 = <&hdmitx5v_pmux>;
+
+	hdmi_5v_en {
+		gpio-hog;
+		gpios = <23 GPIO_ACTIVE_HIGH>;
+		output-high;
+		line-name = "hdmi-5v-en";
+	};
+};
+
 &CPU_SLEEP_0 {
 	status = "disabled";
 };
@@ -217,9 +229,6 @@
 
 &drm {
 	status = "okay";
-	pinctrl-0 = <&hdmitx5v_pmux>;
-	pinctrl-names = "default";
-	hdtx5v-gpio = <&portb 23 GPIO_ACTIVE_HIGH>;
 
 	disp-mode = <2>;
 	disp1-res-id = <13>;
