@@ -1,0 +1,80 @@
+From 38b4809aa0a840d259b67803e26c94a93ec47508 Mon Sep 17 00:00:00 2001
+From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
+Date: Wed, 4 Feb 2026 12:44:48 +0100
+Subject: [PATCH] linux add dwmac support for TXC 90-degree phase shift
+
+The hardware supports a 90-degree phase shift for the Ethernet MAC TX clock,
+but this capability was not previously handled by the driver.
+The REGISTER containing the RGMII_TXC_90DEG_SEL control bit can be provided
+via a syscon reference in Device Tree.
+
+Example Device Tree entry:
+
+eth_txc_90deg: syscon@<REGISTER> {
+    compatible = "syscon";
+    reg = <<REGISTER> 0x04>;
+};
+
+&eth {
+    syna,txc-90deg = <&eth_txc_90deg>;
+};
+---
+ .../ethernet/stmicro/stmmac/dwmac-generic.c   | 34 +++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+index d4edd054999c..55100cda02ed 100644
+--- a/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
++++ b/drivers/net/ethernet/stmicro/stmmac/dwmac-generic.c
+@@ -12,10 +12,37 @@
+ #include <linux/module.h>
+ #include <linux/of.h>
+ #include <linux/platform_device.h>
++#include <linux/mfd/syscon.h>
++#include <linux/regmap.h>
+ 
+ #include "stmmac.h"
+ #include "stmmac_platform.h"
+ 
++#define RGMII_TXC_90DEG_ENABLE	0x1
++#define RGMII_TXC_90DEG_MASK	0x1
++#define RGMII_TXC_90DEG_OFFSET	0x0
++
++static int syna_enable_txc_90deg(struct device *dev) {
++	struct regmap *regmap;
++	int ret;
++
++	regmap = syscon_regmap_lookup_by_phandle(dev->of_node,
++						"syna,txc-90deg");
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "Failed to obtain register syscon regmap\n");
++		return PTR_ERR(regmap);
++	}
++
++	ret = regmap_update_bits(regmap,
++			  RGMII_TXC_90DEG_OFFSET,
++			  RGMII_TXC_90DEG_MASK,
++			  RGMII_TXC_90DEG_ENABLE);
++	if (ret)
++		dev_err(dev, "Failed to set TXC_90DEG_SEL phase shift bit!\n");
++
++	return ret;
++}
++
+ static int dwmac_generic_probe(struct platform_device *pdev)
+ {
+ 	struct plat_stmmacenet_data *plat_dat;
+@@ -26,6 +53,13 @@ static int dwmac_generic_probe(struct platform_device *pdev)
+ 	if (ret)
+ 		return ret;
+ 
++	if (of_property_present(pdev->dev.of_node, "syna,txc-90deg")) {
++		ret = syna_enable_txc_90deg(&pdev->dev);
++		if (ret)
++			return ret;
++		dev_info(&pdev->dev, "use TXC 90deg phase shift");
++	};
++
+ 	if (pdev->dev.of_node) {
+ 		plat_dat = devm_stmmac_probe_config_dt(pdev, stmmac_res.mac);
+ 		if (IS_ERR(plat_dat)) {

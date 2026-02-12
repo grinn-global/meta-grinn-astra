@@ -105,6 +105,11 @@
 	};
 
 	soc {
+		eth0_txc_90deg: syscon@f7ea0a04 {
+			compatible = "syscon";
+			reg = <0xf7ea0a04 0x04>;
+		};
+
 		isp_vsi_subdev: isp_vsi_subdev {
 			id = <0>;
 			status = "okay";
@@ -361,7 +366,7 @@
 	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
 	snps,reset-delays-us = <0 10000 50000>;
 	snps,reset-active-low;
-	syna,txc-90deg;
+	syna,txc-90deg = <&eth0_txc_90deg>;
 };
 
 &gpu {
