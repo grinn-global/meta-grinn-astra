@@ -39,7 +39,7 @@
 	wifi1_bt_disable: wifi1-bt-disable {
 		compatible = "syna,rfkill";
 		status = "okay";
-		bt-power-gpio = <&porta 12 GPIO_ACTIVE_HIGH>;
+		bt-power-gpio = <&porta 10 GPIO_ACTIVE_HIGH>;
 		pinctrl-0 = <&wifi1_bt_disable_pmux>;
 		pinctrl-names = "default";
 	};
@@ -101,7 +101,7 @@
 		compatible = "mmc-pwrseq-simple";
 		pinctrl-names = "default";
 		pinctrl-0 = <&wifi1_wf_disable_pmux>;
-		reset-gpios = <&porta 7 GPIO_ACTIVE_LOW>;
+		reset-gpios = <&porta 12 GPIO_ACTIVE_LOW>;
 	};
 
 	soc {
@@ -269,12 +269,12 @@
 	};
 
 	wifi1_bt_disable_pmux: wifi1-bt-disable-pmux {
-		groups = "I2S2_BCLKIO";
+		groups = "I2S2_DI1";
 		function = "gpio";
 	};
 
 	wifi1_wf_disable_pmux: wifi1-wf-disable-pmux {
-		groups = "I2S2_MCLK";
+		groups = "I2S2_BCLKIO";
 		function = "gpio";
 	};
 };
@@ -488,8 +488,8 @@
 
 &porta {
 	gpio-line-names =
-		"", "", "", "", "", "", "", "WIFI1_WF_DISABLEn",
-		"PCIE_RSTn", "PCIE_WAKEn", "", "PCIE_CLKREQn", "WIFI1_BT_DISABLEn", "", "", "USER_BUTTON",
+		"", "", "", "", "", "", "", "",
+		"PCIE_RSTn", "PCIE_WAKEn", "WIFI1_BT_DISABLEn", "PCIE_CLKREQn", "WIFI1_WF_DISABLEn", "", "", "USER_BUTTON",
 		"", "SDIO_WAKEn", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
