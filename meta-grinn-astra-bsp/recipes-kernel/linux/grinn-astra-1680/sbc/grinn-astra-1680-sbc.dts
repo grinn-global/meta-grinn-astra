@@ -586,7 +586,7 @@
 };
 
 &uart2 {
-	status = "disabled";
+	status = "okay";
 	pinctrl-0 = <&uart2_pmux>;
 	pinctrl-names = "default";
 };
