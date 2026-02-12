@@ -6,6 +6,6 @@ local_conf_header:
     MACHINE_FEATURES:append = " deepx"
 
 repos:
-  meta-deepx:
-    url: https://github.com/grinn-global/meta-deepx
-    commit: c6eac446785b95ad3f3ccbbf23a826567acfe4b7
+  meta-deepx-m1:
+    url: https://github.com/DEEPX-AI/meta-deepx-m1
+    commit: c061e8372bd7cdaf447aaf21808826e62ab7c658
