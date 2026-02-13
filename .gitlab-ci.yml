@@ -12,6 +12,9 @@ spec:
       type: boolean
       default: true
       description: Use git mirrors
+    build-ref:
+      default: ""
+      description: Use specific pipeline id ("pipeline:12345") as build artifacts
 
 ---
 
@@ -24,6 +27,7 @@ include:
       sstate-mirror: $[[ inputs.sstate-mirror ]]
       downloads-mirror: $[[ inputs.downloads-mirror ]]
       git-mirror: $[[ inputs.git-mirror ]]
+      build-ref: $[[ inputs.build-ref ]]
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@1
 
 stages:
@@ -59,13 +63,11 @@ stages:
         KAS_CONFIG:
           - default:deepx
 
-build:
-  <<: *ci_build_matrix
-  variables:
-    KAS_TARGET: astra-media
+.ci_build_artifacts: &ci_build_artifacts
   artifacts:
     expire_in: 1d
     paths:
+      - build.env
       - build.log
       - build/tmp/deploy/images/*/*.rootfs.tar.zst
       - build/tmp/deploy/images/*/*.rootfs.synaimg.tar.zst
@@ -74,12 +76,32 @@ build:
       - build/tmp/deploy/images/*/Image-*.bin
       - build/tmp/deploy/images/*/*.dtb
 
+build:
+  <<: *ci_build_artifacts
+  <<: *ci_build_matrix
+  variables:
+    KAS_TARGET: astra-media
+
+build-download:
+  <<: *ci_build_artifacts
+  <<: *ci_build_matrix
+  variables:
+    JOB_NAME: "build: [$KAS_MACHINE, $KAS_CONFIG]"
+
 lava:
   <<: *ci_test_matrix
   needs:
     - lava-pre
     - job: build
       artifacts: true
+      optional: true
+      parallel:
+        matrix:
+          - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
+            KAS_CONFIG: ['$[[ matrix.KAS_CONFIG ]]']
+    - job: build-download
+      artifacts: true
+      optional: true
       parallel:
         matrix:
           - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
