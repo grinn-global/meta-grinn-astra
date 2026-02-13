@@ -269,7 +269,7 @@
 	};
 
 	wifi1_bt_disable_pmux: wifi1-bt-disable-pmux {
-		groups = "I2S2_BCLK";
+		groups = "I2S2_BCLKIO";
 		function = "gpio";
 	};
 
