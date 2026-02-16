@@ -7,7 +7,7 @@ DT_DIR = "${S}/boot/u-boot/arch/arm/dts"
 CFG_DIR = "${S}/boot/u-boot/configs"
 
 SRC_URI:append:grinn-astra-1680-platform = " \
-	file://0001-uboot-mac-add-support-for-TXC-90-degree-shift.patch;patchdir=boot/u-boot \
+	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch;patchdir=boot/u-boot \
 	file://${MACHINE}.dts \
 	file://${MACHINE}_defconfig \
 "

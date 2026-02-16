@@ -1,0 +1,94 @@
+From 94082998ff3654e7d256e3097b41be1a27d24b13 Mon Sep 17 00:00:00 2001
+From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
+Date: Wed, 11 Feb 2026 14:24:28 +0100
+Subject: [PATCH] uboot add mac support for TXC 90-degree phase shift
+
+The hardware supports a 90-degree phase shift for the Ethernet MAC TX clock,
+but this capability was not previously handled by the driver.
+The REGISTER containing the RGMII_TXC_90DEG_SEL control bit can be provided
+via a syscon reference in Device Tree.
+
+Example Device Tree entry:
+
+soc {
+	eth_txc_90deg: syscon@<REGISTER> {
+	    compatible = "simple-mfd", "syscon";
+	    reg = <<REGISTER> 0x04>;
+	};
+};
+
+&eth {
+    syna,txc-90deg = <&eth_txc_90deg>;
+};
+---
+ drivers/net/designware.c | 34 ++++++++++++++++++++++++++++++++++
+ 1 file changed, 34 insertions(+)
+
+diff --git a/drivers/net/designware.c b/drivers/net/designware.c
+index 2fde769981..76212a4300 100644
+--- a/drivers/net/designware.c
++++ b/drivers/net/designware.c
+@@ -31,12 +31,18 @@
+ #include <linux/kernel.h>
+ #include <asm/io.h>
+ #include <linux/printk.h>
++#include <syscon.h>
++#include <regmap.h>
+ #include <power/regulator.h>
+ #include "designware.h"
+ #ifdef CONFIG_ETH_ROM_MAC
+ #include "misc_syna.h"
+ #endif
+ 
++#define RGMII_TXC_90DEG_ENABLE	0x1
++#define RGMII_TXC_90DEG_MASK	0x1
++#define RGMII_TXC_90DEG_OFFSET	0x0
++
+ static int dw_mdio_read(struct mii_dev *bus, int addr, int devad, int reg)
+ {
+ 	struct dw_eth_dev *priv = dev_get_priv((struct udevice *)bus->priv);
+@@ -693,6 +699,26 @@ static int designware_eth_bind(struct udevice *dev)
+ 	return 0;
+ }
+ 
++static int syna_enable_txc_90deg(struct udevice *dev) {
++	struct regmap *regmap;
++	int ret;
++	
++	regmap = syscon_regmap_lookup_by_phandle(dev, "syna,txc-90deg");
++	if (IS_ERR(regmap)) {
++		dev_err(dev, "Failed to obtain register syscon regmap\n");
++		return PTR_ERR(regmap);
++	}
++
++	ret = regmap_update_bits(regmap,
++			  RGMII_TXC_90DEG_OFFSET,
++			  RGMII_TXC_90DEG_MASK,
++			  RGMII_TXC_90DEG_ENABLE);
++	if (ret)
++		dev_err(dev, "Failed to set TXC_90DEG_SEL phase shift bit!\n");
++	
++	return ret;
++}
++
+ int designware_eth_probe(struct udevice *dev)
+ {
+ 	struct eth_pdata *pdata = dev_get_plat(dev);
+@@ -753,6 +779,14 @@ int designware_eth_probe(struct udevice *dev)
+ 	else
+ 		reset_deassert_bulk(&reset_bulk);
+ 
++	if (dev_read_prop(dev, "syna,txc-90deg", NULL)) {
++		ret = syna_enable_txc_90deg(dev);
++		if (ret)
++			return ret;
++		dev_info(dev, "use TXC 90deg phase shift\n");
++	};
++
++
+ 	/*
+ 	 * If we are on PCI bus, either directly attached to a PCI root port,
+ 	 * or via a PCI bridge, fill in plat before we probe the hardware.
+-- 
+2.43.0
+

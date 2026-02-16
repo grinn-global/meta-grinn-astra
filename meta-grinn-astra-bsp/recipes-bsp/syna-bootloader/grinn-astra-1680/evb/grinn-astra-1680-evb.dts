@@ -46,6 +46,13 @@
 			method = "smc";
 		};
 	};
+
+	soc {
+		eth0_txc_90deg: syscon@0xea0a04 {
+			compatible = "simple-mfd", "syscon";
+			reg = <0xea0a04 0x4>;
+		};
+	};
 };
 
 &sysmgr_pinctrl {
@@ -146,7 +153,7 @@
 	snps,reset-gpio = <&portd 8 GPIO_ACTIVE_HIGH>;
 	snps,reset-active-low;
 	snps,reset-delays-us = <0 10000 50000>;
-	syna,txc-90deg;
+	syna,txc-90deg = <&eth0_txc_90deg>;
 };
 
 &sdhci0 {
