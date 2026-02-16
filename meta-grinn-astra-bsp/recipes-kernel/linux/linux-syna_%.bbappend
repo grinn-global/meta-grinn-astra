@@ -13,14 +13,6 @@ SRC_URI:append:grinn-astra-platform = " \
 	file://0001-linux-add-dwmac-support-for-TXC-90-degree-phase-shif.patch \
 "
 
-SRC_URI:append:grinn-astra-261x-som = " \
-	file://grinn-astra-261x-som.dtsi;subdir=${DT_DIR} \
-"
-
-SRC_URI:append:grinn-astra-261x-sbc = " \
-	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
-"
-
 SRC_URI:append:grinn-astra-1680-platform = " \
 	file://modem.cfg \
 	file://nfs.cfg \
@@ -45,4 +37,12 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://gpio-led.cfg \
 	file://eth.cfg \
 	${@bb.utils.contains('MACHINE_FEATURES', 'deepx', 'file://deepx.cfg', '', d)} \
+"
+
+SRC_URI:append:grinn-astra-261x-som = " \
+	file://grinn-astra-261x-som.dtsi;subdir=${DT_DIR} \
+"
+
+SRC_URI:append:grinn-astra-261x-sbc = " \
+	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
 "
