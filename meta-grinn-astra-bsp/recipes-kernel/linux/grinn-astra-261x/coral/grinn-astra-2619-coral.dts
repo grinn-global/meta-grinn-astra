@@ -1,0 +1,10 @@
+/dts-v1/;
+
+#include "sl2619.dtsi"
+#include "grinn-astra-261x-som.dtsi"
+#include "grinn-astra-261x-coral.dtsi"
+
+/ {
+	model = "Grinn AstraCORAL-2619";
+	compatible = "grinn,grinn-astra-2619-coral", "syna,sl2619";
+};
