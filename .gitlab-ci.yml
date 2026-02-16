@@ -24,7 +24,16 @@ stages:
   - build
   - test
 
-.ci_matrix: &ci_matrix
+.ci_build_matrix: &ci_build_matrix
+  parallel:
+    matrix:
+      - KAS_MACHINE:
+        - grinn-astra-1680-ada
+        - grinn-astra-1680-evb
+        - grinn-astra-1680-sbc
+        - grinn-astra-2619-sbc
+
+.ci_test_matrix: &ci_test_matrix
   parallel:
     matrix:
       - KAS_MACHINE:
@@ -33,7 +42,7 @@ stages:
         - grinn-astra-1680-sbc
 
 build:
-  <<: *ci_matrix
+  <<: *ci_build_matrix
   variables:
     KAS_TARGET: astra-media
   script:
@@ -71,7 +80,7 @@ lava:
   timeout: 6h
   tags:
     - lava-runner
-  <<: *ci_matrix
+  <<: *ci_test_matrix
   needs:
     - job: build
       artifacts: true
