@@ -8,6 +8,7 @@ python __anonymous() {
         "grinn-astra-1680-ada": "dolphin",
         "grinn-astra-1680-evb": "dolphin",
         "grinn-astra-1680-sbc": "dolphin",
+        "grinn-astra-2619-coral": "klamath",
         "grinn-astra-2619-sbc": "klamath",
     }
 
