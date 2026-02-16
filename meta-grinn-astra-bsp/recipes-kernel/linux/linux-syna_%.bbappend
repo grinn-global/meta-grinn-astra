@@ -13,7 +13,7 @@ SRC_URI:append:grinn-astra-platform = " \
 	file://0001-linux-add-dwmac-support-for-TXC-90-degree-phase-shif.patch \
 "
 
-SRC_URI:append:grinn-astra-261x-som = " \ 
+SRC_URI:append:grinn-astra-261x-som = " \
 	file://grinn-astra-261x-som.dtsi;subdir=${DT_DIR} \
 "
 
