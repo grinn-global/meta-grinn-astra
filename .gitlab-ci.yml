@@ -43,6 +43,7 @@ stages:
           - grinn-astra-1680-ada
           - grinn-astra-1680-evb
           - grinn-astra-1680-sbc
+          - grinn-astra-2619-coral
           - grinn-astra-2619-sbc
         KAS_CONFIG:
           - default
