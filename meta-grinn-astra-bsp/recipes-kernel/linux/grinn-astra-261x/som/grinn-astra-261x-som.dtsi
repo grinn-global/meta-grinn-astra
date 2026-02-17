@@ -74,6 +74,7 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c1_pmux>;
+	clock-frequency = <100000>;
 
 	vcore: regulator@60 {
 		compatible = "silergy,sy8827n";
