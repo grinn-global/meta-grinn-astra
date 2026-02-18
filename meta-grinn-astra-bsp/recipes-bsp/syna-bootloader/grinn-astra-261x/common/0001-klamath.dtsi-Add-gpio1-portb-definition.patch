@@ -1,0 +1,39 @@
+From 653ba6604631f1dd1306561a2832af0458790fb3 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Sat, 28 Feb 2026 14:18:21 +0100
+Subject: [PATCH] klamath.dtsi: Add gpio1 (portb) definition
+
+Enable portb so it can be controlled by the bootloader.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ arch/arm/dts/klamath.dtsi | 14 ++++++++++++++
+ 1 file changed, 14 insertions(+)
+
+diff --git a/arch/arm/dts/klamath.dtsi b/arch/arm/dts/klamath.dtsi
+index 224ad774..b81ea6b3 100644
+--- a/arch/arm/dts/klamath.dtsi
++++ b/arch/arm/dts/klamath.dtsi
+@@ -303,5 +303,19 @@
+ 			     <0xf7e5e000 0x2000>;
+ 			interrupts = <GIC_PPI 9 (GIC_CPU_MASK_SIMPLE(4) | IRQ_TYPE_LEVEL_HIGH)>;
+ 		};
++
++		gpio1: gpio@f7f0e000 {
++			compatible = "snps,dw-apb-gpio";
++			reg = <0xf7f0e000 0x400>;
++			#address-cells = <1>;
++			#size-cells = <0>;
++
++			portb: gpio-port@0 {
++				gpio-controller;
++				#gpio-cells = <2>;
++				ngpios = <32>;
++				reg = <0>;
++			};
++		};
+ 	};
+ };
+-- 
+2.53.0
+

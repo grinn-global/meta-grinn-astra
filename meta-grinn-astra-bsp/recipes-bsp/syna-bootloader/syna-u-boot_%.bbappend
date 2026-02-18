@@ -35,7 +35,9 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 "
 
 SRC_URI:append:grinn-astra-261x-platform = " \
+	file://0001-klamath.dtsi-Add-gpio1-portb-definition.patch;patchdir=boot/u-boot \
 	file://misc.cfg \
+	file://usb.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
