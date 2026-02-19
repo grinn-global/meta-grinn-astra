@@ -9,3 +9,12 @@
 &uart0 {
 	status = "okay";
 };
+
+&usb0 {
+	status = "okay";
+	dr_mode = "peripheral";
+};
+
+&usb_phy0 {
+	status = "okay";
+};
