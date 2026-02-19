@@ -4,6 +4,38 @@
 	chosen {
 		stdout-path = "serial0:115200n8";
 	};
+
+	regulators {
+		compatible = "simple-bus";
+		#address-cells = <1>;
+		#size-cells = <0>;
+
+		usb1_vbus: usb1-vbus {
+			compatible = "regulator-fixed";
+			pinctrl-names = "default";
+			pinctrl-0 = <&usb_host_pwr_en_pmux>;
+			regulator-name = "usb1_vbus";
+			regulator-min-microvolt = <5000000>;
+			regulator-max-microvolt = <5000000>;
+			gpio = <&portb 22 GPIO_ACTIVE_HIGH>;
+			enable-active-high;
+		};
+	};
+};
+
+&pinctrl {
+	usb_host_pwr_en_pmux: usb-host-pwr-en-pmux {
+		groups = "GPIO54";
+		function = "gpio";
+	};
+};
+
+&portb {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "USB_HOST_OCSn", "", "", "USB_HOST_POWER_EN", "",
+		"", "", "", "", "", "", "", "";
 };
 
 &uart0 {
@@ -16,5 +48,15 @@
 };
 
 &usb_phy0 {
+	status = "okay";
+};
+
+&usb1 {
+	status = "okay";
+	vbus-supply = <&usb1_vbus>;
+	dr_mode = "host";
+};
+
+&usb_phy1 {
 	status = "okay";
 };
