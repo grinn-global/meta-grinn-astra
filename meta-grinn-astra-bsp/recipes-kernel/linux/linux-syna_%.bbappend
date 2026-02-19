@@ -11,6 +11,7 @@ DT_DIR = "${S}/arch/arm64/boot/dts/synaptics"
 SRC_URI:append:grinn-astra-platform = " \
 	file://${MACHINE}.dts;subdir=${DT_DIR} \
 	file://0001-linux-add-dwmac-support-for-TXC-90-degree-phase-shif.patch \
+	file://gpiolib.cfg \
 "
 
 SRC_URI:append:grinn-astra-1680-platform = " \
