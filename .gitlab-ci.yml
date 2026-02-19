@@ -8,6 +8,10 @@ spec:
       type: boolean
       default: true
       description: Use shared downloads mirror
+    git-mirror:
+      type: boolean
+      default: true
+      description: Use git mirrors
     deploy-public:
       type: boolean
       default: false
@@ -17,12 +21,13 @@ spec:
 
 include:
   - component: $CI_SERVER_FQDN/grinn/ci/ci-lib/deploy-public@deploy-public
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/workflow@1
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@1
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/workflow@2
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@2
     inputs:
       image-name: ghcr.io/siemens/kas/kas:5.2-debian-bookworm
       sstate-mirror: $[[ inputs.sstate-mirror ]]
       downloads-mirror: $[[ inputs.downloads-mirror ]]
+      git-mirror: $[[ inputs.git-mirror ]]
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@1
 
 stages:
