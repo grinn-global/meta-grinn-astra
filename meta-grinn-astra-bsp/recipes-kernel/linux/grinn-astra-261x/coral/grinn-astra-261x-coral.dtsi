@@ -1,8 +1,23 @@
 #include <dt-bindings/gpio/gpio.h>
+#include <dt-bindings/input/input.h>
 
 / {
 	chosen {
 		stdout-path = "serial0:115200n8";
+	};
+
+	keys {
+		compatible = "gpio-keys";
+		status = "okay";
+
+		user-button {
+			pinctrl-names = "default";
+			pinctrl-0 = <&user_button_pmux>;
+			label = "Enter Button";
+			linux,code = <KEY_ENTER>;
+			gpios = <&portb 26 GPIO_ACTIVE_LOW>;
+			debounce-interval = <50>;
+		};
 	};
 
 	regulators {
@@ -28,6 +43,11 @@
 		groups = "GPIO54";
 		function = "gpio";
 	};
+
+	user_button_pmux: user-button-pmux {
+		groups = "GPIO58";
+		function = "gpio";
+	};
 };
 
 &portb {
@@ -35,7 +55,7 @@
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "USB_HOST_OCSn", "", "", "USB_HOST_POWER_EN", "",
-		"", "", "", "", "", "", "", "";
+		"", "", "USER_BUTTONn", "", "", "", "", "";
 };
 
 &uart0 {
