@@ -53,7 +53,7 @@
 &portb {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "POWER_SOURCE", "",
 		"", "", "", "USB_HOST_OCSn", "", "", "USB_HOST_POWER_EN", "",
 		"", "", "USER_BUTTONn", "", "", "", "", "";
 };
