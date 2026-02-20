@@ -64,6 +64,22 @@
 	};
 };
 
+&camera_video {
+	status = "okay";
+};
+
+&csi {
+	status = "okay";
+
+	ports {
+		port@0 {
+			csi_input: endpoint@0 {
+				remote-endpoint = <&cam_endpoint>;
+			};
+		};
+	};
+};
+
 &i2c0 {
 	status = "okay";
 	pinctrl-names = "default";
@@ -82,7 +98,33 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c3_pmux>;
+	no-irq-suspend;
 	clock-frequency = <100000>;
+
+	camera: ov5647@36 {
+		compatible = "ovti,ov5647";
+		status = "okay";
+		pinctrl-names = "default";
+		pinctrl-0 = <&csi_gpio1_pmux>;
+		reg = <0x36>;
+		pwdn-gpios = <&porta 9 GPIO_ACTIVE_LOW>;
+		clocks = <&osc>;
+		rotation = <0>;
+		orientation = <2>;
+
+		port {
+			cam_endpoint: endpoint {
+				clock-lanes = <0>;
+				data-lanes = <1 2>;
+				clock-noncontinuous;
+				remote-endpoint = <&csi_input>;
+			};
+		};
+	};
+};
+
+&isp {
+	status = "okay";
 };
 
 &pinctrl {
@@ -109,6 +151,14 @@
 	};
 };
 
+&porta {
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "CSI_GPIO0", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "";
+};
+
 &portb {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
@@ -123,7 +173,17 @@
 		"", "", "", "", "", "", "LED_1", "LED_2";
 };
 
+&porte {
+	gpio-line-names =
+		"", "", "", "", "", "", "CSI_GPIO1", "";
+};
+
 &sm_pinctrl {
+	csi_gpio1_pmux: csi-gpio1-pmux {
+		groups = "SM_GPIO30";
+		function = "gpio";
+	};
+
 	i2c0_pmux: i2c0-pmux {
 		groups = "SM_GPIO37", "SM_GPIO38";
 		function = "tw0";
