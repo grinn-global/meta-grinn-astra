@@ -7,6 +7,14 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	bt_reg_on: bt-reg-on {
+		compatible = "syna,rfkill";
+		status = "okay";
+		pinctrl-names = "default";
+		pinctrl-0 = <&w_disable2_pmux>;
+		bt-power-gpio = <&portb 18 GPIO_ACTIVE_HIGH>;
+	};
+
 	keys {
 		compatible = "gpio-keys";
 		status = "okay";
@@ -87,6 +95,14 @@
 			states = <1800000 0x0
 				  3300000 0x1>;
 		};
+	};
+
+	sdhci1_pwrseq: sdhci1-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		pinctrl-names = "default";
+		pinctrl-0 = <&w_disable1_pmux>;
+		reset-gpios = <&portb 16 GPIO_ACTIVE_LOW>;
+		post-power-on-delay-ms = <50>;
 	};
 };
 
@@ -277,11 +293,21 @@
 		groups = "GPIO55";
 		function = "gpio";
 	};
+
+	w_disable1_pmux: w-disable1-pmux {
+		groups = "GPIO48";
+		function = "gpio";
+	};
+
+	w_disable2_pmux: w-disable2-pmux {
+		groups = "GPIO50";
+		function = "gpio";
+	};
 };
 
 &porta {
 	gpio-line-names =
-		"", "", "", "", "", "", "", "",
+		"", "", "", "SDIO_RSTn", "", "", "", "",
 		"", "CSI_GPIO0", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
@@ -291,8 +317,8 @@
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
 		"SPI5_SS2", "", "GPIO42", "", "GPIO44", "GPIO45", "POWER_SOURCE", "GPIO47",
-		"", "", "", "USB_HOST_OCSn", "", "USD_PWR_EN", "USB_HOST_POWER_EN", "USD_VSEL",
-		"GPIO56", "", "USER_BUTTONn", "", "", "", "", "";
+		"W_DISABLE1n", "M2_SDIO_HOST_WAKEn", "W_DISABLE2n", "USB_HOST_OCSn", "", "USD_PWR_EN", "USB_HOST_POWER_EN", "USD_VSEL",
+		"GPIO56", "WAKEUPn", "USER_BUTTONn", "", "", "", "", "";
 };
 
 &portc {
@@ -309,6 +335,20 @@
 &portf {
 	gpio-line-names =
 		"", "", "SM_GPIO34", "", "", "", "", "";
+};
+
+&sdhci1 {
+	status = "okay";
+	bus-width = <4>;
+	sdclkdl-dc = /bits/ 8 <50>;
+	pad-sp = /bits/ 8 <12>;
+	pad-sn = /bits/ 8 <12>;
+	no-sd;
+	no-mmc;
+	non-removable;
+	mmc-pwrseq = <&sdhci1_pwrseq>;
+	mode1-tune;
+	keep-power-in-suspend;
 };
 
 &sdhci2 {
@@ -360,6 +400,12 @@
 		function = "gpio";
 	};
 
+	uart1_pmux: uart1-pmux {
+		groups = "SM_GPIO31", "SM_GPIO32", "SM_GPIO35", "SM_GPIO36";
+		function = "uart1";
+		drive-strength = <7>;
+	};
+
 	uart3_pmux: uart3-pmux {
 		groups = "SM_GPIO28", "SM_GPIO29";
 		function = "uart3";
@@ -393,6 +439,14 @@
 
 &uart0 {
 	status = "okay";
+};
+
+&uart1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart1_pmux>;
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 };
 
 &uart3 {
