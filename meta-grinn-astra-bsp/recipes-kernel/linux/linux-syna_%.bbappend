@@ -37,6 +37,7 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://bcmdhd.cfg \
 	file://gpio-led.cfg \
 	file://eth.cfg \
+	file://nvme.cfg \
 	${@bb.utils.contains('MACHINE_FEATURES', 'deepx', 'file://deepx.cfg', '', d)} \
 "
 
