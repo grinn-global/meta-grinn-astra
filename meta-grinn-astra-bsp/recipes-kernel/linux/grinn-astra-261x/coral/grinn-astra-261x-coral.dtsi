@@ -266,9 +266,9 @@
 &portb {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "POWER_SOURCE", "",
+		"", "", "GPIO42", "", "", "GPIO45", "POWER_SOURCE", "",
 		"", "", "", "USB_HOST_OCSn", "", "USD_PWR_EN", "USB_HOST_POWER_EN", "USD_VSEL",
-		"", "", "USER_BUTTONn", "", "", "", "", "";
+		"GPIO56", "", "USER_BUTTONn", "", "", "", "", "";
 };
 
 &portc {
@@ -279,7 +279,7 @@
 
 &porte {
 	gpio-line-names =
-		"", "", "", "", "", "", "CSI_GPIO1", "";
+		"", "", "", "SM_GPIO27", "", "", "CSI_GPIO1", "";
 };
 
 &sdhci2 {
