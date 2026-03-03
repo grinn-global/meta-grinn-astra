@@ -215,6 +215,14 @@
 	status = "okay";
 };
 
+&pdma0 {
+	status = "okay";
+};
+
+&pdma1 {
+	status = "okay";
+};
+
 &pinctrl {
 	i2c2_pmux: i2c2-pmux {
 		groups = "GPIO23", "GPIO24";
@@ -231,6 +239,12 @@
 	sdhci2_pmux: sdhci2-pmux {
 		groups = "GPIO16", "GPIO17", "GPIO18", "GPIO19", "GPIO20", "GPIO21", "GPIO22";
 		function = "sdio2";
+		drive-strength = <7>;
+	};
+
+	uart5_pmux: uart5-pmux {
+		groups = "GPIO25", "GPIO26";
+		function = "uart5";
 		drive-strength = <7>;
 	};
 
@@ -325,6 +339,12 @@
 		groups = "SM_GPIO15";
 		function = "gpio";
 	};
+
+	uart3_pmux: uart3-pmux {
+		groups = "SM_GPIO28", "SM_GPIO29";
+		function = "uart3";
+		drive-strength = <7>;
+	};
 };
 
 &smmu {
@@ -333,6 +353,18 @@
 
 &uart0 {
 	status = "okay";
+};
+
+&uart3 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart3_pmux>;
+};
+
+&uart5 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5_pmux>;
 };
 
 &usb0 {
