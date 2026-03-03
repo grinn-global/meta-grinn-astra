@@ -348,3 +348,8 @@
 &usb_phy1 {
 	status = "okay";
 };
+
+&vpp {
+    status = "okay";
+    enable_ampless_boot = <1>;
+};
