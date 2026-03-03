@@ -242,6 +242,16 @@
 		drive-strength = <7>;
 	};
 
+	spi5_pmux: spi5-pmux {
+		groups = "GPIO37", "GPIO38", "GPIO41";
+		function = "spi5";
+	};
+
+	spi5_ss2_pmux: spi5-ss2-pmux {
+		groups = "GPIO40";
+		function = "gpio";
+	};
+
 	uart5_pmux: uart5-pmux {
 		groups = "GPIO25", "GPIO26";
 		function = "uart5";
@@ -280,14 +290,14 @@
 &portb {
 	gpio-line-names =
 		"", "", "", "", "", "", "", "",
-		"", "", "GPIO42", "", "GPIO44", "GPIO45", "POWER_SOURCE", "GPIO47",
+		"SPI5_SS2", "", "GPIO42", "", "GPIO44", "GPIO45", "POWER_SOURCE", "GPIO47",
 		"", "", "", "USB_HOST_OCSn", "", "USD_PWR_EN", "USB_HOST_POWER_EN", "USD_VSEL",
 		"GPIO56", "", "USER_BUTTONn", "", "", "", "", "";
 };
 
 &portc {
 	gpio-line-names =
-		"", "", "", "", "", "VCORE_ONn", "", "",
+		"", "", "", "", "", "VCORE_ONn", "SM_SPI1_SS3", "",
 		"", "", "", "", "", "", "LED_1", "LED_2";
 };
 
@@ -340,6 +350,16 @@
 		function = "gpio";
 	};
 
+	spi1_pmux: spi1-pmux {
+		groups = "SM_GPIO9", "SM_GPIO10", "SM_GPIO11";
+		function = "spi1";
+	};
+
+	spi1_ss3_pmux: spi1-ss3-pmux {
+		groups = "SM_GPIO6";
+		function = "gpio";
+	};
+
 	uart3_pmux: uart3-pmux {
 		groups = "SM_GPIO28", "SM_GPIO29";
 		function = "uart3";
@@ -349,6 +369,22 @@
 
 &smmu {
 	status = "okay";
+};
+
+&spi1 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi1_pmux>, <&spi1_ss3_pmux>;
+
+	cs-gpios = <&portc 6 GPIO_ACTIVE_LOW>;
+};
+
+&spi5 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&spi5_pmux>, <&spi5_ss2_pmux>;
+
+	cs-gpios = <&portb 8 GPIO_ACTIVE_LOW>;
 };
 
 &uart0 {
