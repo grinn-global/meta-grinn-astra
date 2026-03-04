@@ -66,6 +66,7 @@ repos:
   poky:
     url: https://git.yoctoproject.org/poky
     commit: bab0f9f62af9af580744948dd3240f648a99879a
+    branch: scarthgap
     layers:
       meta:
       meta-poky:
@@ -74,6 +75,7 @@ repos:
   meta-openembedded:
     url: https://github.com/openembedded/meta-openembedded
     commit: b8d1a14f7f3b76457c36752202ea7ae5881b6654
+    branch: scarthgap
     layers:
       meta-filesystems:
       meta-oe:
@@ -84,36 +86,44 @@ repos:
   meta-browser:
     url: https://github.com/OSSystems/meta-browser
     commit: 0c43dd66e951624415516bdefcd7a7a8a641fbc3
+    branch: scarthgap
     layers:
       meta-chromium:
 
   meta-clang:
     url: https://github.com/kraj/meta-clang
     commit: 9fbfa9db33131abdf3870a94f00199eb53e276e5
+    branch: scarthgap
 
   meta-lts-mixins:
     url: https://github.com/jusst-engineering/meta-lts-mixins
     commit: 1793a1b8fc92cf8688c72b7fd4181e3a2f5ade55
+    branch: scarthgap/rust
 
   meta-qt5:
     url: https://github.com/meta-qt5/meta-qt5
     commit: eb828418264a49b8d00035cb3d7b12fcea3be801
+    branch: scarthgap
 
   meta-selinux:
     url: https://github.com/ni/meta-selinux
     commit: 30a49ab1298d2a081089a9e4c760a9e02f8100f6
+    branch: nilrt/master/scarthgap
 
   meta-swupdate:
     url: https://github.com/sbabic/meta-swupdate
     commit: 4a65b1ed36c0b6ee4942d5f23c4984552b17cfe6
+    branch: scarthgap
 
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
     commit: a893fa206b8d6878336f5b760c3b46296263a07a
+    branch: scarthgap_6.12_v2.2.0
 
   meta-virtualization:
     url: https://github.com/ni/meta-virtualization
     commit: 450941a1b6df96285691e8c23d4f332d3c88a994
+    branch: nilrt/master/scarthgap
 
   meta-grinn-astra:
     layers:

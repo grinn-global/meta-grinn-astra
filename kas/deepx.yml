@@ -9,3 +9,4 @@ repos:
   meta-deepx-m1:
     url: https://github.com/DEEPX-AI/meta-deepx-m1
     commit: c061e8372bd7cdaf447aaf21808826e62ab7c658
+    branch: scarthgap
