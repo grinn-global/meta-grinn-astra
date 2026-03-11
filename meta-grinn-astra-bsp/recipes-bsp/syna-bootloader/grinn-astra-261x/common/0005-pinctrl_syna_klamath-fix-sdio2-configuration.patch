@@ -1,0 +1,25 @@
+From 269ce7e19c54e906d575ab7e72d4cb068705428a Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Fri, 13 Mar 2026 13:47:20 +0100
+Subject: [PATCH] pinctrl_syna_klamath: fix sdio2 configuration
+
+---
+ arch/arm/mach-synaptics/drivers/pinctrl/pinctrl_syna_klamath.h | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/arch/arm/mach-synaptics/drivers/pinctrl/pinctrl_syna_klamath.h b/arch/arm/mach-synaptics/drivers/pinctrl/pinctrl_syna_klamath.h
+index bca6c23..f7d8046 100644
+--- a/arch/arm/mach-synaptics/drivers/pinctrl/pinctrl_syna_klamath.h
++++ b/arch/arm/mach-synaptics/drivers/pinctrl/pinctrl_syna_klamath.h
+@@ -373,7 +373,7 @@ static const struct syna_desc_group klamath_soc_pinctrl_groups[] = {
+ 	SYNA_PINCTRL_GROUP("GPIO21", 0x14, 0x3, 0x18,
+ 			   SYNA_PINCTRL_FUNC(0x0, "gpio"), /* GPIO21 */
+ 			   SYNA_PINCTRL_FUNC(0x1, "spi2"), /* SCLK */
+-			   SYNA_PINCTRL_FUNC(0x2, "sdio2"), /* CLK */
++			   SYNA_PINCTRL_FUNC(0x3, "sdio2"), /* CLK */
+ 			   SYNA_PINCTRL_FUNC(0x5, "clkout")),
+ 	SYNA_PINCTRL_GROUP("GPIO22", 0x14, 0x3, 0x1b,
+ 			   SYNA_PINCTRL_FUNC(0x0, "gpio"), /* GPIO22 */
+-- 
+2.53.0
+

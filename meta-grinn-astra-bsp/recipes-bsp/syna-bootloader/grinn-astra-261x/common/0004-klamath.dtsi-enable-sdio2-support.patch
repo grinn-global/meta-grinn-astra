@@ -1,0 +1,62 @@
+From 70af17f20bc180240b764d5d769d540c574499b9 Mon Sep 17 00:00:00 2001
+From: Terry Zhou <Terry.Zhou@synaptics.com>
+Date: Wed, 11 Mar 2026 13:44:08 +0100
+Subject: [PATCH] configs: klamath: enable sdio2 support
+
+---
+ arch/arm/dts/klamath.dtsi | 25 +++++++++++++++++++++++++
+ 1 file changed, 25 insertions(+)
+
+diff --git a/arch/arm/dts/klamath.dtsi b/arch/arm/dts/klamath.dtsi
+index b81ea6b..5896c32 100644
+--- a/arch/arm/dts/klamath.dtsi
++++ b/arch/arm/dts/klamath.dtsi
+@@ -111,6 +111,12 @@
+ 		clock-frequency = <200000000>;
+ 	};
+ 
++	sdioclk: sdioclk {
++		compatible = "fixed-clock";
++		#clock-cells = <0>;
++		clock-frequency = <200000000>;
++	};
++
+ 	gmac1clk: gmac1clk {
+ 		compatible = "fixed-clock";
+ 		#clock-cells = <0>;
+@@ -217,6 +223,17 @@
+ 			status = "disabled";
+ 		};
+ 
++		sdhci2: sdhci@f7a02000 {
++			compatible = "snps,dwcmshc-sdhci";
++			reg = <0xf7a02000 0x1000>;
++			interrupts = <GIC_SPI 11 IRQ_TYPE_LEVEL_HIGH>;
++			clocks = <&sdioclk>, <&sdioclk>;
++			clock-names = "core", "bus";
++			resets = <&reset 0x350 7 0 1>;
++			bus-width = <4>;
++			status = "disabled";
++		};
++
+ 		gmac1: ethernet@f7a06000 {
+ 			compatible = "synaptics,klamath-dwmac-eqos";
+ 			reg = <0xf7a06000 0x2000>;
+@@ -288,6 +305,14 @@
+ 			#reset-cells = <4>;
+ 		};
+ 
++		mux0: mux-controller@f7e10040 {
++			compatible = "reg-mux";
++			reg = <0xf7e10040 0x4>;
++			#mux-control-cells = <1>;
++			mux-reg-masks = <0x0 0x30>;
++			status = "disabled";
++		};
++
+ 		pinctrl: pinctrl@f7e18000 {
+ 			compatible = "syna,klamath-soc-pinctrl";
+ 			reg = <0xf7e18000 0x18>;
+-- 
+2.53.0
+

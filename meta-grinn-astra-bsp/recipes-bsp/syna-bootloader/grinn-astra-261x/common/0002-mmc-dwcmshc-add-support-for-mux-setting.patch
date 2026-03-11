@@ -1,0 +1,41 @@
+From 59fe65451cd36aa4c5e3b422bae965f2ed5cc1c6 Mon Sep 17 00:00:00 2001
+From: Terry Zhou <Terry.Zhou@synaptics.com>
+Date: Wed, 31 Dec 2025 10:10:07 +0800
+Subject: [PATCH] mmc: dwcmshc: add support for mux setting
+
+Change-Id: I9cf361785658b3408ea446d410240aa3ca4043d5
+Signed-off-by: Terry Zhou <Terry.Zhou@synaptics.com>
+Reviewed-on: https://gerrit-sha.synaptics.com/gerrit/285620
+---
+
+diff --git a/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c b/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c
+index e419444..e64ce4c 100644
+--- a/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c
++++ b/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c
+@@ -27,6 +27,8 @@
+ #include <reset.h>
+ #include <sdhci.h>
+ #include <clk.h>
++#include <mux.h>
++#include <mux-internal.h>
+ #include <linux/delay.h>
+ 
+ #include "dwcmshc_sdhci.h"
+@@ -443,9 +445,17 @@
+ 	int ret = 0;
+ 	struct clk clk;
+ 	unsigned long clock;
++	struct mux_control *mux;
++	unsigned int state;
+ 
+ 	dwcmshc_reset_host(plat);
+ 
++	mux = devm_mux_control_get(dev, "mux-0");
++	if (!IS_ERR(mux)) {
++		state = dev_read_u32_default(dev, "mux-0-value", 0);
++		mux_control_select(mux, state);
++	}
++
+ 	ret = clk_get_by_index(dev, 0, &clk);
+ 	if (ret < 0) {
+ 		dev_err(dev, "failed to get clock\n");

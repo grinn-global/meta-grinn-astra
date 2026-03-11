@@ -36,6 +36,10 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 
 SRC_URI:append:grinn-astra-261x-platform = " \
 	file://0001-klamath.dtsi-Add-gpio1-portb-definition.patch;patchdir=boot/u-boot \
+	file://0002-mmc-dwcmshc-add-support-for-mux-setting.patch;patchdir=boot/u-boot \
+	file://0003-mmc-dwcmshc-add-support-for-non-phy-controller.patch;patchdir=boot/u-boot \
+	file://0004-klamath.dtsi-enable-sdio2-support.patch;patchdir=boot/u-boot \
+	file://0005-pinctrl_syna_klamath-fix-sdio2-configuration.patch;patchdir=boot/u-boot \
 	file://misc.cfg \
 	file://usb.cfg \
 "

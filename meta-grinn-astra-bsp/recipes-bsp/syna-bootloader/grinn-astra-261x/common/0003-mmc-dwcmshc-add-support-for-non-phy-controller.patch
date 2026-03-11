@@ -1,0 +1,151 @@
+From aa8b0a917a91af2df4d7b9add07b6467f3e8e814 Mon Sep 17 00:00:00 2001
+From: Terry Zhou <Terry.Zhou@synaptics.com>
+Date: Fri, 23 Jan 2026 14:45:33 +0800
+Subject: [PATCH] mmc: dwcmshc: add support for non-phy controller
+
+Change-Id: I5e976d313232054b8a949269cd5ce06adf9d5924
+Signed-off-by: Terry Zhou <Terry.Zhou@synaptics.com>
+Reviewed-on: https://gerrit-sha.synaptics.com/gerrit/287844
+Reviewed-by: Jenkins
+---
+
+diff --git a/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c b/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c
+index e64ce4c..998dbf0 100644
+--- a/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c
++++ b/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.c
+@@ -33,14 +33,20 @@
+ 
+ #include "dwcmshc_sdhci.h"
+ 
+-static void dwcmshc_reset_phy(struct sdhci_host *host, int rst)
++static int dwcmshc_reset_phy(struct sdhci_host *host, int rst)
+ {
+ 	volatile u16 valw;
++	struct dwcmshc_sdhci_plat *plat = dev_get_plat(host->mmc->dev);
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	valw = sdhci_readw(host, PHY_CNFG_REG);
+ 	valw &= ~PHY_RSTN;
+ 	valw |= rst;
+ 	sdhci_writew(host, valw, PHY_CNFG_REG);
++
++	return 0;
+ }
+ 
+ static void dwcmshc_reset_device(struct sdhci_host *host)
+@@ -70,9 +76,13 @@
+ 	reset_deassert_bulk(&plat->reset_ctl);
+ }
+ 
+-static void dwcmshc_setup_phy_datapath(struct sdhci_host *host)
++static int dwcmshc_setup_phy_datapath(struct sdhci_host *host)
+ {
+ 	u8 valb;
++	struct dwcmshc_sdhci_plat *plat = dev_get_plat(host->mmc->dev);
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	valb = sdhci_readb(host, PHY_COMMDL_CNFG_REG);
+ 	valb &= ~DLSTEP_SEL;
+@@ -100,11 +110,17 @@
+ 	valb &= ~AINPSEL_CNFG_MSK;
+ 	valb |= (3 << AINPSEL_CNFG_SFT);
+ 	sdhci_writeb(host, valb, PHY_ATDL_CNFG_REG);
++
++	return 0;
+ }
+ 
+-static void dwcmshc_setup_phy_delayline(struct sdhci_host *host, u8 delay)
++static int dwcmshc_setup_phy_delayline(struct sdhci_host *host, u8 delay)
+ {
+ 	u8 valb;
++	struct dwcmshc_sdhci_plat *plat = dev_get_plat(host->mmc->dev);
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	valb = sdhci_readb(host, PHY_SDCLKDL_CNFG_REG);
+ 	valb |= UPDATE_DC;
+@@ -118,11 +134,17 @@
+ 	valb = sdhci_readb(host, PHY_SDCLKDL_CNFG_REG);
+ 	valb &= ~UPDATE_DC;
+ 	sdhci_writeb(host, valb, PHY_SDCLKDL_CNFG_REG);
++
++	return 0;
+ }
+ 
+-static void dwcmshc_setup_phy_tuning(struct sdhci_host *host)
++static int dwcmshc_setup_phy_tuning(struct sdhci_host *host)
+ {
+ 	u32 offset, val;
++	struct dwcmshc_sdhci_plat *plat = dev_get_plat(host->mmc->dev);
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	offset = sdhci_readl(host, SDHCI_P_VENDOR_SPECIFIC_AREA);
+ 	offset &= SDHCI_P_VENDOR_SPECIFIC_AREA_MASK;
+@@ -134,6 +156,8 @@
+ 	val &= ~PRE_CHANGE_DLY_MSK;
+ 	val |= TUNE_CLK_STOP_EN | (3 << POST_CHANGE_DLY_SFT) | (3 << PRE_CHANGE_DLY_SFT);
+ 	sdhci_writel(host, val, offset);
++
++	return 0;
+ }
+ 
+ static int dwcmshc_setup_phy_configure(struct sdhci_host *host)
+@@ -146,6 +170,9 @@
+ 	volatile u16 valw;
+ 	volatile u32 val;
+ 	int timeout = 100;
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	if (host->mmc->signal_voltage == MMC_SIGNAL_VOLTAGE_330) {
+ 		gen_setting = &gen_setting_3v3;
+@@ -195,6 +222,9 @@
+ 	u16 valw;
+ 	u8 valb;
+ 	char *ep = NULL;
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	/* prepare DLL configuration */
+ 	valw = sdhci_readw(host, SDHCI_CLOCK_CONTROL);
+@@ -264,6 +294,9 @@
+ static int dwcmshc_setup_phy(struct sdhci_host *host)
+ {
+ 	struct dwcmshc_sdhci_plat *plat = dev_get_plat(host->mmc->dev);
++
++	if (plat->skip_phy)
++		return 0;
+ 
+ 	dwcmshc_setup_phy_datapath(host);
+ 	dwcmshc_setup_phy_delayline(host,
+@@ -479,6 +512,9 @@
+ 	if (dev_read_bool(dev, "fixed-voltage"))
+ 		plat->fixed_voltage = 1;
+ 
++	if (dev_read_bool(dev, "skip-phy"))
++		plat->skip_phy = 1;
++
+ 	if (dev_read_bool(dev, "sdhci-sdio"))
+ 		plat->mmc_type = SD_VERSION_SD;
+ 	else
+diff --git a/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.h b/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.h
+index 639d08e..cfb6b22 100644
+--- a/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.h
++++ b/arch/arm/mach-synaptics/drivers/mmc/dwcmshc_sdhci.h
+@@ -184,6 +184,7 @@
+ 	u32 dll_delay_offset;
+ 	enum mmc_voltage phy_voltage;
+ 	int fixed_voltage;
++	int skip_phy;
+ };
+ 
+ struct phy_gen_setting gen_setting_1v8 = {
