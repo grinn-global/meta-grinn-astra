@@ -54,6 +54,51 @@
 			enable-active-high;
 		};
 	};
+
+	vmmc_sdhci2: vmmc-sdhci2 {
+		compatible = "regulator-fixed";
+		pinctrl-names = "default";
+		pinctrl-0 = <&vmmc_sdhci2_pmux>;
+		regulator-name = "vmmc_sdio";
+		regulator-min-microvolt = <3300000>;
+		regulator-max-microvolt = <3300000>;
+		gpio = <&portb 21 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+	};
+
+	vqmmc_sdhci2: vqmmc-sdhci2 {
+		compatible = "regulator-gpio";
+		pinctrl-names = "default";
+		pinctrl-0 = <&vqmmc_sdhci2_pmux>;
+		regulator-name = "vqmmc_sdio";
+		regulator-type = "voltage";
+		regulator-min-microvolt = <1800000>;
+		regulator-max-microvolt = <3300000>;
+		gpios = <&portb 23 GPIO_ACTIVE_HIGH>;
+		enable-active-high;
+		states = <1800000 0x0 3300000 0x1>;
+	};
+};
+
+&mux0 {
+	status = "okay";
+};
+
+&pinctrl {
+	sdhci2_pmux: sdhci2-pmux {
+		groups = "GPIO16", "GPIO17", "GPIO18", "GPIO19", "GPIO20", "GPIO21", "GPIO22";
+		function = "sdio2";
+	};
+
+	vmmc_sdhci2_pmux: vmmc-sdhci2-pmux {
+		groups = "GPIO53";
+		function = "gpio";
+	};
+
+	vqmmc_sdhci2_pmux: vqmmc-sdhci2-pmux {
+		groups = "GPIO55";
+		function = "gpio";
+	};
 };
 
 &sysmgr_pinctrl {
@@ -75,6 +120,26 @@
 	mmc-hs200-1_8v;
 	mmc-hs400-1_8v;
 	fixed-voltage;
+};
+
+&sdhci2 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&sdhci2_pmux>;
+	sdhci-sdio;
+	disable-wp;
+	cap-sd-highspeed;
+	sd-uhs-sdr12;
+	sd-uhs-sdr25;
+	sd-uhs-sdr50;
+	sd-uhs-sdr104;
+	fixed-voltage;
+	skip-phy;
+	vmmc-supply = <&vmmc_sdhci2>;
+	vqmmc-supply = <&vqmmc_sdhci2>;
+	mux-control-names = "mux-0";
+	mux-controls = <&mux0 0>;
+	mux-0-value = <3>;
 };
 
 &usb_phy0 {
