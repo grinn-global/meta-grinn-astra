@@ -24,17 +24,12 @@
 
 /dts-v1/;
 
-#include "dolphin.dtsi"
+#include "grinn-astra-1680-som.dtsi"
 #include <dt-bindings/gpio/gpio.h>
 
 / {
 	model = "Grinn Astra 1680 ada";
 	compatible = "Synaptics,dolphin", "Synaptics,asserial";
-
-	memory {
-		device_type = "memory";
-		reg = <0 0 0 0x80000000>;
-	};
 
 	chosen {
 		stdout-path = &smuart0;
@@ -54,13 +49,6 @@
 			regulator-name = "vmmc_sdio";
 			enable-active-high;
 			gpio = <&portb 12 GPIO_ACTIVE_HIGH>;
-		};
-	};
-
-	firmware {
-		optee {
-			compatible = "linaro,optee-tz";
-			method = "smc";
 		};
 	};
 
@@ -84,11 +72,6 @@
 };
 
 &pinctrl {
-	emmc_pmux: emmc-pmux {
-		groups = "NAND_IO0", "NAND_IO1", "NAND_IO2", "NAND_IO3", "NAND_IO4", "NAND_IO5", "ND_IO6", "NAND_IO7", "NAND_ALE", "NAND_CLE", "NAND_WPn";
-		function = "emmc";
-	};
-
 	sdio_pmux: sdio_pmux{
 		groups = "SDIO_CDn";
 		function = "sdio";
@@ -120,10 +103,6 @@
 		output-high;
 		line-name = "hdmi-5v-en";
 	};
-};
-
-&CPU_SLEEP_0 {
-	status = "disabled";
 };
 
 &smuart0 {

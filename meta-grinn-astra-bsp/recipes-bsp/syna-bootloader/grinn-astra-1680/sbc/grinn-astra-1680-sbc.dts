@@ -24,27 +24,15 @@
 
 /dts-v1/;
 
-#include "dolphin.dtsi"
+#include "grinn-astra-1680-som.dtsi"
 #include <dt-bindings/gpio/gpio.h>
 
 / {
 	model = "Grinn Astra 1680 sbc";
 	compatible = "Synaptics,dolphin", "Synaptics,asserial";
 
-	memory {
-		device_type = "memory";
-		reg = <0 0 0 0x80000000>;
-	};
-
 	chosen {
 		stdout-path = &smuart0;
-	};
-
-	firmware {
-		optee {
-			compatible = "linaro,optee-tz";
-			method = "smc";
-		};
 	};
 
 	soc {
@@ -84,10 +72,6 @@
 		output-high;
 		line-name = "hdmi-5v-en";
 	};
-};
-
-&CPU_SLEEP_0 {
-	status = "disabled";
 };
 
 &smuart0 {

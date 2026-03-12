@@ -1,4 +1,5 @@
 FILESEXTRAPATHS:prepend:grinn-astra-platform := "${THISDIR}/common:"
+FILESEXTRAPATHS:prepend:grinn-astra-1680-som := "${THISDIR}/grinn-astra-1680/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-evb := "${THISDIR}/grinn-astra-1680/evb:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
@@ -11,6 +12,10 @@ SRC_URI:append:grinn-astra-platform = " \
 	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch;patchdir=boot/u-boot \
 	file://0002-uboot-Add-Yocto-config-fragment-support.patch;patchdir=build \
 	file://${MACHINE}.dts \
+"
+
+SRC_URI:append:grinn-astra-1680-som = " \
+        file://grinn-astra-1680-som.dtsi \
 "
 
 SRC_URI:append:grinn-astra-1680-platform = " \
@@ -28,6 +33,7 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 
 do_configure:append:grinn-astra-1680-platform() {
 	cp ${WORKDIR}/${MACHINE}.dts ${DT_DIR}/dolphin-rdk.dts
+	cp ${WORKDIR}/grinn-astra-1680-som.dtsi ${DT_DIR}
 }
 
 do_configure:append:grinn-astra-261x-platform() {
