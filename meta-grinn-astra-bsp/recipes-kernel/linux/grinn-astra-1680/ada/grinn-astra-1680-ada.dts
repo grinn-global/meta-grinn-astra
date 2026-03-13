@@ -666,7 +666,7 @@
 	};
 };
 
-&i2cdemux3_i2c {
+&i2c3 {
 	expander0: gpio@43 {
 		compatible = "fcs,fxl6408";
 		reg = <0x43>;
