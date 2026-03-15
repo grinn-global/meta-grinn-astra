@@ -531,8 +531,8 @@
 	disable-wp;
 	keep-power-in-suspend;
 	broken-cd;
-	sd-uhs-ddr50;
-	max-frequency = <25000000>;
+	sd-uhs-sdr104;
+	max-frequency = <200000000>;
 	mmc-pwrseq = <&sdhci1_pwrseq>;
 };
 
