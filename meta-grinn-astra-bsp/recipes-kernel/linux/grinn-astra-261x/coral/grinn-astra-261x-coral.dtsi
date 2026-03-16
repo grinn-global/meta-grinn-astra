@@ -178,14 +178,20 @@
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c0_pmux>;
-	clock-frequency = <100000>;
+	clock-frequency = <400000>;
+	i2c-sda-hold-time-ns = <300>;
+	i2c-sda-falling-time-ns = <250>;
+	i2c-scl-falling-time-ns = <250>;
 };
 
 &i2c2 {
 	status = "okay";
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c2_pmux>;
-	clock-frequency = <100000>;
+	clock-frequency = <400000>;
+	i2c-sda-hold-time-ns = <300>;
+	i2c-sda-falling-time-ns = <250>;
+	i2c-scl-falling-time-ns = <250>;
 };
 
 &i2c3 {
@@ -193,7 +199,10 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c3_pmux>;
 	no-irq-suspend;
-	clock-frequency = <100000>;
+	clock-frequency = <400000>;
+	i2c-sda-hold-time-ns = <300>;
+	i2c-sda-falling-time-ns = <250>;
+	i2c-scl-falling-time-ns = <250>;
 
 	camera: ov5647@36 {
 		compatible = "ovti,ov5647";
