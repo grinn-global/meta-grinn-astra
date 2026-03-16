@@ -8,10 +8,15 @@ spec:
       type: boolean
       default: true
       description: Use shared downloads mirror
+    deploy-public:
+      type: boolean
+      default: false
+      description: Deploy to public HTTP server
 
 ---
 
 include:
+  - component: $CI_SERVER_FQDN/grinn/ci/ci-lib/deploy-public@deploy-public
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/workflow@1
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@1
     inputs:
@@ -24,6 +29,7 @@ stages:
   - ci-kas
   - build
   - test
+  - deploy
 
 .ci_build_matrix: &ci_build_matrix
   parallel:
@@ -64,3 +70,29 @@ lava:
       parallel:
         matrix:
           - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
+
+deploy-public:
+  <<: *ci_build_matrix
+  variables:
+    KAS_TARGET: astra-media
+  rules:
+    - if: $[[ inputs.deploy-public ]] == "true"
+  needs:
+    - job: build
+      artifacts: true
+      parallel:
+        matrix:
+          - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
+  script:
+    - apk add tar yq zstd
+    - git clone --depth 1 --revision $CI_COMMIT_SHA $CI_REPOSITORY_URL
+
+    - |
+      DATE=${CI_PIPELINE_CREATED_AT%%T*}
+      BRANCH=$(yq ".repos.meta-synaptics.branch" $CI_PROJECT_NAME/kas/default.yml)
+      VERSION=${BRANCH##*_}
+      COMMIT=${CI_COMMIT_SHA:0:10}
+      FILE_NAME=$KAS_MACHINE-default-$DATE-$VERSION-$COMMIT.tar.zst
+
+    - tar -cf - -C build/tmp/deploy/images/$KAS_MACHINE/ SYNAIMG/ | zstd -T0 -z -19 > $FILE_NAME
+    - ci-lib/bin/deploy-public --upload-path astra/$DATE $FILE_NAME
