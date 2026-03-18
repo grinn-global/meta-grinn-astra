@@ -18,6 +18,7 @@ include:
       image-name: ghcr.io/siemens/kas/kas:5.1-debian-bookworm
       sstate-mirror: $[[ inputs.sstate-mirror ]]
       downloads-mirror: $[[ inputs.downloads-mirror ]]
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@1
 
 stages:
   - ci-kas
@@ -45,50 +46,21 @@ build:
   <<: *ci_build_matrix
   variables:
     KAS_TARGET: astra-media
-  script:
-    # Build
-    - >
-      ci-kas/kas-log-filter -o build.log
-      kas build $CI_PROJECT_NAME/kas/default.yml
-
-    # Prepare images/ and lava job template for LAVA testing
-    - rm -rf lava
-    - mkdir -p lava/images
-
-    - cp -rL build/tmp/deploy/images/${KAS_MACHINE}/SYNAIMG lava/images/
-    - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_TARGET}-${KAS_MACHINE}.rootfs.tar.xz lava/images/
-    - cp -L build/tmp/deploy/images/${KAS_MACHINE}/Image-${KAS_MACHINE}.bin lava/images/
-    - cp -L build/tmp/deploy/images/${KAS_MACHINE}/${KAS_MACHINE}.dtb lava/images/
-
-    # Save GitLab CI job id and KAS details, used in .lava.yml template
-    - echo "BUILD_JOB_ID=$CI_JOB_ID" > build.env
-    - echo "KAS_TARGET=${KAS_TARGET}" >> build.env
-    - echo "KAS_MACHINE=${KAS_MACHINE}" >> build.env
-
-    # Copy the template to artifacts for use in LAVA
-    - cp $CI_PROJECT_NAME/.lava.yml lava/.lava.yml
-
   artifacts:
     expire_in: 1d
     paths:
-      - lava/
-    reports:
-      dotenv: build.env
+      - build.log
+      - build/tmp/deploy/images/*/*.rootfs.tar.xz
+      - build/tmp/deploy/images/*/Image-*.bin
+      - build/tmp/deploy/images/*/*.dtb
+      - build/tmp/deploy/images/*/SYNAIMG
 
 lava:
-  stage: test
-  timeout: 6h
-  tags:
-    - lava-runner
   <<: *ci_test_matrix
   needs:
+    - lava-pre
     - job: build
       artifacts: true
       parallel:
         matrix:
           - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
-  script: submit lava/.lava.yml
-  artifacts:
-    when: always
-    paths:
-      - "*.yaml"
