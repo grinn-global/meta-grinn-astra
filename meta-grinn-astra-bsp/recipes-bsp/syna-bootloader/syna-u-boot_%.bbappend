@@ -41,6 +41,7 @@ SRC_URI:append:grinn-astra-261x-platform = " \
 	file://0004-klamath.dtsi-enable-sdio2-support.patch;patchdir=boot/u-boot \
 	file://0005-pinctrl_syna_klamath-fix-sdio2-configuration.patch;patchdir=boot/u-boot \
 	file://misc.cfg \
+	file://mux.cfg \
 	file://usb.cfg \
 "
 
