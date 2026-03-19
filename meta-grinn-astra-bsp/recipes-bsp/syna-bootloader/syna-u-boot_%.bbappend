@@ -4,6 +4,7 @@ FILESEXTRAPATHS:prepend:grinn-astra-1680-som := "${THISDIR}/grinn-astra-1680/som
 FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-evb := "${THISDIR}/grinn-astra-1680/evb:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
+FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/grinn-astra-261x/common:"
 FILESEXTRAPATHS:prepend:grinn-astra-2619-coral := "${THISDIR}/grinn-astra-261x/coral:"
 FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
 
@@ -31,6 +32,10 @@ SRC_URI:append:grinn-astra-1680-evb = " \
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://display_disable.cfg \
+"
+
+SRC_URI:append:grinn-astra-261x-platform = " \
+	file://misc.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
