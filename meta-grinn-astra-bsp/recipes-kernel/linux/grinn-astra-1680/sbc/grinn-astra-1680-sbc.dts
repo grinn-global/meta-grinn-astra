@@ -486,9 +486,15 @@
 	};
 
 	rpi_portb_pmux: rpi-portb-pmux {
-		groups = "SDIO_WP", "SDIO_CDn", "SPI1_SCLK", "SPI1_SDO", "SPI1_SDI", "SPI1_SS0n", "SPI1_SS1n",
-			 "STS0_CLK", "STS0_SOP", "STS0_SD", "STS0_VALD", "STS1_CLK", "STS1_SOP", "STS1_VALD";
+		groups = "SDIO_WP", "SDIO_CDn", "SPI1_SCLK", "SPI1_SDO", "SPI1_SDI",
+			 "SPI1_SS0n", "SPI1_SS1n", "STS1_CLK", "STS1_SOP", "STS1_VALD";
 		function = "gpio";
+	};
+
+	uart3_pmux: uart3-pmux {
+		groups = "STS0_CLK", "STS0_SOP", "STS0_SD", "STS0_VALD";
+		function = "uart3";
+		drive-strength = <3>;
 	};
 
 	usb_hub_reset_pmux: usb-hub-reset-pmux {
@@ -514,7 +520,7 @@
 
 	gpio-line-names =
 		"", "", "", "", "RPi_GPIO_4", "HDMI_TX_5V_EN", "RPi_GPIO_13", "RPi_GPIO_12",
-		"RPi_GPIO_23", "RPi_GPIO_22", "RPi_GPIO_14", "RPi_GPIO_15", "RPi_GPIO_0", "RPi_GPIO_1", "", "",
+		"", "", "", "", "RPi_GPIO_0", "RPi_GPIO_1", "", "",
 		"RPi_GPIO_9", "RPi_GPIO_11", "RPi_GPIO_10", "", "", "RPi_GPIO_7", "RPi_GPIO_8", "USB_HUB_RESET",
 		"", "", "", "", "", "", "", "";
 
@@ -607,6 +613,12 @@
 &uart2 {
 	status = "okay";
 	pinctrl-0 = <&uart2_pmux>;
+	pinctrl-names = "default";
+};
+
+&uart3 {
+	status = "okay";
+	pinctrl-0 = <&uart3_pmux>;
 	pinctrl-names = "default";
 };
 
