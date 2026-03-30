@@ -43,7 +43,7 @@ local_conf_header:
 
     ENABLE_RESCUE_MODE = "0"
 
-    IMAGE_FSTYPES += " synaimg tar.xz"
+    IMAGE_FSTYPES += " synaimg tar.zst"
 
     GLIBC_GENERATE_LOCALES = "zh_CN.UTF-8 en_GB.UTF-8 en_US.UTF-8"
     IMAGE_LINGUAS = "zh-cn en-gb en-us"

@@ -56,7 +56,7 @@ build:
     expire_in: 1d
     paths:
       - build.log
-      - build/tmp/deploy/images/*/*.rootfs.tar.xz
+      - build/tmp/deploy/images/*/*.rootfs.tar.zst
       - build/tmp/deploy/images/*/Image-*.bin
       - build/tmp/deploy/images/*/*.dtb
       - build/tmp/deploy/images/*/SYNAIMG

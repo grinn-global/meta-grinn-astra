@@ -23,8 +23,8 @@ actions:
       dtb:
         url: "{{ job.CI_API_V4_URL }}/projects/{{ job.CI_PROJECT_ID }}/jobs/{{ job.BUILD_JOB_ID }}/artifacts/build/tmp/deploy/images/{{ job.KAS_MACHINE }}/{{ job.KAS_MACHINE }}.dtb?job_token={{ job.CI_JOB_TOKEN }}"
       nfsrootfs:
-        url: "{{ job.CI_API_V4_URL }}/projects/{{ job.CI_PROJECT_ID }}/jobs/{{ job.BUILD_JOB_ID }}/artifacts/build/tmp/deploy/images/{{ job.KAS_MACHINE }}/{{ job.KAS_TARGET }}-{{ job.KAS_MACHINE }}.rootfs.tar.xz?job_token={{ job.CI_JOB_TOKEN }}"
-        compression: xz
+        url: "{{ job.CI_API_V4_URL }}/projects/{{ job.CI_PROJECT_ID }}/jobs/{{ job.BUILD_JOB_ID }}/artifacts/build/tmp/deploy/images/{{ job.KAS_MACHINE }}/{{ job.KAS_TARGET }}-{{ job.KAS_MACHINE }}.rootfs.tar.zst?job_token={{ job.CI_JOB_TOKEN }}"
+        compression: zstd
 
   - boot:
       method: u-boot
