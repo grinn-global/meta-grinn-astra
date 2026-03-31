@@ -1,8 +1,14 @@
 #!/bin/bash
+set -e
 
 rootfs=$(swupdate -g)
 
 rootfs_num=$(echo "$rootfs" | grep -o '[0-9]*$')
+
+if [ -z "$rootfs_num" ]; then
+    echo "Error: could not determine current rootfs partition number" >&2
+    exit 1
+fi
 
 if (( rootfs_num % 2 == 0 )); then
     e2fsck -f /dev/mmcblk0p13 > /dev/null 2>&1
