@@ -61,7 +61,7 @@ globals :
     syslog = true;
     postupdatecmd = "fw_setenv upgrade_available 1"
     gen-swversions = "/etc/sw-versions"
-    public-key-file = "/etc/demo.cert.pem";
+    public-key-file = "/etc/swupdate.cert.pem";
 #	mtd-blacklist = "0 1 2 3 4 5 6";
 };
 

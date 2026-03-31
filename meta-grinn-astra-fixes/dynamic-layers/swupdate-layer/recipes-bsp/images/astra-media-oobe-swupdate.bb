@@ -25,8 +25,14 @@ SRC_URI = " \
 IMAGE_DEPENDS = "${SYNA_IMAGE_NAME}"
 
 SWUPDATE_SIGNING = "CMS"
-SWUPDATE_CMS_KEY = "${THISDIR}/${SWU_IMAGE_GENERATION_COMMON}/demo.key.pem"
-SWUPDATE_CMS_CERT = "${THISDIR}/${SWU_IMAGE_GENERATION_COMMON}/demo.cert.pem"
+# Demo key/cert — safe for development only.
+# For production override both variables in local.conf, e.g.:
+#   SWUPDATE_CMS_KEY  = "/path/to/production.key.pem"
+#   SWUPDATE_CMS_CERT = "/path/to/production.cert.pem"
+# The cert installed on the target device is controlled by SWUPDATE_CERT_FILE
+# in swupdate_%.bbappend and must match the signing cert.
+SWUPDATE_CMS_KEY  ?= "${THISDIR}/${SWU_IMAGE_GENERATION_COMMON}/demo.key.pem"
+SWUPDATE_CMS_CERT ?= "${THISDIR}/${SWU_IMAGE_GENERATION_COMMON}/demo.cert.pem"
 
 SWUPDATE_IMAGES = " \
 	preboot \
