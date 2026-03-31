@@ -60,6 +60,8 @@ build:
       - build/tmp/deploy/images/*/Image-*.bin
       - build/tmp/deploy/images/*/*.dtb
       - build/tmp/deploy/images/*/SYNAIMG
+    exclude:
+      - build/tmp/deploy/images/*/SYNAIMG/rootfs.subimg.gz
 
 lava:
   <<: *ci_test_matrix
