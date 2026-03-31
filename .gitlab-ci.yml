@@ -62,11 +62,10 @@ build:
     paths:
       - build.log
       - build/tmp/deploy/images/*/*.rootfs.tar.zst
+      - build/tmp/deploy/images/*/*.synaimg.tar.zst
+      - build/tmp/deploy/images/*/*.synaimg.tar.zst.sha256sum
       - build/tmp/deploy/images/*/Image-*.bin
       - build/tmp/deploy/images/*/*.dtb
-      - build/tmp/deploy/images/*/SYNAIMG
-    exclude:
-      - build/tmp/deploy/images/*/SYNAIMG/rootfs.subimg.gz
 
 lava:
   <<: *ci_test_matrix
@@ -91,15 +90,13 @@ deploy-public:
         matrix:
           - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
   script:
-    - apk add tar yq zstd
+    - apk add yq
     - git clone --depth 1 --revision $CI_COMMIT_SHA $CI_REPOSITORY_URL
-
     - |
       DATE=${CI_PIPELINE_CREATED_AT%%T*}
       BRANCH=$(yq ".repos.meta-synaptics.branch" $CI_PROJECT_NAME/kas/default.yml)
       VERSION=${BRANCH##*_}
       COMMIT=${CI_COMMIT_SHA:0:10}
       FILE_NAME=$KAS_MACHINE-default-$DATE-$VERSION-$COMMIT.tar.zst
-
-    - tar -cf - -C build/tmp/deploy/images/$KAS_MACHINE/ SYNAIMG/ | zstd -T0 -z -19 > $FILE_NAME
+    - cp build/tmp/deploy/images/$KAS_MACHINE/*.rootfs.synaimg.tar.zst $FILE_NAME
     - ci-lib/bin/deploy-public --upload-path astra/$DATE $FILE_NAME
