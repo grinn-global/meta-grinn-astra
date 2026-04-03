@@ -40,18 +40,30 @@ stages:
   parallel:
     matrix:
       - KAS_MACHINE:
-        - grinn-astra-1680-ada
-        - grinn-astra-1680-evb
-        - grinn-astra-1680-sbc
-        - grinn-astra-2619-sbc
+          - grinn-astra-1680-ada
+          - grinn-astra-1680-evb
+          - grinn-astra-1680-sbc
+          - grinn-astra-2619-sbc
+        KAS_CONFIG:
+          - default
+      - KAS_MACHINE:
+          - grinn-astra-1680-sbc
+        KAS_CONFIG:
+          - default:deepx
 
 .ci_test_matrix: &ci_test_matrix
   parallel:
     matrix:
       - KAS_MACHINE:
-        - grinn-astra-1680-ada
-        - grinn-astra-1680-evb
-        - grinn-astra-1680-sbc
+          - grinn-astra-1680-ada
+          - grinn-astra-1680-evb
+          - grinn-astra-1680-sbc
+        KAS_CONFIG:
+          - default
+      - KAS_MACHINE:
+          - grinn-astra-1680-sbc
+        KAS_CONFIG:
+          - default:deepx
 
 build:
   <<: *ci_build_matrix
@@ -76,6 +88,7 @@ lava:
       parallel:
         matrix:
           - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
+            KAS_CONFIG: ['$[[ matrix.KAS_CONFIG ]]']
 
 deploy-public:
   <<: *ci_build_matrix
@@ -89,6 +102,7 @@ deploy-public:
       parallel:
         matrix:
           - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
+            KAS_CONFIG: ['$[[ matrix.KAS_CONFIG ]]']
   script:
     - apk add yq
     - git clone --depth 1 --revision $CI_COMMIT_SHA $CI_REPOSITORY_URL
