@@ -7,6 +7,6 @@ local_conf_header:
 
 repos:
   meta-deepx-m1:
-    url: https://github.com/DEEPX-AI/meta-deepx-m1
-    commit: c061e8372bd7cdaf447aaf21808826e62ab7c658
+    url: https://github.com/grinn-global/meta-deepx-m1
+    commit: fffc05810ce2c1d96ad94ecca65305514d116fa7
     branch: scarthgap
