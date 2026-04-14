@@ -1,0 +1,27 @@
+From 0ac95a07e30d52738350d6af42be7951f5b68694 Mon Sep 17 00:00:00 2001
+From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
+Date: Tue, 14 Apr 2026 14:37:52 +0200
+Subject: [PATCH] sm_cm3: fix build when IR protocol is disabled
+
+---
+ bootloader/sm_cm3/syna/src/power/sm_power_op.c | 2 ++
+ 1 file changed, 2 insertions(+)
+
+diff --git a/bootloader/sm_cm3/syna/src/power/sm_power_op.c b/bootloader/sm_cm3/syna/src/power/sm_power_op.c
+index 01bd237..bdaebdf 100644
+--- a/bootloader/sm_cm3/syna/src/power/sm_power_op.c
++++ b/bootloader/sm_cm3/syna/src/power/sm_power_op.c
+@@ -117,8 +117,10 @@ int mv_sm_power_socpoweroff(void)
+ 	peripheral_assert();
+ 	board_soc_poweroff();
+ 
++#ifdef IRENABLE
+ 	// Add IR int enable as it is disabled during warmup flow, only enabled when IR ready
+ 	sm_gpio_int_enable(SM_GPIO_PORT_IR);
++#endif
+ 
+ 	PRT_INFO("%s done\n", __func__);
+ 
+-- 
+2.43.0
+
