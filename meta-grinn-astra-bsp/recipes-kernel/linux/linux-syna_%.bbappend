@@ -50,6 +50,7 @@ SRC_URI:append:grinn-astra-261x-coral = " \
 	file://bcmdhd.cfg \
 	file://gpio-led.cfg \
 	file://grinn-astra-261x-coral.dtsi;subdir=${DT_DIR} \
+	file://grinn-astra-261x-coral-hat-overlay.dtso;subdir=${DT_DIR} \
 "
 
 SRC_URI:append:grinn-astra-261x-sbc = " \
