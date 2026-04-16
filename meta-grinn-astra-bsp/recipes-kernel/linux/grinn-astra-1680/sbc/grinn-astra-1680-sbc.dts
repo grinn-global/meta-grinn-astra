@@ -485,8 +485,13 @@
 		drive-strength = <7>;
 	};
 
+	pwm0_pmux: pwm0-pmux {
+		groups = "STS1_CLK", "STS1_SOP";
+		function = "pwm";
+	};
+
 	rpi_portb_pmux: rpi-portb-pmux {
-		groups = "SDIO_WP", "SDIO_CDn", "STS1_CLK", "STS1_SOP", "STS1_VALD";
+		groups = "SDIO_WP", "SDIO_CDn", "STS1_VALD";
 		function = "gpio";
 	};
 
@@ -523,7 +528,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "RPi_GPIO_4", "HDMI_TX_5V_EN", "RPi_GPIO_13", "RPi_GPIO_12",
+		"", "", "", "", "RPi_GPIO_4", "HDMI_TX_5V_EN", "", "",
 		"", "", "", "", "RPi_GPIO_0", "RPi_GPIO_1", "", "",
 		"", "", "", "", "", "", "", "USB_HUB_RESET",
 		"", "", "", "", "", "", "", "";
@@ -545,6 +550,12 @@
 		"ETH_RESETn", "", "", "RPi_GPIO_16", "", "", "", "",
 		"CAM_LED_EN", "CAM_POWER_EN", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
+};
+
+&pwm0 {
+	status = "okay";
+	pinctrl-0 = <&pwm0_pmux>;
+	pinctrl-names = "default";
 };
 
 &sdhci1 {
