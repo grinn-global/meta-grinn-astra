@@ -258,6 +258,11 @@
 		function = "gpio";
 	};
 
+	rpi_porta_pmux: rpi-porta-pmux {
+		groups = "I2S2_MCLK", "I2S2_LRCKIO", "SPDIFO", "SPDIFI", "I2S3_BCLKIO", "I2S3_LRCKIO", "I2S3_DO", "I2S3_DI";
+		function = "gpio";
+	};
+
 	sdio_wake_pmux: sdio-wake-pmux {
 		groups = "I2S1_DO1";
 		function = "gpio";
@@ -480,6 +485,12 @@
 		drive-strength = <7>;
 	};
 
+	rpi_portb_pmux: rpi-portb-pmux {
+		groups = "SDIO_WP", "SDIO_CDn", "SPI1_SCLK", "SPI1_SDO", "SPI1_SDI", "SPI1_SS0n", "SPI1_SS1n",
+			 "STS0_CLK", "STS0_SOP", "STS0_SD", "STS0_VALD", "STS1_CLK", "STS1_SOP", "STS1_VALD";
+		function = "gpio";
+	};
+
 	usb_hub_reset_pmux: usb-hub-reset-pmux {
 		groups = "USB2_DRV_VBUS";
 		function = "gpio";
@@ -487,21 +498,24 @@
 };
 
 &porta {
+	pinctrl-0 = <&rpi_porta_pmux>;
+	pinctrl-names = "default";
+
 	gpio-line-names =
-		"", "", "", "", "", "", "", "",
-		"PCIE_RSTn", "PCIE_WAKEn", "WIFI1_BT_DISABLEn", "PCIE_CLKREQn", "WIFI1_WF_DISABLEn", "", "", "USER_BUTTON",
+		"RPi_GPIO_20", "RPi_GPIO_21", "RPi_GPIO_18", "RPi_GPIO_19", "RPi_GPIO_6", "", "", "RPi_GPIO_27",
+		"PCIE_RSTn", "PCIE_WAKEn", "WIFI1_BT_DISABLEn", "PCIE_CLKREQn", "WIFI1_WF_DISABLEn", "RPi_GPIO_26", "RPi_GPIO_5", "USER_BUTTON",
 		"", "SDIO_WAKEn", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
 
 &portb {
-	pinctrl-0 = <&usb_hub_reset_pmux>;
+	pinctrl-0 = <&rpi_portb_pmux>, <&usb_hub_reset_pmux>;
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "", "HDMI_TX_5V_EN", "", "",
-		"", "", "", "", "", "", "", "",
-		"", "", "", "", "", "", "", "USB_HUB_RESET",
+		"", "", "", "", "RPi_GPIO_4", "HDMI_TX_5V_EN", "RPi_GPIO_13", "RPi_GPIO_12",
+		"RPi_GPIO_23", "RPi_GPIO_22", "RPi_GPIO_14", "RPi_GPIO_15", "RPi_GPIO_0", "RPi_GPIO_1", "", "",
+		"RPi_GPIO_9", "RPi_GPIO_11", "RPi_GPIO_10", "", "", "RPi_GPIO_7", "RPi_GPIO_8", "USB_HUB_RESET",
 		"", "", "", "", "", "", "", "";
 
 	disable_usb_hub_reset {
@@ -513,12 +527,12 @@
 };
 
 &portd {
-	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>;
+	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>, <&rpi_portd_pmux>;
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "", "", "", "ETH_INTn",
-		"ETH_RESETn", "", "", "", "", "", "", "",
+		"RPi_GPIO_24", "RPi_GPIO_25", "", "", "", "", "", "ETH_INTn",
+		"ETH_RESETn", "", "", "RPi_GPIO_16", "", "", "", "",
 		"CAM_LED_EN", "CAM_POWER_EN", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
 };
@@ -567,6 +581,11 @@
 
 	eth_reset_pmux: eth-reset-pmux {
 		groups = "SM_TDO";
+		function = "gpio";
+	};
+
+	rpi_portd_pmux: rpi-portd-pmux {
+		groups = "SM_SPI2_SCLK", "SM_TW2_SCL", "SM_TW2_SDA";
 		function = "gpio";
 	};
 
