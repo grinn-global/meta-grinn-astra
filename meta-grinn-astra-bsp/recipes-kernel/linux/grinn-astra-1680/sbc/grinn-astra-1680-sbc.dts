@@ -259,7 +259,7 @@
 	};
 
 	rpi_porta_pmux: rpi-porta-pmux {
-		groups = "I2S2_MCLK", "I2S2_LRCKIO", "SPDIFO", "SPDIFI", "I2S3_BCLKIO", "I2S3_LRCKIO", "I2S3_DO", "I2S3_DI";
+		groups = "I2S2_MCLK", "I2S2_LRCKIO", "SPDIFO", "SPDIFI";
 		function = "gpio";
 	};
 
@@ -281,6 +281,11 @@
 	wifi1_wf_disable_pmux: wifi1-wf-disable-pmux {
 		groups = "I2S2_BCLKIO";
 		function = "gpio";
+	};
+
+	i2s3_pmux: i2s3-pmux {
+		groups = "I2S3_LRCKIO", "I2S3_BCLKIO", "I2S3_DI", "I2S3_DO";
+		function = "i2s3";
 	};
 };
 
@@ -308,6 +313,31 @@
 		link-name = "soc-hdmio";
 		format = "i2s";
 		cpu-node = <&hdmi_out>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2si3: soc-i2si3 {
+		status = "okay";
+		stream-name = "soc-i2si3";
+		link-name = "soc-i2si3";
+		format = "i2s";
+		cpu-node = <&i2s_mic2>;
+		codec-name = "snd-soc-dummy";
+		codec-dai-name = "snd-soc-dummy-dai";
+		platform-node = <&dolphin_pcm>;
+	};
+
+	soc_i2so3: soc-i2so3 {
+		status = "okay";
+		stream-name = "soc-i2so3";
+		link-name = "soc-i2so3";
+		format = "i2s";
+		continuous-clock;
+		bitclock-inversion;
+		frame-inversion;
+		cpu-node = <&i2s_sec>;
 		codec-name = "snd-soc-dummy";
 		codec-dai-name = "snd-soc-dummy-dai";
 		platform-node = <&dolphin_pcm>;
@@ -390,6 +420,14 @@
 	status = "okay";
 };
 
+&i2s_mic2 {
+	status = "okay";
+	pinctrl-0 = <&i2s3_pmux>;
+	pinctrl-names = "default";
+	duplex;
+	disablemicmute;
+};
+
 &i2c0 {
 	status = "okay";
 	pinctrl-names = "default";
@@ -420,6 +458,14 @@
 
 &isp_vsi_vb {
 	status = "okay";
+};
+
+&i2s_sec {
+	status = "okay";
+	pinctrl-0 = <&i2s3_pmux>;
+	pinctrl-names = "default";
+	duplex;
+	sample-period = <32>;
 };
 
 &mc_dfc {
@@ -517,7 +563,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_20", "RPi_GPIO_21", "RPi_GPIO_18", "RPi_GPIO_19", "RPi_GPIO_6", "", "", "RPi_GPIO_27",
+		"", "", "", "", "RPi_GPIO_6", "", "", "RPi_GPIO_27",
 		"PCIE_RSTn", "PCIE_WAKEn", "WIFI1_BT_DISABLEn", "PCIE_CLKREQn", "WIFI1_WF_DISABLEn", "RPi_GPIO_26", "RPi_GPIO_5", "USER_BUTTON",
 		"", "SDIO_WAKEn", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
