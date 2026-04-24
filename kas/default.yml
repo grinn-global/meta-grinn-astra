@@ -118,8 +118,8 @@ repos:
 
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
-    commit: a893fa206b8d6878336f5b760c3b46296263a07a
-    branch: scarthgap_6.12_v2.2.0
+    commit: a0344af9be13726ca196a9ed77e19cf77971e2e0
+    branch: scarthgap_6.12_v2.3.0
 
   meta-virtualization:
     url: https://github.com/ni/meta-virtualization
