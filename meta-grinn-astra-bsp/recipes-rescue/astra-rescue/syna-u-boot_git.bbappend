@@ -10,7 +10,7 @@ python __anonymous() {
     d.setVar("MACHINE_NAME", name)
 }
 
-do_compile:prepend() {
+do_configure:prepend() {
     UBOOT_DEFCONFIG="${S}/configs/${MACHINE_NAME}_suboot_defconfig"
     if [ ! -f "${UBOOT_DEFCONFIG}" ]; then
         bbfatal "UBOOT_DEFCONFIG file not found: ${UBOOT_DEFCONFIG}"
@@ -22,7 +22,7 @@ do_compile:prepend() {
     if [ "${ENABLE_RESCUE_MODE}" = "1" ]; then
         bbnote "Enabling rescue mode"
         echo 'CONFIG_SYNA_RESCUE_MODE=y' >> "${UBOOT_DEFCONFIG}"
-        echo "CONFIG_ENV_OFFSET=0x77f0000" >> "${UBOOT_DEFCONFIG}"
+        echo "CONFIG_ENV_OFFSET=0x9BF0000" >> "${UBOOT_DEFCONFIG}"
         sed -i '/^CONFIG_SYS_REDUNDAND_ENVIRONMENT/d' "${UBOOT_DEFCONFIG}"
         echo "#CONFIG_SYS_REDUNDAND_ENVIRONMENT is not set" >> "${UBOOT_DEFCONFIG}"
     else
