@@ -1,10 +1,6 @@
 python __anonymous() {
     machine = d.getVar("MACHINE")
     mapping = {
-        "sl1620": "myna2",
-        "sl1640": "platypus",
-        "sl1680": "dolphin",
-        "sl2619": "klamath",
         "grinn-astra-1680-ada": "dolphin",
         "grinn-astra-1680-sbc": "dolphin",
         "grinn-astra-2619-sbc": "klamath",
