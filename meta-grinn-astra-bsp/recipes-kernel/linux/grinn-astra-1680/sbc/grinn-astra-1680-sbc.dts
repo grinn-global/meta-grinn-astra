@@ -542,11 +542,11 @@
 };
 
 &portd {
-	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>, <&rpi_portd_pmux>;
+	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>, <&optiga_rstn_pmux>, <&rpi_portd_pmux>;
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_24", "RPi_GPIO_25", "", "", "", "", "", "ETH_INTn",
+		"RPi_GPIO_24", "RPi_GPIO_25", "", "", "", "", "OPTIGA_RSTn", "ETH_INTn",
 		"ETH_RESETn", "", "", "RPi_GPIO_16", "", "", "", "",
 		"CAM_LED_EN", "CAM_POWER_EN", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
@@ -602,6 +602,11 @@
 
 	eth_reset_pmux: eth-reset-pmux {
 		groups = "SM_TDO";
+		function = "gpio";
+	};
+
+	optiga_rstn_pmux: optiga-rstn-pmux {
+		groups = "SM_TMS";
 		function = "gpio";
 	};
 
