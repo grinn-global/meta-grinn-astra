@@ -5,11 +5,11 @@ FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
 FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
 
-DT_DIR = "${S}/boot/u-boot/arch/arm/dts"
-CFG_DIR = "${S}/boot/u-boot/configs"
+DT_DIR = "${S}/arch/arm/dts"
+CFG_DIR = "${S}/configs"
 
 SRC_URI:append:grinn-astra-platform = " \
-	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch;patchdir=boot/u-boot \
+	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch \
 	file://${MACHINE}.dts \
 "
 
