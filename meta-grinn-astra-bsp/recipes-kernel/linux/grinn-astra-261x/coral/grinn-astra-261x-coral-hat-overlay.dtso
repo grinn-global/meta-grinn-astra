@@ -37,6 +37,10 @@
 	};
 };
 
+&avio {
+	status = "okay";
+};
+
 &dmic {
 	status = "okay";
 	pinctrl-names = "default";
