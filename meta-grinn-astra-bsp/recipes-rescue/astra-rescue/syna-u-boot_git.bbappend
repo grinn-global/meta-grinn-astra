@@ -15,7 +15,7 @@ python __anonymous() {
 }
 
 do_compile:prepend() {
-    UBOOT_DEFCONFIG="${S}/boot/u-boot/configs/${MACHINE_NAME}_suboot_defconfig"
+    UBOOT_DEFCONFIG="${S}/configs/${MACHINE_NAME}_suboot_defconfig"
     if [ ! -f "${UBOOT_DEFCONFIG}" ]; then
         bbfatal "UBOOT_DEFCONFIG file not found: ${UBOOT_DEFCONFIG}"
     fi
