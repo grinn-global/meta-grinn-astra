@@ -20,3 +20,8 @@ IMAGE_INSTALL:append:grinn-astra-261x-platform = " \
 	libgpiod \
 	libgpiod-tools \
 "
+
+IMAGE_INSTALL:append:grinn-astra-2619-coral = " \
+	android-tools-adbd \
+	ncm-gadget-conf-configfs \
+"
