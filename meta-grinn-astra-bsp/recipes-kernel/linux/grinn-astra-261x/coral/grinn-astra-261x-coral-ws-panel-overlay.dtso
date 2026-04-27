@@ -74,6 +74,11 @@
 };
 
 &i2c3 {
+	clock-frequency = <100000>;
+	/delete-property/ i2c-sda-hold-time-ns;
+	/delete-property/ i2c-sda-falling-time-ns;
+	/delete-property/ i2c-scl-falling-time-ns;
+
 	rpi_panel_regulator: rpi_panel_regulator@45 {
 		compatible = "raspberrypi,7inch-touchscreen-panel-regulator";
 		reg = <0x45>;

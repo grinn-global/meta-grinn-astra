@@ -58,6 +58,11 @@
 };
 
 &i2c3 {
+	clock-frequency = <100000>;
+	/delete-property/ i2c-sda-hold-time-ns;
+	/delete-property/ i2c-sda-falling-time-ns;
+	/delete-property/ i2c-scl-falling-time-ns;
+
 	display: waveshare@45 {
 		compatible = "waveshare,13.3inch-4lane-panel";
 		status = "okay";
