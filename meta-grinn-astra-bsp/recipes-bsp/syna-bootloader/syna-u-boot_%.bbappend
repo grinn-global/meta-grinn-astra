@@ -45,6 +45,10 @@ SRC_URI:append:grinn-astra-261x-platform = " \
 	file://usb.cfg \
 "
 
+SRC_URI:append:grinn-astra-2619-coral = " \
+	file://overlay.cfg \
+"
+
 do_configure:append:grinn-astra-1680-platform() {
 	cp ${WORKDIR}/${MACHINE}.dts ${DT_DIR}/dolphin-rdk.dts
 	cp ${WORKDIR}/grinn-astra-1680-som.dtsi ${DT_DIR}
