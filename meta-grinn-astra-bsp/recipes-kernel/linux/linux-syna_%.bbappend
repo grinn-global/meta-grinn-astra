@@ -54,6 +54,7 @@ SRC_URI:append:grinn-astra-261x-coral = " \
 	file://grinn-astra-261x-coral-ws-1080p-panel-overlay.dtso;subdir=${DT_DIR} \
 	file://grinn-astra-261x-coral-ws-panel-overlay.dtso;subdir=${DT_DIR} \
 	file://usbeth.cfg \
+	file://usbncm.cfg \
 "
 
 SRC_URI:append:grinn-astra-261x-sbc = " \
