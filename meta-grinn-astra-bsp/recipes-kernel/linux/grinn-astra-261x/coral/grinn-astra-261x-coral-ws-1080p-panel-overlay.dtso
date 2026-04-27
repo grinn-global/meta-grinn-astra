@@ -60,7 +60,7 @@
 &i2c3 {
 	display: waveshare@45 {
 		compatible = "waveshare,13.3inch-4lane-panel";
-		status= "okay";
+		status = "okay";
 		reg = <0x45>;
 	};
 };

@@ -13,7 +13,7 @@
 	status = "okay";
 
 	dsi_panel {
-		status= "okay";
+		status = "okay";
 
 		power-supply = <&rpi_panel_regulator>;
 		backlight = <&rpi_panel_regulator>;
