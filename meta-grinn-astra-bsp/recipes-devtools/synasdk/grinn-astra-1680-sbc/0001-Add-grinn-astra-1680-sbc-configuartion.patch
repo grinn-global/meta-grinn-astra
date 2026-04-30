@@ -1,16 +1,24 @@
-From d109687ebe781d4b5d2a9c9833caeadb8a588221 Mon Sep 17 00:00:00 2001
+From ae4aea11c95b47a62f22c8f8b6cb8165be000c76 Mon Sep 17 00:00:00 2001
 From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
-Date: Mon, 20 Apr 2026 17:29:54 +0200
-Subject: [PATCH 1/2] [MCU]: Add grinn-astra-1680-sbc configuartion
+Date: Wed, 6 May 2026 16:32:56 +0200
+Subject: [PATCH] Add grinn-astra-1680-sbc configuartion
 
-Remove unnecessary gpios bindings.
+Configure platform-related GPIOs for grinn-astra-1680-sbc.
+
+Changes:
+- Remove I2C expander 1 (N/A)
+- Remove ADC-related configuration
+- Retain only used GPIOs:
+    - I2C expander 0 (0x43): pins 0-4
+    - SM_GPIO 7
+
 ---
- .../dolphin/dolphin-rdk/platform_config.h     | 34 -------------------
- .../dolphin-rdk/platform_customization.c      |  8 ++---
- 2 files changed, 2 insertions(+), 40 deletions(-)
+ .../dolphin/dolphin-rdk/platform_config.h     | 32 -------------------
+ .../dolphin-rdk/platform_customization.c      | 28 ++--------------
+ 2 files changed, 3 insertions(+), 57 deletions(-)
 
 diff --git a/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_config.h b/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_config.h
-index ce777b7..d828d43 100644
+index 41af397..b3f262d 100644
 --- a/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_config.h
 +++ b/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_config.h
 @@ -37,13 +37,9 @@
@@ -27,7 +35,7 @@ index ce777b7..d828d43 100644
  
  /* I2C expander GPIO0 */
  #define GPIO_VCORE 	0
-@@ -66,40 +62,10 @@
+@@ -66,40 +62,12 @@
  #define PERI_ON 	0
  #define PERI_OFF 	1
  
@@ -39,11 +47,11 @@ index ce777b7..d828d43 100644
  #define SM_GPIO_PORT_DDR_CTRL GPIO_VDDM
  
 -/* WiFi GPIO definitions*/
--#define SM_GPIO_PORT_WIFIBT 6
+-#define SM_GPIO_PORT_WIFIBT 7
  #define SM_GPIO_PORT_GEPHY 7
  
--#define WIFIBT_GAP_MIN	10
--#define WIFIBT_GAP_MAX	125
+ #define WIFIBT_GAP_MIN	10
+ #define WIFIBT_GAP_MAX	125
  #define ETH_GAP_MAX	512
  
 -/* ADC button press time threshold*/
@@ -69,10 +77,10 @@ index ce777b7..d828d43 100644
 -
  #endif /* __PLATFORM_CONFIG_H__ */
 diff --git a/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_customization.c b/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_customization.c
-index 42c9228..c7d2f21 100644
+index 84bc1b2..0a69a42 100644
 --- a/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_customization.c
 +++ b/bootloader/sm_cm3/syna/customization/dolphin/dolphin-rdk/platform_customization.c
-@@ -86,14 +86,10 @@ void board_soc_poweroff(void)
+@@ -89,43 +89,21 @@ void board_soc_poweroff(void)
  
  void board_wifi_poweron(void)
  {
@@ -89,6 +97,36 @@ index 42c9228..c7d2f21 100644
 -		PRT_ERROR("%s: failed\n", __func__);
 +	return;
  }
+ 
+-DECLARE_GPIO_ISR(SM_GPIO_PORT_WIFIBT, EDGE_SENSITIVE, FALLING_EDGE, sm_gpio_isr);
+-
+-#ifndef WIFIBT_GAP_MIN
+-#define WIFIBT_GAP_MIN	10
+-#define WIFIBT_GAP_MAX	125
+-#define ETH_GAP_MAX	512
+-#endif
++DECLARE_GPIO_ISR(SM_GPIO_PORT_GEPHY, EDGE_SENSITIVE, FALLING_EDGE, sm_gpio_isr);
+ 
+ #ifndef BTKEY_NETFLIX_GAP_MIN
+ #define BTKEY_NETFLIX_GAP_MIN 395
+ #define BTKEY_NETFLIX_GAP_MAX 415
+ #endif
+ 
+-/* wifi */
+-DECLARE_GPIO_WAKEUP(wifi, SM_GPIO_PORT_WIFIBT, 0, (WIFIBT_GAP_MIN *2),
+-							MV_SM_WAKEUP_SOURCE_WIFI, 0, 0);
+-
+-/* bt (not netflix key) */
+-DECLARE_GPIO_WAKEUP(bt_otherkey, SM_GPIO_PORT_WIFIBT, (WIFIBT_GAP_MIN *2), BTKEY_NETFLIX_GAP_MIN,
+-							MV_SM_WAKEUP_SOURCE_BT, 1, KEY_OTHERS);
+-
+-/* bt (netflix key) */
+-DECLARE_GPIO_WAKEUP(bt_netflixkey, SM_GPIO_PORT_WIFIBT, BTKEY_NETFLIX_GAP_MIN, BTKEY_NETFLIX_GAP_MAX,
+-							MV_SM_WAKEUP_SOURCE_BT, 1, KEY_NETFLIX);
+-
+ /* geth */
+ DECLARE_GPIO_WAKEUP(geth, SM_GPIO_PORT_GEPHY, BTKEY_NETFLIX_GAP_MAX, DEFAULT_THOLD,
+ 							MV_SM_WAKEUP_SOURCE_WOL, 0, 0);
 -- 
 2.43.0
 

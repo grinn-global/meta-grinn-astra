@@ -3,6 +3,8 @@ From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
 Date: Tue, 14 Apr 2026 14:37:52 +0200
 Subject: [PATCH] sm_cm3: fix build when IR protocol is disabled
 
+Fix the build error that occurs when the IRENABLE constant is not defined.
+
 ---
  bootloader/sm_cm3/syna/src/power/sm_power_op.c | 2 ++
  1 file changed, 2 insertions(+)

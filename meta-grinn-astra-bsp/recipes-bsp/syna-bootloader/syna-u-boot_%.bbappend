@@ -7,8 +7,6 @@ FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc := "${THISDIR}/grinn-astra-261x/sbc
 
 DT_DIR = "${S}/boot/u-boot/arch/arm/dts"
 CFG_DIR = "${S}/boot/u-boot/configs"
-CM3_CFG_FILE:grinn-astra-1680-sbc = "${STAGING_DIR_NATIVE}/usr/share/syna/build/.config"
-CONFIG_FILE:grinn-astra-1680-sbc = "${WORKDIR}/.config"
 
 SRC_URI:append:grinn-astra-platform = " \
 	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch;patchdir=boot/u-boot \
@@ -26,23 +24,12 @@ SRC_URI:append:grinn-astra-1680-platform = " \
 "
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
-	file://0001-MCU-Add-grinn-astra-1680-sbc-configuartion.patch;patchdir=boot \
-	file://0002-MCU-Remove-wifibt-related-code.patch;patchdir=boot \
-	file://0003-MCU-Fix-build-when-IR-protocol-is-disabled.patch;patchdir=boot \
-	file://cm3-bootloader.config \
 	file://display_disable.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
 	cp ${WORKDIR}/${MACHINE}.dts ${DT_DIR}/dolphin-rdk.dts
 	cp ${WORKDIR}/grinn-astra-1680-som.dtsi ${DT_DIR}
-}
-
-do_configure:append:grinn-astra-1680-sbc() {
-	# set config for cm3 mcu
-	${S}/boot/u-boot/scripts/kconfig/merge_config.sh -m -O ${WORKDIR} \
-		${CM3_CFG_FILE} \
-		${WORKDIR}/cm3-bootloader.config
 }
 
 do_configure:append:grinn-astra-261x-platform() {
