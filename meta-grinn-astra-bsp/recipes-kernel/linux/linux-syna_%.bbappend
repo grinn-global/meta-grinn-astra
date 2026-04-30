@@ -1,7 +1,6 @@
 FILESEXTRAPATHS:prepend:grinn-astra-platform := "${THISDIR}/common:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-som := "${THISDIR}/grinn-astra-1680/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada:"
-FILESEXTRAPATHS:prepend:grinn-astra-1680-evb := "${THISDIR}/grinn-astra-1680/evb:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-som := "${THISDIR}/grinn-astra-261x/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
@@ -25,11 +24,6 @@ SRC_URI:append:grinn-astra-1680-som = " \
 "
 
 SRC_URI:append:grinn-astra-1680-ada = " \
-	file://eth.cfg \
-"
-
-SRC_URI:append:grinn-astra-1680-evb = " \
-	file://gpio-led.cfg \
 	file://eth.cfg \
 "
 

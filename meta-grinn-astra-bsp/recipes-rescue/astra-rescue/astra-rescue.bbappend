@@ -4,7 +4,7 @@ do_install() {
 	KERNEL_FILE="${DEPLOY_DIR_IMAGE}/Image-${MACHINE}.bin"
 	INITRAMFS_FILE=$(find ${DEPLOY_DIR_IMAGE} -name "swupdate-image-${MACHINE}.rootfs-*.cpio.gz" | head -n 1)
 	DTB_FILE=$(find ${DEPLOY_DIR_IMAGE} -type f -name "*.dtb" \
-		 | grep -E "(-rdk-|grinn-astra-1680-(ada|evb|sbc))")
+		 | grep -E "(-rdk-|grinn-astra-1680-(ada|sbc))")
 
 	# Compress and install files
 	gzip -c -1 "$KERNEL_FILE" > ${D}/rescue/Image-${MACHINE}.gz

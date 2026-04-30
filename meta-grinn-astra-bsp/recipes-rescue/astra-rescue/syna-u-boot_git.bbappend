@@ -6,7 +6,6 @@ python __anonymous() {
         "sl1680": "dolphin",
         "sl2619": "klamath",
         "grinn-astra-1680-ada": "dolphin",
-        "grinn-astra-1680-evb": "dolphin",
         "grinn-astra-1680-sbc": "dolphin",
         "grinn-astra-2619-sbc": "klamath",
     }
