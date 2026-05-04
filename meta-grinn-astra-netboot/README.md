@@ -76,26 +76,30 @@ sudo systemctl restart nfs-kernel-server
 ## Yocto Configuration
 
 ### Configuration variables
-These variables are used to configure the board for network boot:
-- `NETBOOT_SERVER_IP` - IP address of the host providing NFS and TFTP services
+Variables defined in
+`meta-grinn-astra/meta-grinn-astra-netboot/scripts/config.sh`,
+are used to configure the board for network boot:
+- `NETBOOT_SERVER_IP` - IP address of the host providing NFS and TFTP
+  services. Autodetected from the host's default route. Override by
+  editing if the autodetected interface is wrong.
+- `TFTP_PATH` - Root directory of the TFTP server
 - `NFS_ROOTFS_PATH` - NFS export path used as the root filesystem
 - `TFTP_KERNEL_BIN_PATH` - Path to the kernel image served by TFTP
 - `TFTP_DTB_BIN_PATH` - Path to the device tree blob served by TFTP
 - `TFTP_IMAGE_PATH` - Path to the SYNAIMG folder for TFTP flash
 
 ### Build
+Edit `config.sh` to match your environment, then run the setup
+script. It generates the U-Boot configuration fragment used during the
+build and creates the required TFTP/NFS directories.
 ```bash
-source meta-grinn-astra/meta-grinn-astra-netboot/scripts/setup.sh
+meta-grinn-astra/meta-grinn-astra-netboot/scripts/setup.sh
+```
 
+Run the build:
+```bash
 KAS_MACHINE=grinn-astra-1680-ada \
 kas-container \
-  --runtime-args "
-    -e NETBOOT_SERVER_IP=XXX.XXX.XXX.XXX
-    -e NFS_ROOTFS_PATH=${NFS_ROOTFS_PATH}
-    -e TFTP_KERNEL_BIN_PATH=${TFTP_KERNEL_BIN_PATH}
-    -e TFTP_DTB_BIN_PATH=${TFTP_DTB_BIN_PATH}
-    -e TFTP_IMAGE_PATH=${TFTP_IMAGE_PATH}
-  " \
   build \
   meta-grinn-astra/kas/default.yml:meta-grinn-astra/kas/netboot.yml
 ```

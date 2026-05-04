@@ -1,7 +1,14 @@
 #!/usr/bin/env bash
 
 SCRIPT_DIR="$(dirname "$(realpath "$0")")"
-source ${SCRIPT_DIR}/setup.sh
+CONFIG_FILE="${SCRIPT_DIR}/config.sh"
+
+if [ ! -f "${CONFIG_FILE}" ]; then
+    echo "Error: ${CONFIG_FILE} not found."
+    exit 1
+fi
+
+source "${CONFIG_FILE}"
 
 if [ -n "$1" ]; then
     YOCTO_DIR=(${SCRIPT_DIR}/../../../build/tmp/deploy/images/$1)
@@ -50,7 +57,7 @@ if [ -z "$ROOTFS" ]; then
 fi
 
 set -eu
-echo "Using from env:"
+echo "Using from config:"
 echo "  TFTP_PATH=$TFTP_PATH"
 echo "  TFTP_KERNEL_BIN_PATH=$TFTP_KERNEL_BIN_PATH"
 echo "  TFTP_DTB_BIN_PATH=$TFTP_DTB_BIN_PATH"
@@ -64,7 +71,7 @@ sudo rsync -a ${SYNAIMG}/ "${TFTP_PATH}/${TFTP_IMAGE_PATH}"
 echo "Copying rootfs to ${NFS_ROOTFS_PATH}.."
 
 if [ ! -d "${NFS_ROOTFS_PATH}" ]; then
-    echo "Error: Path: ${NFS_ROOTFS_PATH} not valid! Source setup.sh first!"
+    echo "Error: Path: ${NFS_ROOTFS_PATH} not valid! Run setup.sh first!"
     exit 1
 fi
 
