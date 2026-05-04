@@ -62,3 +62,12 @@ actions:
         - "root@{{ job.KAS_MACHINE }} login:~#"
         - "root@.*:~#"
         - "~#"
+
+  - test:
+      timeout:
+        minutes: 30
+      definitions:
+        - from: git
+          repository: git@gitlab.grinndev.ovh:grinn/ci/lava/lava-test-definitions.git
+          path: automated/linux/ethernet/ethernet-test.yaml
+          name: ethernet-test
