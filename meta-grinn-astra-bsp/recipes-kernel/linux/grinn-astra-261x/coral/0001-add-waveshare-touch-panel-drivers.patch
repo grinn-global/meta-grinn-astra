@@ -1,0 +1,98 @@
+From: Michal Oleszczyk <michal.oleszczyk@grinn-global.com>
+Date: Tue, 28 Apr 2026 14:46:32 +0200
+Subject: [PATCH] add Waveshare 10.1" DSI Touch (A) panel drivers
+
+Wires the two new driver files into the kernel build:
+
+  drivers/regulator/waveshare-panel-regulator.c
+    Imported verbatim from raspberrypi/linux rpi-6.12.y; supports the
+    "waveshare,touchscreen-panel-regulator" I2C MCU that powers the
+    Waveshare DSI Touch family panels and exposes 16 GPIOs.
+
+  drivers/gpu/drm/panel/panel-waveshare-dsi-v2.c
+    Custom platform_driver glue for syna_drm. Registers a drm_panel
+    under "waveshare,10.1-dsi-touch-a" so syna_drm's compatible_panel
+    lookup can attach to it. Sequences iovcc / avdd / reset GPIOs at
+    probe; the JD9365 DCS init bytes are sent by syna_drm itself via
+    the dsi_panel "command" property in the device tree overlay.
+
+The two .c files are dropped into the kernel tree by SRC_URI subdir=
+entries in meta-grinn-astra-bsp; this patch only adds the Kconfig and
+Makefile hooks.
+
+Note: the upstream RPi panel-waveshare-dsi-v2 driver depends on
+DRM_MIPI_DSI / I2C / BACKLIGHT_CLASS_DEVICE because it probes as a
+mipi_dsi_device. Our adapter is a platform_driver that just sequences
+GPIOs and registers a drm_panel, so only depends on OF (DRM is implied
+by the surrounding "Display Panels" menu).
+
+---
+ drivers/gpu/drm/panel/Kconfig  |  9 +++++++++
+ drivers/gpu/drm/panel/Makefile |  1 +
+ drivers/regulator/Kconfig      | 10 ++++++++++
+ drivers/regulator/Makefile     |  1 +
+ 4 files changed, 21 insertions(+)
+
+diff --git a/drivers/gpu/drm/panel/Kconfig b/drivers/gpu/drm/panel/Kconfig
+--- a/drivers/gpu/drm/panel/Kconfig
++++ b/drivers/gpu/drm/panel/Kconfig
+@@ -562,6 +562,15 @@
+ 	help
+ 	  Say Y here if you want to enable support for the Raspberry
+ 	  Pi 7" Touchscreen.  To compile this driver as a module,
+ 	  choose M here.
+ 
++config DRM_PANEL_WAVESHARE_TOUCHSCREEN_V2
++	tristate "Waveshare touchscreen panels V2 (syna_drm adapter)"
++	depends on OF
++	help
++	  syna_drm-side adapter for the Waveshare DSI v2 touchscreen panel
++	  family (e.g. the 10.1" DSI Touch (A), JD9365 / GT9271). Registers
++	  a drm_panel that syna_drm attaches to via its compatible_panel
++	  lookup; sequences iovcc/avdd/reset GPIOs at probe.
++
+ config DRM_PANEL_RAYDIUM_RM67191
+diff --git a/drivers/gpu/drm/panel/Makefile b/drivers/gpu/drm/panel/Makefile
+--- a/drivers/gpu/drm/panel/Makefile
++++ b/drivers/gpu/drm/panel/Makefile
+@@ -56,6 +56,7 @@
+ obj-$(CONFIG_DRM_PANEL_ORISETECH_OTM8009A) += panel-orisetech-otm8009a.o
+ obj-$(CONFIG_DRM_PANEL_OSD_OSD101T2587_53TS) += panel-osd-osd101t2587-53ts.o
+ obj-$(CONFIG_DRM_PANEL_PANASONIC_VVX10F034N00) += panel-panasonic-vvx10f034n00.o
+ obj-$(CONFIG_DRM_PANEL_RASPBERRYPI_TOUCHSCREEN) += panel-raspberrypi-touchscreen.o
++obj-$(CONFIG_DRM_PANEL_WAVESHARE_TOUCHSCREEN_V2) += panel-waveshare-dsi-v2.o
+ obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM67191) += panel-raydium-rm67191.o
+ obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM68200) += panel-raydium-rm68200.o
+ obj-$(CONFIG_DRM_PANEL_RAYDIUM_RM692E5) += panel-raydium-rm692e5.o
+diff --git a/drivers/regulator/Kconfig b/drivers/regulator/Kconfig
+--- a/drivers/regulator/Kconfig
++++ b/drivers/regulator/Kconfig
+@@ -1140,6 +1140,16 @@
+ 	help
+ 	  This driver supports ATTINY regulator on the Raspberry Pi 7-inch
+ 	  touchscreen unit. The regulator is used to enable power to the
+ 	  TC358762, display and to control backlight.
+ 
++config REGULATOR_WAVESHARE_TOUCHSCREEN
++	tristate "Waveshare touchscreen panel regulator"
++	depends on BACKLIGHT_CLASS_DEVICE
++	depends on I2C
++	select REGMAP_I2C
++	help
++	  This driver supports regulator on the waveshare
++	  touchscreen unit. The regulator is used to enable power to the
++	  display and to control backlight.
++
+ config REGULATOR_RC5T583
+diff --git a/drivers/regulator/Makefile b/drivers/regulator/Makefile
+--- a/drivers/regulator/Makefile
++++ b/drivers/regulator/Makefile
+@@ -134,6 +134,7 @@
+ obj-$(CONFIG_REGULATOR_PCAP) += pcap-regulator.o
+ obj-$(CONFIG_REGULATOR_PCF50633) += pcf50633-regulator.o
+ obj-$(CONFIG_REGULATOR_RAA215300) += raa215300.o
+ obj-$(CONFIG_REGULATOR_RASPBERRYPI_TOUCHSCREEN_ATTINY)  += rpi-panel-attiny-regulator.o
++obj-$(CONFIG_REGULATOR_WAVESHARE_TOUCHSCREEN) += waveshare-panel-regulator.o
+ obj-$(CONFIG_REGULATOR_RC5T583)  += rc5t583-regulator.o
+ obj-$(CONFIG_REGULATOR_RK808)   += rk808-regulator.o
+ obj-$(CONFIG_REGULATOR_RN5T618) += rn5t618-regulator.o

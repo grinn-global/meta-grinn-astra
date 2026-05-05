@@ -53,8 +53,14 @@ SRC_URI:append:grinn-astra-261x-coral = " \
 	file://grinn-astra-261x-coral-hat-overlay.dtso;subdir=${DT_DIR} \
 	file://grinn-astra-261x-coral-ws-1080p-panel-overlay.dtso;subdir=${DT_DIR} \
 	file://grinn-astra-261x-coral-ws-panel-overlay.dtso;subdir=${DT_DIR} \
+	file://grinn-astra-261x-coral-ws-10inch-panel-overlay.dtso;subdir=${DT_DIR} \
 	file://usbeth.cfg \
 	file://usbncm.cfg \
+	file://0001-add-waveshare-touch-panel-drivers.patch \
+	file://0002-add-support-for-polling-instead-of-interrupt-gpio.patch \
+	file://waveshare-panel-regulator.c;subdir=${S}/drivers/regulator \
+	file://panel-waveshare-dsi-v2.c;subdir=${S}/drivers/gpu/drm/panel \
+	file://waveshare-touch.cfg \
 "
 
 SRC_URI:append:grinn-astra-261x-sbc = " \
