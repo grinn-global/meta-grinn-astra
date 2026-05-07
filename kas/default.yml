@@ -44,7 +44,7 @@ local_conf_header:
     ENABLE_RESCUE_MODE = "0"
 
     IMAGE_CLASSES += "image_synaimg_tar image_synaimg_bootloader_tar"
-    IMAGE_FSTYPES += "synaimg.tar.zst synaimg.tar.zst.sha256sum synaimg_bootloader.tar.zst tar.zst"
+    IMAGE_FSTYPES += "synaimg.tar.zst synaimg.tar.zst.sha256sum synaimg_bootloader.tar.zst tar.zst ext4.gz"
 
     GLIBC_GENERATE_LOCALES = "zh_CN.UTF-8 en_GB.UTF-8 en_US.UTF-8"
     IMAGE_LINGUAS = "zh-cn en-gb en-us"
