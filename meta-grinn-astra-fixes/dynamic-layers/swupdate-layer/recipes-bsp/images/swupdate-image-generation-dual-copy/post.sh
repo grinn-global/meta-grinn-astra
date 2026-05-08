@@ -1,6 +1,28 @@
 #!/bin/bash
 set -e
 
+# e2fsck uses a bitmap exit code: 0 = clean, 1 = errors corrected,
+# 2 = errors corrected (reboot suggested). 4/8/16 indicate real failures
+# (uncorrected errors, operational error, usage error). Treat 0/1/2 as success.
+run_e2fsck() {
+    local dev=$1
+    local rc=0
+    e2fsck -fy "$dev" 2>&1 || rc=$?
+    if (( rc > 2 )); then
+        echo "Error: e2fsck $dev failed with exit code $rc" >&2
+        exit 1
+    fi
+}
+
+prepare_inactive_rootfs() {
+    local dev=$1
+    sync
+    blockdev --flushbufs "$dev" || true
+    run_e2fsck "$dev"
+    resize2fs "$dev" 2>&1
+    run_e2fsck "$dev"
+}
+
 rootfs=$(swupdate -g)
 
 rootfs_num=$(echo "$rootfs" | grep -o '[0-9]*$')
@@ -11,16 +33,12 @@ if [ -z "$rootfs_num" ]; then
 fi
 
 if (( rootfs_num % 2 == 0 )); then
-    e2fsck -f /dev/mmcblk0p13 > /dev/null 2>&1
-    resize2fs /dev/mmcblk0p13 > /dev/null 2>&1
-    e2fsck -f /dev/mmcblk0p13 > /dev/null 2>&1
+    prepare_inactive_rootfs /dev/mmcblk0p13
     bootctrl set-active-boot-slot 1
     fw_setenv boot_slot 2
     echo "Switching to Partition B"
 else
-    e2fsck -f /dev/mmcblk0p12 > /dev/null 2>&1
-    resize2fs /dev/mmcblk0p12 > /dev/null 2>&1
-    e2fsck -f /dev/mmcblk0p12 > /dev/null 2>&1
+    prepare_inactive_rootfs /dev/mmcblk0p12
     bootctrl set-active-boot-slot 0
     fw_setenv boot_slot 1
     echo "Switching to Partition A"
