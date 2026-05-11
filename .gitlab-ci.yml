@@ -28,7 +28,7 @@ include:
       downloads-mirror: $[[ inputs.downloads-mirror ]]
       git-mirror: $[[ inputs.git-mirror ]]
       build-ref: $[[ inputs.build-ref ]]
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@1
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@2
 
 stages:
   - ci-kas
