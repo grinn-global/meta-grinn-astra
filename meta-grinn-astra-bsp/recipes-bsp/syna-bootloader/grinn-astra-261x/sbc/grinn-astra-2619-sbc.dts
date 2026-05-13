@@ -39,20 +39,98 @@
 	chosen {
 		stdout-path = &sm_uart0;
 	};
-};
 
-&sysmgr_pinctrl {
-	xspi0_pmux: xspi0-pmux {
-		groups = "SM_GPIO18", "SM_GPIO19", "SM_GPIO20", "SM_GPIO21",
-			 "SM_GPIO22", "SM_GPIO23", "SM_GPIO24", "SM_GPIO25",
-			 "SM_GPIO26", "SM_GPIO27", "SM_GPIO28", "SM_GPIO29",
-			 "SM_GPIO30";
-		function = "xspi";
+	gmac0clk: gmac0clk {
+		compatible = "fixed-clock";
+		#clock-cells = <0>;
+		clk_freq = <250000000>;
+	};
+
+	soc {
+		eth0_txc_90deg: syscon@0xf7e10a18 {
+			compatible = "simple-mfd", "syscon";
+			reg = <0xf7e10a18 0x4>;
+		};
+
+		gmac0: ethernet@f7a04000 {
+			compatible = "synaptics,klamath-dwmac-eqos";
+			reg = <0xf7a04000 0x2000>;
+			interrupts = <GIC_SPI 15 IRQ_TYPE_LEVEL_HIGH>;
+			interrupt-names = "macirq";
+			phy-mode = "rgmii";
+			clocks = <&gmac0clk>;
+			clock-names = "stmmaceth";
+			resets = <&reset 0x350 6 0 1>;
+			reset-names = "eqos";
+			status = "disabled";
+		};
+
+		gpio0: gpio@f7f07000 {
+			compatible = "snps,dw-apb-gpio";
+			dev_name = "gpio_soc_0";
+			reg = <0xf7f07000 0x400>;
+			#address-cells = <1>;
+			#size-cells = <0>;
+
+			porta: gpio-port@0 {
+				gpio-controller;
+				#gpio-cells = <2>;
+				ngpios = <32>;
+				reg = <0>;
+			};
+		};
 	};
 };
 
-&sm_uart0 {
+&gmac0 {
 	status = "okay";
+	max-speed = <1000>;
+	phy-mode = "rgmii-id";
+	phy-handle = <&phy0>;
+	phy = <&phy0>;
+	phy-reset-gpios = <&porta 16 GPIO_ACTIVE_LOW>;
+	pinctrl-names = "default";
+	pinctrl-0 = <&eth0_pmux>, <&mdio_pmux>, <&eth0_phy_rst_pmux>;
+
+	mdio {
+		#address-cells = <1>;
+		#size-cells = <0>;
+		phy0: ethernet-phy@3 {
+			device_type = "ethernet-phy";
+			reg = <3>;
+			rxc-skew-ps = <1500>;
+			rxdv-skew-ps = <420>;
+			rxd0-skew-ps = <420>;
+			rxd1-skew-ps = <420>;
+			rxd2-skew-ps = <420>;
+			rxd3-skew-ps = <420>;
+			txc-skew-ps = <900>;
+			txen-skew-ps = <420>;
+			txd0-skew-ps = <420>;
+			txd1-skew-ps = <420>;
+			txd2-skew-ps = <420>;
+			txd3-skew-ps = <420>;
+		};
+	};
+};
+
+&pinctrl {
+	eth0_phy_rst_pmux: eth0-phy-rst-pmux {
+		groups = "GPIO16";
+		function = "gpio";
+	};
+
+	eth0_pmux: eth0-pmux {
+		groups = "GPIO33", "GPIO34", "GPIO35", "GPIO36", "GPIO37",
+			 "GPIO38", "GPIO39", "GPIO40", "GPIO41", "GPIO42",
+			 "GPIO43", "GPIO44";
+		function = "rgmii1";
+	};
+
+	mdio_pmux: mdio-pmux {
+		groups = "GPIO31", "GPIO32";
+		function = "rgmii";
+	};
 };
 
 &sdhci0 {
@@ -65,8 +143,18 @@
 	fixed-voltage;
 };
 
-&usb_phy0 {
+&sm_uart0 {
 	status = "okay";
+};
+
+&sysmgr_pinctrl {
+	xspi0_pmux: xspi0-pmux {
+		groups = "SM_GPIO18", "SM_GPIO19", "SM_GPIO20", "SM_GPIO21",
+			 "SM_GPIO22", "SM_GPIO23", "SM_GPIO24", "SM_GPIO25",
+			 "SM_GPIO26", "SM_GPIO27", "SM_GPIO28", "SM_GPIO29",
+			 "SM_GPIO30";
+		function = "xspi";
+	};
 };
 
 &usb0 {
@@ -74,12 +162,16 @@
 	status = "okay";
 };
 
-&usb_phy1 {
+&usb1 {
+	compatible = "snps,dwc2-host";
 	status = "okay";
 };
 
-&usb1 {
-	compatible = "snps,dwc2-host";
+&usb_phy0 {
+	status = "okay";
+};
+
+&usb_phy1 {
 	status = "okay";
 };
 

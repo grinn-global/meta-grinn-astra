@@ -34,6 +34,8 @@ SRC_URI:append:grinn-astra-2619-som = " \
 "
 
 SRC_URI:append:grinn-astra-261x-platform = " \
+	file://0001-board-synaptics-klamath-klamath_boardinit-use-default.patch \
+	file://eth.cfg \
 	file://misc.cfg \
 "
 

@@ -1,0 +1,19 @@
+From 36e995bfead239f5d9b3738332b0630537bf77a0 Mon Sep 17 00:00:00 2001
+From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
+Date: Wed, 18 Mar 2026 16:32:07 +0100
+Subject: [PATCH] board: synaptics: klamath: klamath_boardinit: use default
+ RGMII0 MDIO
+
+Use default RGMII0 MDIO for MAC-PHY communication instead of RGMII1 MDIO
+---
+ board/synaptics/klamath/klamath_boardinit.c | 1 -
+ 1 file changed, 1 deletion(-)
+
+diff --git a/board/synaptics/klamath/klamath_boardinit.c b/board/synaptics/klamath/klamath_boardinit.c
+index a194bf0319..6466eb140a 100644
+--- a/board/synaptics/klamath/klamath_boardinit.c
++++ b/board/synaptics/klamath/klamath_boardinit.c
+@@ -244,1 +244,0 @@ int board_init(void)
+-	tw_init_mdio();
+--
+2.47.3
