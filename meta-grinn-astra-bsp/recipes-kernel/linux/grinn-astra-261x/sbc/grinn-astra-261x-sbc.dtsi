@@ -210,6 +210,11 @@
 		groups = "GPIO22";
 		function = "gpio";
 	};
+
+	optiga_rstn_pmux: optiga-rstn-pmux {
+		groups = "GPIO45";
+		function = "gpio";
+	};
 };
 
 &porta {
@@ -218,6 +223,17 @@
 		"", "", "", "", "", "", "", "",
 		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "", "", "LED_YELLOW", "LED_GREEN",
 		"LED_RED", "", "", "", "", "", "", "";
+};
+
+&portb {
+	pinctrl-0 = <&optiga_rstn_pmux>;
+	pinctrl-names = "default";
+
+	gpio-line-names =
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "Optiga_RSTn", "", "",
+		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "";
 };
 
 &uart0 {

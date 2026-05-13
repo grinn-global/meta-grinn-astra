@@ -18,3 +18,7 @@ IMAGE_INSTALL:append:grinn-astra-1680-ada = " \
 IMAGE_INSTALL:append:grinn-astra-1680-sbc = " \
 	i2c-utils-optiga-trust \
 "
+
+IMAGE_INSTALL:append:grinn-astra-261x-sbc = " \
+	i2c-utils-optiga-trust \
+"
