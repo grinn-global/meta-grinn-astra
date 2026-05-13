@@ -71,3 +71,10 @@ actions:
           repository: git@gitlab.grinndev.ovh:grinn/ci/lava/lava-test-definitions.git
           path: automated/linux/ethernet/ethernet-test.yaml
           name: ethernet-test
+        - from: git
+          repository: git@gitlab.grinndev.ovh:grinn/ci/lava/lava-test-definitions.git
+          path: automated/linux/optiga/optiga-test.yaml
+          name: optiga-test
+          parameters:
+            OPTIGA_I2C_BUS: "/dev/i2c-3"
+            DEVICE: "{{ job.KAS_MACHINE }}"
