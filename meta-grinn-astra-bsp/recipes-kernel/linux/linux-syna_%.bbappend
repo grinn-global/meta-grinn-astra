@@ -44,6 +44,7 @@ SRC_URI:append:grinn-astra-2619-som = " \
 "
 
 SRC_URI:append:grinn-astra-261x-sbc = " \
+	file://eth.cfg \
 	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
 "
 

@@ -22,10 +22,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 
-			ethernet_phy0: ethernet-phy@3 {
-				reg = <3>;
+			eth0_phy: ethernet-phy@3 {
 				compatible = "ethernet-phy-ieee802.3-c22";
-				device_type = "ethernet-phy";
+				reg = <3>;
+				pinctrl-0 = <&eth0_phy_rst_pmux>, <&eth0_phy_int_pmux>;
+				pinctrl-names = "default";
 				rxc-skew-ps = <1500>;
 				rxdv-skew-ps = <420>;
 				rxd0-skew-ps = <420>;
@@ -38,6 +39,9 @@
 				txd1-skew-ps = <420>;
 				txd2-skew-ps = <420>;
 				txd3-skew-ps = <420>;
+				reset-assert-us = <20000>;
+				reset-deassert-us = <100000>;
+				reset-gpios = <&porta 16 GPIO_ACTIVE_LOW>;
 			};
 		};
 
@@ -46,10 +50,11 @@
 			#address-cells = <1>;
 			#size-cells = <0>;
 
-			ethernet_phy1: ethernet-phy@2 {
-				reg = <2>;
+			eth1_phy: ethernet-phy@7 {
 				compatible = "ethernet-phy-ieee802.3-c22";
-				device_type = "ethernet-phy";
+				reg = <7>;
+				pinctrl-0 = <&eth1_phy_rst_pmux>, <&eth1_phy_int_pmux>;
+				pinctrl-names = "default";
 				rxc-skew-ps = <1500>;
 				rxdv-skew-ps = <420>;
 				rxd0-skew-ps = <420>;
@@ -62,6 +67,9 @@
 				txd1-skew-ps = <420>;
 				txd2-skew-ps = <420>;
 				txd3-skew-ps = <420>;
+				reset-assert-us = <20000>;
+				reset-deassert-us = <100000>;
+				reset-gpios = <&porta 19 GPIO_ACTIVE_LOW>;
 			};
 		};
 	};
@@ -81,12 +89,10 @@
 
 &ethernet0 {
 	status = "okay";
-	pinctrl-0 = <&eth_mdio_pmux>, <&eth0_pmux>, <&eth0_phy_rst_pmux>, <&eth0_phy_int_pmux>;
+	pinctrl-0 = <&eth_mdio_pmux>, <&eth0_pmux>;
 	pinctrl-names = "default";
-	phy-handle = <&ethernet_phy0>;
+	phy-handle = <&eth0_phy>;
 	phy-mode = "rgmii-id";
-	snps,reset-gpio = <&porta 16 GPIO_ACTIVE_LOW>;
-	snps,reset-delays-us = <0 10000 50000>;
 	syna,txc-90deg = <&eth0_txc_90deg>;
 
 	mdio0: mdio {
@@ -98,12 +104,10 @@
 
 &ethernet1 {
 	status = "okay";
-	pinctrl-0 = <&eth_mdio_pmux>, <&eth1_pmux>, <&eth1_phy_rst_pmux>, <&eth1_phy_int_pmux>;
+	pinctrl-0 = <&eth_mdio_pmux>, <&eth1_pmux>;
 	pinctrl-names = "default";
-	phy-handle = <&ethernet_phy1>;
+	phy-handle = <&eth1_phy>;
 	phy-mode = "rgmii-id";
-	snps,reset-gpio = <&porta 19 GPIO_ACTIVE_LOW>;
-	snps,reset-delays-us = <0 10000 50000>;
 	syna,txc-90deg = <&eth1_txc_90deg>;
 
 	mdio1: mdio {
