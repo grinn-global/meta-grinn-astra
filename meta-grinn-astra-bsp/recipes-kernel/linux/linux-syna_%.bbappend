@@ -2,6 +2,7 @@ FILESEXTRAPATHS:prepend:grinn-astra-platform := "${THISDIR}/common:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-som := "${THISDIR}/grinn-astra-1680/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
+FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/grinn-astra-261x/common:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-som := "${THISDIR}/grinn-astra-261x/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
 
@@ -47,6 +48,7 @@ SRC_URI:append:grinn-astra-261x-sbc = " \
 	file://eth.cfg \
 	file://gpio-led.cfg \
 	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
+	file://waveshare-7inch-panel-overlay.dtso;subdir=${DT_DIR} \
 "
 
 # kernel-yocto applies patches via kgit-s2q on the main kernel index, which

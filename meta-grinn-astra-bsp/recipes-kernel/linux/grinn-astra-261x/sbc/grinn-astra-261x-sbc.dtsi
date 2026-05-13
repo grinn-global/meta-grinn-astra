@@ -169,6 +169,10 @@
 	};
 };
 
+&gpu {
+	status = "okay";
+};
+
 &i2c3 {
 	status = "okay";
 	pinctrl-names = "default";
