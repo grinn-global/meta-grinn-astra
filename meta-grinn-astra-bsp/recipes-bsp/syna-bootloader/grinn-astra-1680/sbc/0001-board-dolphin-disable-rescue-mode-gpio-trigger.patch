@@ -1,0 +1,33 @@
+From 0000000000000000000000000000000000000000 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Thu, 15 May 2026 12:00:00 +0200
+Subject: [PATCH] board: dolphin: disable rescue-mode GPIO trigger
+
+The dolphin board late init unconditionally probes a jumper between
+PortB6 (GPIO38) and PortB7 (GPIO39) to decide whether to enter rescue
+mode. On grinn-astra-1680-sbc those pins are routed differently than
+on the Synaptics reference board, so the detection falsely triggers
+on every boot and forces the device into rescue mode.
+
+Disable the GPIO-based trigger on grinn-astra-1680-sbc. Rescue mode is
+still reachable from the U-Boot prompt via `run rescue_boot`.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ board/synaptics/dolphin/dolphin_boardinit.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/board/synaptics/dolphin/dolphin_boardinit.c b/board/synaptics/dolphin/dolphin_boardinit.c
+--- a/board/synaptics/dolphin/dolphin_boardinit.c
++++ b/board/synaptics/dolphin/dolphin_boardinit.c
+@@ -456,7 +456,7 @@ int board_late_init(void)
+
+ #ifdef CONFIG_SYNA_RESCUE_MODE
+ 	setup_rescue_mode_gpio();
+-	rescue_trigger_detect();
++	/* rescue_trigger_detect(); */ /* disabled: false-trigger on grinn-astra-1680-sbc */
+ #endif
+
+ #ifdef CONFIG_SYNA_TZ_MR
+--
+2.43.0
