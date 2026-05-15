@@ -286,17 +286,24 @@
 		groups = "GPIO45";
 		function = "gpio";
 	};
+
+	rpi_porta_pmux: rpi-porta-pmux {
+		groups = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4",
+			 "GPIO12", "GPIO13", "GPIO14", "GPIO15",
+			 "GPIO25", "GPIO26", "GPIO29", "GPIO30";
+		function = "gpio";
+	};
 };
 
 &porta {
-	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>;
+	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>, <&rpi_porta_pmux>;
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "", "CAM_GPIO0", "CAM_GPIO1", "",
-		"", "", "", "", "", "", "", "",
-		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "", "", "LED_YELLOW", "LED_GREEN",
-		"LED_RED", "", "", "MIPI_SCL", "MIPI_SDA", "", "", "";
+		"RPi_GPIO_8", "RPi_GPIO_11", "RPi_GPIO_10", "RPi_GPIO_7", "RPi_GPIO_9", "CAM_GPIO0", "CAM_GPIO1", "UART_WAKEn",
+		"BT_DISABLEn", "WF_DISABLEn", "SDIO_RESETn", "SDIO_WAKEn", "RPi_GPIO_19", "RPi_GPIO_18", "RPi_GPIO_21", "RPi_GPIO_20",
+		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "SS1", "", "LED_YELLOW", "LED_GREEN",
+		"LED_RED", "RPi_GPIO_15", "RPi_GPIO_14", "MIPI_SCL", "MIPI_SDA", "RPi_GPIO_27", "RPi_GPIO_17", "";
 };
 
 &portb {
@@ -308,6 +315,54 @@
 		"", "", "", "", "", "Optiga_RSTn", "", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
+};
+
+&portc {
+	pinctrl-0 = <&rpi_portc_pmux>, <&user_button_pmux>;
+	pinctrl-names = "default";
+
+	gpio-line-names =
+		"SM_TMS", "SM_TDI", "SM_TDO", "OPTIGA_SCL", "OPTIGA_SDA", "VCORE_ONn", "DISPLAY_GPIO0", "DEBUG_RXD",
+		"DEBUG_TXD", "BOOTn", "USER_BUTTON", "", "RPi_GPIO_3", "RPi_GPIO_2", "CAN0_RX", "CAN0_TX";
+};
+
+&porte {
+	pinctrl-0 = <&rpi_porte_pmux>;
+	pinctrl-names = "default";
+
+	gpio-line-names =
+		"RPi_GPIO_6", "RPi_GPIO_16", "RPi_GPIO_26", "RPi_GPIO_22", "RPi_GPIO_25", "RPi_GPIO_5", "RPi_GPIO_4", "RPi_GPIO_23";
+};
+
+&portf {
+	pinctrl-0 = <&rpi_portf_pmux>;
+	pinctrl-names = "default";
+
+	gpio-line-names =
+		"RPi_GPIO_24", "", "", "RPi_GPIO_12", "", "", "RPi_GPIO_13", "";
+};
+
+&sm_pinctrl {
+	rpi_portc_pmux: rpi-portc-pmux {
+		groups = "SM_GPIO12", "SM_GPIO13";
+		function = "gpio";
+	};
+
+	rpi_porte_pmux: rpi-porte-pmux {
+		groups = "SM_GPIO24", "SM_GPIO25", "SM_GPIO26", "SM_GPIO27",
+			 "SM_GPIO28", "SM_GPIO29", "SM_GPIO30", "SM_GPIO31";
+		function = "gpio";
+	};
+
+	rpi_portf_pmux: rpi-portf-pmux {
+		groups = "SM_GPIO32", "SM_GPIO37", "SM_GPIO38";
+		function = "gpio";
+	};
+
+	user_button_pmux: user-button-pmux {
+		groups = "SM_GPIO10";
+		function = "gpio";
+	};
 };
 
 &uart0 {
