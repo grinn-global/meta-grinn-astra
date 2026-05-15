@@ -50,6 +50,7 @@ local_conf_header:
     IMAGE_LINGUAS = "zh-cn en-gb en-us"
 
     DISTRO_FEATURES:append = " wayland"
+    DISTRO_FEATURES:append = " sysvinit"
     DISTRO_FEATURES:remove = " x11"
     DISTRO_FEATURES_NATIVESDK:remove = "x11"
 
