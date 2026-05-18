@@ -5,10 +5,3 @@ repos:
   meta-grinn-astra:
     layers:
       meta-grinn-astra-netboot:
-
-env:
-  NETBOOT_SERVER_IP: ""
-  NFS_ROOTFS_PATH: ""
-  TFTP_KERNEL_BIN_PATH: ""
-  TFTP_DTB_BIN_PATH: ""
-  TFTP_IMAGE_PATH: ""
