@@ -21,4 +21,5 @@ IMAGE_INSTALL:append:grinn-astra-1680-sbc = " \
 
 IMAGE_INSTALL:append:grinn-astra-261x-sbc = " \
 	i2c-utils-optiga-trust \
+	image-sensor-demo \
 "
