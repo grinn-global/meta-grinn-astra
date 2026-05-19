@@ -111,18 +111,21 @@ meta-grinn-astra/meta-grinn-astra-netboot/scripts/sync.sh
 ```
 
 ## Usage
-Netboot flow is controlled via U-Boot environment:
+With this layer applied, NFS boot is the default — U-Boot preboot sets
+`netboot=1` whenever the variable is not already defined in the saved
+environment. The boot command then runs `netboot_boot` when
+`netboot=1` and falls back to `bootmmc` otherwise.
 
-### Enable booting via NFS
+### Switch to eMMC boot
 ```bash
-setenv netboot 1
+setenv netboot 0
 saveenv
 reset
 ```
 
-### Restore default eMMC boot flow
+### Switch to NFS boot
 ```bash
-env delete netboot
+setenv netboot 1
 saveenv
 reset
 ```
