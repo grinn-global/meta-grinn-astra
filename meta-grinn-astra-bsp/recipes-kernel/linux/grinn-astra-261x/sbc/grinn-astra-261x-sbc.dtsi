@@ -123,6 +123,22 @@
 	status = "okay";
 };
 
+&camera_video {
+	status = "okay";
+};
+
+&csi {
+	status = "okay";
+
+	ports {
+		port@0 {
+			csi_input: endpoint@0 {
+				remote-endpoint = <&cam_endpoint>;
+			};
+		};
+	};
+};
+
 &ethernet0 {
 	status = "okay";
 	pinctrl-0 = <&eth_mdio_pmux>, <&eth0_pmux>;
@@ -153,6 +169,37 @@
 	};
 };
 
+&i2c3 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&i2c3_pmux>;
+	clock-frequency = <100000>;
+
+	cam_node: ov5647@36 {
+		compatible = "ovti,ov5647";
+		reg = <0x36>;
+		status = "okay";
+
+		clocks = <&osc>;
+
+		rotation = <0>;
+		orientation = <2>;
+
+		port {
+			cam_endpoint: endpoint {
+				clock-lanes = <0>;
+				data-lanes = <1 2>;
+				clock-noncontinuous;
+				remote-endpoint = <&csi_input>;
+			};
+		};
+	};
+};
+
+&isp {
+	status = "okay";
+};
+
 &mux1 {
 	status = "okay";
 };
@@ -162,6 +209,16 @@
 };
 
 &pinctrl {
+	cam_gpio0_pmux: cam-gpio0-pmux {
+		groups = "GPIO5";
+		function = "gpio";
+	};
+
+	cam_gpio1_pmux: cam-gpio1-pmux {
+		groups = "GPIO6";
+		function = "gpio";
+	};
+
 	eth_mdio_pmux: eth-mdio-pmux {
 		groups = "GPIO31", "GPIO32";
 		function = "rgmii";
@@ -200,6 +257,12 @@
 		drive-strength = <7>;
 	};
 
+	i2c3_pmux: i2c3-pmux {
+		groups = "GPIO27", "GPIO28";
+		function = "tw3";
+		drive-strength = <8>;
+	};
+
 	led_green_pmux: led-green-pmux {
 		groups = "GPIO23";
 		function = "gpio";
@@ -222,11 +285,14 @@
 };
 
 &porta {
+	pinctrl-0 = <&cam_gpio0_pmux>, <&cam_gpio1_pmux>;
+	pinctrl-names = "default";
+
 	gpio-line-names =
-		"", "", "", "", "", "", "", "",
+		"", "", "", "", "", "CAM_GPIO0", "CAM_GPIO1", "",
 		"", "", "", "", "", "", "", "",
 		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "", "", "LED_YELLOW", "LED_GREEN",
-		"LED_RED", "", "", "", "", "", "", "";
+		"LED_RED", "", "", "MIPI_SCL", "MIPI_SDA", "", "", "";
 };
 
 &portb {
