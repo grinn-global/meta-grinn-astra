@@ -1,3 +1,8 @@
+# [2.0.0]
+
+## Changed
+- Bump `meta-synaptics` to v2.3.0
+
 # [1.0.1]
 
 ## Fixed
