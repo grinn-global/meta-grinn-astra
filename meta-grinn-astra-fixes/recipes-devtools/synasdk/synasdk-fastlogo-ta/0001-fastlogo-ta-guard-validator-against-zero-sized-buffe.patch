@@ -1,0 +1,74 @@
+From 0000000000000000000000000000000000000001 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Thu, 21 May 2026 12:00:00 +0200
+Subject: [PATCH] fastlogo-ta: guard validator against zero-sized buffer
+
+On platforms where no VPP display output is active at fastlogo TA
+initialization time (e.g. AstraSBC booted without HDMI plugged in,
+or AstraADA with DSI panel disabled and HDMI unplugged), the
+fastlogo TA passes a buffer descriptor with bufSize == 0 down the
+shared-memory path.
+
+The actual crash is triggered inside VPP_MapAndValidate_SingleBuffer()
+which calls VPP_BUFF_GetHandle() before the validators. With bufSize=0
+this invokes TEE_Register_Memory(addr, 0, ...) and TEE_Map_Memory(mem_id=0,
+...), producing:
+
+    E/TC: mr_find_region:55 buffer=0xbcd0a000, size=0x00000000
+    E/TC: umem_register_memory:645 Cannot find mobj.
+    E/TC: umem_map_memory:881 memory id 0x0 is already mapped @ 0x40270000
+    E/TC: User mode data-abort at address 0x402a6a10 (translation fault)
+    E/LD: Status of TA 1316a183-894d-43fe-9893-bb946ae103f5
+
+Reject zero-sized buffers up-front in VPP_ValidateInput(),
+VPP_ValidateOutput() and most importantly in
+VPP_MapAndValidate_SingleBuffer() before the buffer handle is acquired.
+All existing callers (tee_ta_vpp.c, tee_ta_vpp_shm_cmd.c) already check
+the return value, so no behavioural regression is expected on healthy
+paths.
+
+This is a local workaround.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ ta/display/ta/vpp/g7/ta_wrapper/common/tee_ta_buffer_check.c | 13 +++++++++++++
+ 1 file changed, 13 insertions(+)
+
+--- a/ta/display/ta/vpp/g7/ta_wrapper/common/tee_ta_buffer_check.c
++++ b/ta/display/ta/vpp/g7/ta_wrapper/common/tee_ta_buffer_check.c
+@@ -23,6 +23,10 @@
+     TEE_Result res = TEE_ERROR_BAD_PARAMETERS;
+     TEE_MemRegion mr;
+
++    /* workaround: avoid TA data-abort on zero-sized buffer */
++    if (pBuffDec->bufSize == 0)
++        return TEE_ERROR_BAD_PARAMETERS;
++
+     if(TEE_SUCCESS != TEE_FindMemRegion(&mr, pBuffDec->bufAddr, pBuffDec->bufSize))
+         return res;
+     if (TEE_MR_IS_RESTRICTED(&mr))
+@@ -37,6 +41,10 @@
+     TEE_Result res = TEE_ERROR_BAD_PARAMETERS;
+     TEE_MemRegion mr;
+
++    /* workaround: avoid TA data-abort on zero-sized buffer */
++    if (pBuffDec->bufSize == 0)
++        return TEE_ERROR_BAD_PARAMETERS;
++
+     if(TEE_SUCCESS != TEE_FindMemRegion(&mr, pBuffDec->bufAddr, pBuffDec->bufSize))
+         return res;
+     if (TEE_MR_IS_RESTRICTED(&mr))
+@@ -85,6 +93,11 @@
+     //memid/phy-addr is passed in pBuffDesc->bufAddr
+     shmSize = VPP_SHM_ALIGN_ROUNDUP(pBuffDesc->bufSize);
+
++    /* workaround: avoid TEE_Register_Memory(addr, 0, ...) which
++     * leads to "Cannot find mobj" and a subsequent TA data-abort */
++    if (shmSize == 0)
++        return TEE_ERROR_BAD_PARAMETERS;
++
+     VPP_BUFF_GetHandle(pBuffHandle, (UINT32)pBuffDesc->bufAddr, shmSize, bIsMapToAllInstances, bIsPhyAddrNeeded);
+
+     //Retrieve the value from VPP_BUFF_HANDLE
+--
+2.49.0
