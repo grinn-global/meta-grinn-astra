@@ -1,3 +1,8 @@
+# [1.0.1]
+
+## Fixed
+- Inability to generate SWUpdate bundle
+
 # [1.0.0]
 
 Initial, SDK v2.2.0 based release.
