@@ -85,3 +85,10 @@ actions:
           name: usb-test
           parameters:
             DEVICE: "{{ job.KAS_MACHINE }}"
+        - from: git
+          repository: git@gitlab.grinndev.ovh:grinn/ci/lava/lava-test-definitions.git
+          path: automated/linux/wifi/wifi-test.yaml
+          name: wifi-test
+          parameters:
+            WIFI_IFACE: "wlan0"
+            DEVICE: "{{ job.KAS_MACHINE }}"
