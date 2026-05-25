@@ -1,0 +1,46 @@
+From 0000000000000000000000000000000000000002 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <lukasz.madej.prv@gmail.com>
+Date: Mon, 25 May 2026 00:00:00 +0200
+Subject: [PATCH] bcmdhd: disable DHD_WOWL_IN_SUSPEND_SDIO
+
+The BCM DHD driver gates DHD_WOWL_IN_SUSPEND_SDIO on the absence of
+CONFIG_ANDROID_VENDOR_OEM_DATA, so it is unconditionally enabled on
+Yocto. With the flag enabled, dhd_pm_callback() on PM_SUSPEND_PREPARE
+pushes "wowl", "wowl_activate" and "hostsleep" iovars to the firmware,
+followed by an unconditional 1 s msleep meant to let the firmware
+settle.
+
+That works when WiFi is associated to an AP. With no AP, wowl_activate
+fails and clutters dmesg on every suspend:
+
+  dhd_set_wowl_active: force wowl suspend setting
+  dhd_set_wowl_active wowl_activate failed -1
+
+The 1 s msleep is paid either way.
+
+Wake-on-WLAN is not a use case on this board (suspend is driven from
+local input, RTC or GPIO, not from network packets). Drop the flag so
+dhd_pm_callback() becomes a no-op for SDIO suspend.
+
+Signed-off-by: Lukasz Madej <lukasz.madej.prv@gmail.com>
+---
+ drivers/synaptics/net/wireless/bcmdhd/Makefile | 4 +++-
+ 1 file changed, 3 insertions(+), 1 deletion(-)
+
+diff --git a/drivers/synaptics/net/wireless/bcmdhd/Makefile b/drivers/synaptics/net/wireless/bcmdhd/Makefile
+--- a/drivers/synaptics/net/wireless/bcmdhd/Makefile
++++ b/drivers/synaptics/net/wireless/bcmdhd/Makefile
+@@ -630,8 +630,10 @@ ifneq ($(CONFIG_BCMDHD_PCIE),)
+   DHDCFLAGS += -DLIMIT_BORROW
+   DHDCFLAGS += -DBULK_DEQUEUE
+
++# WoWL is unused on this board (no Wake-on-WLAN use case) and only adds a 1 s
++# msleep on every suspend plus "wowl_activate failed -1" spam when no AP.
+ ifeq ($(CONFIG_ANDROID_VENDOR_OEM_DATA),)
+-  DHDCFLAGS += -DDHD_WOWL_IN_SUSPEND_SDIO
++  # DHDCFLAGS += -DDHD_WOWL_IN_SUSPEND_SDIO
+ endif
+
+ # Secure Boot
+--
+2.43.0

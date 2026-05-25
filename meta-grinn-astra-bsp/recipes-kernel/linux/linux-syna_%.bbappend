@@ -29,6 +29,7 @@ SRC_URI:append:grinn-astra-1680-ada = " \
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://0001-bcmdhd-stop-watchdog-on-suspend-to-release-SDIO-wake.patch;apply=no \
+	file://0002-bcmdhd-disable-DHD_WOWL_IN_SUSPEND_SDIO.patch;apply=no \
 	file://bcmdhd.cfg \
 	file://gpio-led.cfg \
 	file://eth.cfg \
@@ -46,8 +47,9 @@ SRC_URI:append:grinn-astra-261x-sbc = " \
 "
 
 # kernel-yocto applies patches via kgit-s2q on the main kernel index, which
-# does not track drivers/synaptics/. Mark the patch as apply=no so kgit
-# skips it, and apply it manually here with plain patch.
+# does not track drivers/synaptics/. Mark patches as apply=no so kgit skips
+# them, and apply them manually here with plain patch.
 do_patch:append:grinn-astra-1680-sbc() {
 	patch -d ${S} -p1 < ${WORKDIR}/0001-bcmdhd-stop-watchdog-on-suspend-to-release-SDIO-wake.patch
+	patch -d ${S} -p1 < ${WORKDIR}/0002-bcmdhd-disable-DHD_WOWL_IN_SUSPEND_SDIO.patch
 }
