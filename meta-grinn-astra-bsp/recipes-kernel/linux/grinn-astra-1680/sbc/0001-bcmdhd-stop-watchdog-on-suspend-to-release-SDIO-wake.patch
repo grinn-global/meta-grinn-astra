@@ -1,0 +1,63 @@
+From 0000000000000000000000000000000000000001 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <lukasz.madej.prv@gmail.com>
+Date: Mon, 25 May 2026 00:00:00 +0200
+Subject: [PATCH] bcmdhd: stop watchdog on suspend to release SDIO wakelock
+
+On SDIO platforms (e.g. grinn-astra-1680-sbc) the BCM DHD driver holds
+the wl_wdwake wakelock continuously while its periodic watchdog timer is
+armed: dhd_os_wd_timer(wdtick > 0) takes the lock and only
+dhd_os_wd_timer(0) releases it. On PCIe builds the same lock is taken
+and released around each handler invocation, so it is effectively never
+active when system suspend is attempted.
+
+When the system enters suspend, bcmsdh_sdmmc_suspend() (func 2) calls
+bcmsdh_suspend() -> dhdsdio_suspend(), which calls
+dhd_os_check_wakelock(). The check returns 1 if wl_wifi or wl_wdwake is
+active. The non-zero return is converted to -EBUSY by bcmsdh_suspend(),
+aborting suspend with:
+
+  bcmsdh_sdmmc mmc1:0001:2: PM: dpm_run_callback(): pm_generic_suspend returns -16
+  bcmsdh_sdmmc mmc1:0001:2: PM: failed to suspend async: error -16
+
+On the SBC the watchdog wakelock is held in 200-800 ms bursts (~20% of
+the time), so suspend reliably fails. Hard-removing the WiFi module so
+that the driver does not probe lets the system suspend correctly,
+confirming the diagnosis.
+
+Stop the watchdog timer in PM_SUSPEND_PREPARE (releasing wl_wdwake) and
+re-arm it in PM_POST_SUSPEND. This is also semantically correct: the
+WiFi watchdog has nothing to do while the chip is suspended.
+
+Signed-off-by: Lukasz Madej <lukasz.madej.prv@gmail.com>
+---
+ drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c | 10 ++++++++++
+ 1 file changed, 10 insertions(+)
+
+diff --git a/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c b/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c
+--- a/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c
++++ b/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c
+@@ -1113,5 +1113,11 @@ static int dhd_pm_callback(struct notifier_block *nfb, unsigned long action, voi
+ 	dhd_set_wowl_active(TRUE);
+ 	msleep(1000);
+ #endif /* DHD_WOWL_IN_SUSPEND_SDIO */
++#ifdef BCMSDIO
++		/* Release wl_wdwake before SDIO suspend so that
++		 * dhd_os_check_wakelock() does not abort with -EBUSY. */
++		dhdinfo = container_of(nfb, dhd_info_t, pm_notifier);
++		dhd_os_wd_timer(&dhdinfo->pub, 0);
++#endif /* BCMSDIO */
+ 		suspend = TRUE;
+ 		break;
+@@ -1121,6 +1127,10 @@ static int dhd_pm_callback(struct notifier_block *nfb, unsigned long action, voi
+ #ifdef DHD_WOWL_IN_SUSPEND_SDIO
+ 	dhd_set_wowl_active(FALSE);
+ #endif /* DHD_WOWL_IN_SUSPEND_SDIO */
++#ifdef BCMSDIO
++		dhdinfo = container_of(nfb, dhd_info_t, pm_notifier);
++		dhd_os_wd_timer(&dhdinfo->pub, dhd_watchdog_ms);
++#endif /* BCMSDIO */
+ 		suspend = FALSE;
+ 		break;
+ 	}
+--
+2.43.0
