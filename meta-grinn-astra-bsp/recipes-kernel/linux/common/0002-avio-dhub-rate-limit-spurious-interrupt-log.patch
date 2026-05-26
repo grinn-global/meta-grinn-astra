@@ -1,0 +1,76 @@
+From 0000000000000000000000000000000000000001 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Tue, 26 May 2026 00:00:00 +0200
+Subject: [PATCH] avio: dhub: rate-limit "Spurious interrupt" log with delta
+ counter
+
+The AVIO DHUB ISR's "Spurious interrupt" message can be emitted at display
+refresh rate (60-75 Hz) for the short race window between request_irq() in
+drv_dhub_open and Dhub_IntrRegisterHandler() in the VPP path, where the AVIO
+IRQ is live but the per-slot handler is not yet attached. On boots where the
+window is wider than usual the console floods at ~120 lines/s and becomes
+unusable.
+
+Vendor (Synaptics) confirms the issue is non-functional - the ISR acks the
+semaphore correctly even without a handler, the race window only spans early
+boot, and downstream VPP consumers register vsync callbacks only after the
+window closes so no events can be lost. Recommended remedy is to silence the
+log.
+
+Rather than fully downgrade to debug (which loses the diagnostic signal
+entirely), gate the message with hand-rolled rate-limiting that:
+
+  - emits the first occurrence immediately so a single boot-time race is
+    visible at default loglevel
+  - throttles subsequent occurrences to one log per 5 seconds, each carrying
+    a delta (+N since last log) plus running total
+
+This makes the difference between a benign race window (one or two messages
+then silence as the handler attaches) and a true regression (heartbeat with
+ever-growing total) immediately readable from a single dmesg snapshot,
+without the flood.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ .../soc/berlin/modules/avio/dhub/drv_dhub.c   | 24 ++++++++++++++++---
+ 1 file changed, 21 insertions(+), 3 deletions(-)
+
+diff --git a/drivers/synaptics/soc/berlin/modules/avio/dhub/drv_dhub.c b/drivers/synaptics/soc/berlin/modules/avio/dhub/drv_dhub.c
+--- a/drivers/synaptics/soc/berlin/modules/avio/dhub/drv_dhub.c
++++ b/drivers/synaptics/soc/berlin/modules/avio/dhub/drv_dhub.c
+@@ -213,10 +213,28 @@ static irqreturn_t avio_devices_dhub_isr(int irq, void *dev_id)
+ 		if (intr_status && p_int_handler->pIntrHandler)
+ 			p_int_handler->pIntrHandler(intr_status,
+ 				p_int_handler->pIntrHandlerArgs);
+-		else
+-			avio_error("%s:%d: Spurious interrupt - %d/%x/%x\n",
+-				__func__, __LINE__, intr_num,
+-				intr_status, p_int_handler->intrMask);
++		else {
++			static unsigned long spurious_total;
++			static unsigned long spurious_logged;
++			static unsigned long spurious_next_log;
++			spurious_total++;
++			if (spurious_total == 1) {
++				avio_error("%s:%d: Spurious interrupt - %d/%x/%x (first occurrence, total=%lu)\n",
++					__func__, __LINE__, intr_num,
++					intr_status, p_int_handler->intrMask,
++					spurious_total);
++				spurious_logged = spurious_total;
++				spurious_next_log = jiffies + 5 * HZ;
++			} else if (time_after(jiffies, spurious_next_log)) {
++				avio_error("%s:%d: Spurious interrupt - %d/%x/%x (+%lu since last, total=%lu)\n",
++					__func__, __LINE__, intr_num,
++					intr_status, p_int_handler->intrMask,
++					spurious_total - spurious_logged,
++					spurious_total);
++				spurious_logged = spurious_total;
++				spurious_next_log = jiffies + 5 * HZ;
++			}
++		}
+
+ 		//Clear the interrupt bit in instat
+ 		instat &= ~(1 << intr_num);
+--
+2.43.0
+
