@@ -11,12 +11,12 @@ SRC_URI:append:grinn-astra-platform = " \
 	file://${MACHINE}.dts;subdir=${DT_DIR} \
 	file://0001-linux-add-dwmac-support-for-TXC-90-degree-phase-shif.patch \
 	file://gpiolib.cfg \
+	file://nfs.cfg \
 "
 
 SRC_URI:append:grinn-astra-1680-platform = " \
 	file://0002-avio-dhub-rate-limit-spurious-interrupt-log.patch;apply=no \
 	file://modem.cfg \
-	file://nfs.cfg \
 "
 
 SRC_URI:append:grinn-astra-1680-som = " \
