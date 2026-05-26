@@ -119,6 +119,10 @@
 	};
 };
 
+&avio {
+	status = "okay";
+};
+
 &ethernet0 {
 	status = "okay";
 	pinctrl-0 = <&eth_mdio_pmux>, <&eth0_pmux>;
