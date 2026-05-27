@@ -315,15 +315,15 @@
 	dr_mode = "peripheral";
 };
 
-&usb_phy0 {
-	status = "okay";
-};
-
 &usb1 {
 	status = "okay";
 	dr_mode = "host";
 };
 
-&usb_phy1{
+&usb_phy0 {
+	status = "okay";
+};
+
+&usb_phy1 {
 	status = "okay";
 };
