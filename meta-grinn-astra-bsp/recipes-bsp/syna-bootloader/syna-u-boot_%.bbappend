@@ -3,6 +3,7 @@ FILESEXTRAPATHS:prepend:grinn-astra-1680-platform := "${THISDIR}/grinn-astra-168
 FILESEXTRAPATHS:prepend:grinn-astra-1680-som := "${THISDIR}/grinn-astra-1680/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-ada := "${THISDIR}/grinn-astra-1680/ada:"
 FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc:"
+FILESEXTRAPATHS:prepend:grinn-astra-261x-som := "${THISDIR}/grinn-astra-261x/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
 
 DT_DIR = "${S}/arch/arm/dts"
@@ -25,6 +26,10 @@ SRC_URI:append:grinn-astra-1680-platform = " \
 SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://0001-board-dolphin-disable-rescue-mode-gpio-trigger.patch \
 	file://display_disable.cfg \
+"
+
+SRC_URI:append:grinn-astra-2619-som = " \
+	file://memory_1gb.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
