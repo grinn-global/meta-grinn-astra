@@ -18,15 +18,14 @@
 		compatible = "syna,berlin-heaps";
 		pool-num = <0>;
 		reg-names = "NonSecure-NC";
-		reg = <0 0x7f800000 0 0x00800000>;
+		reg = <0 0x00d00000 0 0x00800000>;
 		attributes-num-per-pool = <2>;
 		pool-attributes = <0x00000105 0x00000F3A>;
 	};
 
 	memory {
 		device_type = "memory";
-		reg = <0x0 0x01000000 0x0 0xdf000000>,
-		      <0x1 0xe0000000 0x0 0x20000000>;
+		reg = <0x0 0x01500000 0x0 0x3eb00000>;
 	};
 
 	reserved-memory {
@@ -36,7 +35,7 @@
 
 		linux,cma {
 			compatible = "shared-dma-pool";
-			reg = <0x00 0x5c000000 0x00 0x20000000>;
+			reg = <0x00 0x38000000 0x00 0x04000000>;
 			linux,cma-default;
 			reusable;
 		};
