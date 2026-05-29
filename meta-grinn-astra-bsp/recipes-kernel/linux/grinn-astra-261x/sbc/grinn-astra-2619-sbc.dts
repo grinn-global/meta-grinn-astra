@@ -1,7 +1,7 @@
 /dts-v1/;
 
 #include "sl2619.dtsi"
-#include "grinn-astra-261x-som.dtsi"
+#include "grinn-astra-2619-som.dtsi"
 #include "grinn-astra-261x-sbc.dtsi"
 
 / {

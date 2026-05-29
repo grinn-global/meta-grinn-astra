@@ -39,8 +39,8 @@ SRC_URI:append:grinn-astra-1680-sbc = " \
 	${@bb.utils.contains('MACHINE_FEATURES', 'deepx', 'file://deepx.cfg', '', d)} \
 "
 
-SRC_URI:append:grinn-astra-261x-som = " \
-	file://grinn-astra-261x-som.dtsi;subdir=${DT_DIR} \
+SRC_URI:append:grinn-astra-2619-som = " \
+	file://grinn-astra-2619-som.dtsi;subdir=${DT_DIR} \
 "
 
 SRC_URI:append:grinn-astra-261x-sbc = " \
