@@ -11,6 +11,14 @@
 		stdout-path = "serial0:115200n8";
 	};
 
+	bt_reg_on: bt-reg-on {
+		compatible = "syna,rfkill";
+		status = "okay";
+		bt-power-gpio = <&porta 8 GPIO_ACTIVE_HIGH>;
+		pinctrl-0 = <&bt_disable_pmux>;
+		pinctrl-names = "default";
+	};
+
 	leds {
 		compatible = "gpio-leds";
 		status = "okay";
@@ -104,6 +112,14 @@
 				reset-gpios = <&porta 19 GPIO_ACTIVE_LOW>;
 			};
 		};
+	};
+
+	sdhci1_pwrseq: sdhci1-pwrseq {
+		compatible = "mmc-pwrseq-simple";
+		reset-gpios = <&porta 9 GPIO_ACTIVE_LOW>, <&porta 10 GPIO_ACTIVE_LOW>;
+		post-power-on-delay-ms = <50>;
+		pinctrl-0 = <&wf_disable_pmux>, <&sdio_reset_pmux>;
+		pinctrl-names = "default";
 	};
 
 	soc {
@@ -213,6 +229,11 @@
 };
 
 &pinctrl {
+	bt_disable_pmux: bt-disable-pmux {
+		groups = "GPIO8";
+		function = "gpio";
+	};
+
 	cam_gpio0_pmux: cam-gpio0-pmux {
 		groups = "GPIO5";
 		function = "gpio";
@@ -293,6 +314,16 @@
 			 "GPIO25", "GPIO26", "GPIO29", "GPIO30";
 		function = "gpio";
 	};
+
+	sdio_reset_pmux: sdio-reset-pmux {
+		groups = "GPIO10";
+		function = "gpio";
+	};
+
+	wf_disable_pmux: wf-disable-pmux {
+		groups = "GPIO9";
+		function = "gpio";
+	};
 };
 
 &porta {
@@ -339,10 +370,30 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_24", "", "", "RPi_GPIO_12", "", "", "RPi_GPIO_13", "";
+		"RPi_GPIO_24", "M2E_RTSn", "M2E_CTSn", "M2E_TXD", "M2E_RXD", "RPi_GPIO_12", "RPi_GPIO_13", "";
+};
+
+&sdhci1 {
+	status = "okay";
+	bus-width = <4>;
+	sdclkdl-dc = /bits/ 8 <50>;
+	pad-sp = /bits/ 8 <12>;
+	pad-sn = /bits/ 8 <12>;
+	no-sd;
+	no-mmc;
+	non-removable;
+	mmc-pwrseq = <&sdhci1_pwrseq>;
+	mode1-tune;
+	keep-power-in-suspend;
 };
 
 &sm_pinctrl {
+	m2e_uart3_pmux: m2e-uart3-pmux {
+		groups = "SM_GPIO33", "SM_GPIO34", "SM_GPIO35", "SM_GPIO36";
+		function = "uart3";
+		drive-strength = <7>;
+	};
+
 	rpi_portc_pmux: rpi-portc-pmux {
 		groups = "SM_GPIO12", "SM_GPIO13";
 		function = "gpio";
@@ -367,6 +418,14 @@
 
 &uart0 {
 	status = "okay";
+};
+
+&uart3 {
+	status = "okay";
+	pinctrl-0 = <&m2e_uart3_pmux>;
+	pinctrl-names = "default";
+	/delete-property/ dmas;
+	/delete-property/ dma-names;
 };
 
 &usb0 {
