@@ -56,6 +56,9 @@ local_conf_header:
 
     PREFERRED_VERSION_libgpiod = "1.6.4"
 
+  meta-grinn-astra_qt-selection: |
+    QT_MAJOR = "6"
+
 bblayers_conf_header:
   meta-grinn-astra: |
     POKY_BBLAYERS_CONF_VERSION = "2"
@@ -100,10 +103,10 @@ repos:
     commit: 1793a1b8fc92cf8688c72b7fd4181e3a2f5ade55
     branch: scarthgap/rust
 
-  meta-qt5:
-    url: https://github.com/meta-qt5/meta-qt5
-    commit: eb828418264a49b8d00035cb3d7b12fcea3be801
-    branch: scarthgap
+  meta-qt6:
+    url: https://code.qt.io/yocto/meta-qt6.git
+    commit: c58fdf7af5d92f5dc0a3446a9865580511ae8691
+    branch: "6.8"
 
   meta-selinux:
     url: https://github.com/ni/meta-selinux
