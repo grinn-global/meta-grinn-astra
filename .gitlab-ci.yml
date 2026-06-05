@@ -26,7 +26,7 @@ include:
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/workflow@3
   - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@3
     inputs:
-      image-name: ghcr.io/siemens/kas/kas:5.2-debian-bookworm
+      image-name: ghcr.io/siemens/kas/kas:5.3-debian-bookworm
       sstate-mirror: $[[ inputs.sstate-mirror ]]
       downloads-mirror: $[[ inputs.downloads-mirror ]]
       git-mirror: $[[ inputs.git-mirror ]]
