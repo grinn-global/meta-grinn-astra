@@ -15,21 +15,27 @@ spec:
     build-ref:
       default: ""
       description: Use specific pipeline id ("pipeline:12345") as build artifacts
+    lava-test-definitions-revision:
+      default: main
+      description: Use specific git tag / branch / commit_id of lava-test-definitions (instead of default)
 
 ---
 
 include:
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/deploy-public@2
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/workflow@2
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@2
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/deploy-public@3
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/workflow@3
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/build@3
     inputs:
       image-name: ghcr.io/siemens/kas/kas:5.2-debian-bookworm
       sstate-mirror: $[[ inputs.sstate-mirror ]]
       downloads-mirror: $[[ inputs.downloads-mirror ]]
       git-mirror: $[[ inputs.git-mirror ]]
       build-ref: $[[ inputs.build-ref ]]
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@2
-  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/release-tag@2
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@3
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/release-tag@3
+  - component: $CI_SERVER_FQDN/grinn/ci/yocto/kas/lava@3
+    inputs:
+      lava-test-definitions-revision: $[[ inputs.lava-test-definitions-revision ]]
 
 stages:
   - ci-kas
@@ -81,8 +87,6 @@ stages:
 build:
   <<: *ci_build_artifacts
   <<: *ci_build_matrix
-  variables:
-    KAS_TARGET: astra-media
 
 build-download:
   <<: *ci_build_artifacts
@@ -90,10 +94,18 @@ build-download:
   variables:
     JOB_NAME: "build: [$KAS_MACHINE, $KAS_CONFIG]"
 
+lava-pre:
+  <<: *ci_test_matrix
+
 lava:
   <<: *ci_test_matrix
   needs:
-    - lava-pre
+    - job: lava-pre
+      artifacts: true
+      parallel:
+        matrix:
+          - KAS_MACHINE: ['$[[ matrix.KAS_MACHINE ]]']
+            KAS_CONFIG: ['$[[ matrix.KAS_CONFIG ]]']
     - job: build
       artifacts: true
       optional: true
@@ -112,7 +124,6 @@ lava:
 deploy-public:
   <<: *ci_build_matrix
   variables:
-    KAS_TARGET: astra-media
     DEPLOY_PUBLIC_FILE: build/tmp/deploy/images/$KAS_MACHINE/$KAS_TARGET-$KAS_MACHINE.rootfs.synaimg.tar.zst
   needs:
     - job: build
