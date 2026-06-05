@@ -2,3 +2,13 @@ header:
   version: 14
 
 target: astra-media-oobe
+
+local_conf_header:
+  oobe: |
+    DISTRO_FEATURES:append:dolphin = " virtualization"
+
+repos:
+  meta-virtualization:
+    url: https://github.com/ni/meta-virtualization
+    commit: 450941a1b6df96285691e8c23d4f332d3c88a994
+    branch: nilrt/master/scarthgap

@@ -54,8 +54,6 @@ local_conf_header:
     DISTRO_FEATURES:remove = " x11"
     DISTRO_FEATURES_NATIVESDK:remove = "x11"
 
-    DISTRO_FEATURES:append = " virtualization"
-
     PREFERRED_VERSION_libgpiod = "1.6.4"
 
 bblayers_conf_header:
@@ -121,11 +119,6 @@ repos:
     url: https://github.com/synaptics-astra/meta-synaptics
     commit: a0344af9be13726ca196a9ed77e19cf77971e2e0
     branch: scarthgap_6.12_v2.3.0
-
-  meta-virtualization:
-    url: https://github.com/ni/meta-virtualization
-    commit: 450941a1b6df96285691e8c23d4f332d3c88a994
-    branch: nilrt/master/scarthgap
 
   meta-grinn-astra:
     layers:
