@@ -33,12 +33,12 @@ if [ -z "$rootfs_num" ]; then
 fi
 
 if (( rootfs_num % 2 == 0 )); then
-    prepare_inactive_rootfs /dev/mmcblk0p13
+    prepare_inactive_rootfs /dev/mmcblk0p11
     bootctrl set-active-boot-slot 1
     fw_setenv boot_slot 2
     echo "Switching to Partition B"
 else
-    prepare_inactive_rootfs /dev/mmcblk0p12
+    prepare_inactive_rootfs /dev/mmcblk0p10
     bootctrl set-active-boot-slot 0
     fw_setenv boot_slot 1
     echo "Switching to Partition A"
