@@ -1,0 +1,28 @@
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Sun, 8 Jun 2026 00:00:01 +0000
+Subject: [PATCH] bootctrl: resolve misc device by GPT label
+
+The misc device path was hardcoded to a partition number, which broke
+whenever the partition layout changed. The path is now resolved by the
+GPT partition label, so it stays correct regardless of the partition
+number. The label is provided by udev (60-persistent-storage.rules) as
+/dev/disk/by-partlabel/misc. If the label is missing, open() fails with
+the existing error instead of writing to a wrong partition.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ bootctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bootctrl.c b/bootctrl.c
+--- a/bootctrl.c
++++ b/bootctrl.c
+@@ -22,7 +22,7 @@
+ #define MISC_BOOT_CONTROL_VERSION 2
+ #define COMMAND_LINE_SIZE 2048
+
+-static const char *misc_device = "/dev/mmcblk0p15";
++static const char *misc_device = "/dev/disk/by-partlabel/misc";
+ static const size_t SYNA_SPACE_OFFSET_IN_MISC = 4 * 1024;
+ static const int kActiveSlotPriority = 8;
+ static const int kOtherSlotPriority = 3;

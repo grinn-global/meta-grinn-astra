@@ -1,0 +1,27 @@
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Sun, 8 Jun 2026 00:00:00 +0000
+Subject: [PATCH] bootctrl: point misc device to mmcblk0p15
+
+The dual-copy partition layout was changed in SDK v2.4.0: the firmware
+partition was dropped, which shifted the misc partition from p17 to p15.
+The misc device path is hardcoded, so it is updated to match the new
+layout. Without this, open() on the non-existent /dev/mmcblk0p17 fails
+and the boot slot can no longer be read or written.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ bootctrl.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/bootctrl.c b/bootctrl.c
+--- a/bootctrl.c
++++ b/bootctrl.c
+@@ -22,7 +22,7 @@
+ #define MISC_BOOT_CONTROL_VERSION 2
+ #define COMMAND_LINE_SIZE 2048
+
+-static const char *misc_device = "/dev/mmcblk0p17";
++static const char *misc_device = "/dev/mmcblk0p15";
+ static const size_t SYNA_SPACE_OFFSET_IN_MISC = 4 * 1024;
+ static const int kActiveSlotPriority = 8;
+ static const int kOtherSlotPriority = 3;
