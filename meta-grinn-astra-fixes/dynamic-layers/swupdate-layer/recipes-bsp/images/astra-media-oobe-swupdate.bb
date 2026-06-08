@@ -7,12 +7,19 @@ SYNA_IMAGE_NAME = "astra-media-oobe"
 SWU_IMAGE_GENERATION_COMMON = "swupdate-image-generation-common"
 
 python __anonymous() {
+    rescue = d.getVar("ENABLE_RESCUE_MODE")
     mode = {
         "0": "swupdate-image-generation-dual-copy",
         "1": "swupdate-image-generation-single-copy",
-    }.get(d.getVar("ENABLE_RESCUE_MODE"), "")
+    }.get(rescue, "")
 
     d.setVar("SWU_IMAGE_GENERATION", mode)
+
+    # firmware.subimg is only flashed in the rescue (single-copy) layout, which
+    # keeps a firmware partition. The normal dual-copy layout dropped it in SDK
+    # v2.4.0, so it must not be packed there (would be written over rootfs).
+    if rescue == "1":
+        d.appendVar("SWUPDATE_IMAGES", " firmware")
 }
 
 FILESEXTRAPATHS:prepend := "${THISDIR}/${SWU_IMAGE_GENERATION}:"
@@ -40,7 +47,6 @@ SWUPDATE_IMAGES = " \
 	tzk \
 	bl \
 	boot \
-	firmware \
 	${SYNA_IMAGE_NAME}-${MACHINE} \
 	fastlogo \
 "
