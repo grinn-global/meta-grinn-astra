@@ -47,6 +47,7 @@ SRC_URI:append:grinn-astra-2619-som = " \
 SRC_URI:append:grinn-astra-261x-sbc = " \
 	file://bcmdhd.cfg \
 	file://eth.cfg \
+	file://gpio-keys.cfg \
 	file://gpio-led.cfg \
 	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
 	file://waveshare-7inch-panel-overlay.dtso;subdir=${DT_DIR} \
