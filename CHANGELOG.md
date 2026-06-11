@@ -1,3 +1,15 @@
+# [2.1.0]
+
+## Added
+- Support for `grinn-astra-2619-sbc`
+- Python tools for out-of-the-box application development
+
+## Changed
+- Enable virtualization for OOBE builds only (via kas yml)
+
+## Fixed
+- Inability to enter sleep on `grinn-astra-1680-sbc`
+
 # [2.0.0]
 
 ## Changed
