@@ -1,7 +1,12 @@
 header:
   version: 14
 
+env:
+  NETBOOT_SERVER_IP: ""
+  NETBOOT_SERVER_SUBDIR: ""
+
 repos:
-  meta-grinn-astra:
-    layers:
-      meta-grinn-astra-netboot:
+  meta-grinn-common-netboot:
+    url: https://github.com/grinn-global/meta-grinn-common-netboot
+    commit: 5b1d04adf0a2f19e3a44d22e76a5564a3ab21c80
+    branch: scarthgap
