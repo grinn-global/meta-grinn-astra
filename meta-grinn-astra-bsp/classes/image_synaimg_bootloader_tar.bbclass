@@ -21,7 +21,7 @@ IMAGE_TYPES:append = " synaimg_bootloader.tar"
 IMAGE_TYPEDEP:synaimg_bootloader.tar = "synaimg"
 
 # Files to include in the bootloader archive (space-separated list)
-SYNAIMG_BOOTLOADER_FILES ?= "bl.subimg.gz key.subimg.gz tzk.subimg.gz preboot.subimg.gz emmc_part_list"
+SYNAIMG_BOOTLOADER_FILES ?= "bl.subimg.gz key.subimg.gz tzk.subimg.gz preboot.subimg.gz fastlogo.subimg.gz emmc_part_list"
 
 # Custom emmc_image_list content for bootloader flashing
 # This defines the partition layout used for flashing
@@ -34,7 +34,9 @@ tzk.subimg.gz,sd3\n\
 key.subimg.gz,sd4\n\
 tzk.subimg.gz,sd5\n\
 bl.subimg.gz,sd6\n\
-bl.subimg.gz,sd7\
+bl.subimg.gz,sd7\n\
+fastlogo.subimg.gz,sd12\n\
+fastlogo.subimg.gz,sd13\
 "
 
 IMAGE_CMD:synaimg_bootloader.tar () {
