@@ -12,16 +12,13 @@ CFG_DIR = "${S}/configs"
 
 SRC_URI:append:grinn-astra-platform = " \
 	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch \
+	file://eth.cfg \
+	file://misc.cfg \
 	file://${MACHINE}.dts \
 "
 
 SRC_URI:append:grinn-astra-1680-som = " \
         file://grinn-astra-1680-som.dtsi \
-"
-
-SRC_URI:append:grinn-astra-1680-platform = " \
-	file://eth.cfg \
-	file://misc.cfg \
 "
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
@@ -35,8 +32,6 @@ SRC_URI:append:grinn-astra-2619-som = " \
 
 SRC_URI:append:grinn-astra-261x-platform = " \
 	file://0001-board-synaptics-klamath-klamath_boardinit-use-default.patch \
-	file://eth.cfg \
-	file://misc.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
