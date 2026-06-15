@@ -22,7 +22,11 @@ python __anonymous() {
         d.appendVar("SWUPDATE_IMAGES", " firmware")
 }
 
-FILESEXTRAPATHS:prepend := "${THISDIR}/${SWU_IMAGE_GENERATION}:"
+# The eMMC partition numbering differs between SoCs (sl2619 inserts the sysmgr
+# partitions, which shifts bl/boot/rootfs/fastlogo down), so the sw-description
+# and post.sh are kept in a per-platform subdirectory selected by override.
+FILESEXTRAPATHS:prepend:grinn-astra-1680-platform := "${THISDIR}/${SWU_IMAGE_GENERATION}/grinn-astra-1680:"
+FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/${SWU_IMAGE_GENERATION}/grinn-astra-261x:"
 
 SRC_URI = " \
 	file://sw-description \
