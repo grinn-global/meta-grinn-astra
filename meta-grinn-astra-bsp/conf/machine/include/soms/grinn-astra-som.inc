@@ -1,0 +1,1 @@
+MACHINEOVERRIDES =. "grinn-astra-som:"
