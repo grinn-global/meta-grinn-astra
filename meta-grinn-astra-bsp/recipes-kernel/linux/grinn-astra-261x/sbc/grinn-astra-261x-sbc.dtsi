@@ -240,6 +240,10 @@
 	status = "okay";
 };
 
+&pdma0 {
+	status = "okay";
+};
+
 &pdma1 {
 	status = "okay";
 };
@@ -327,13 +331,19 @@
 	rpi_porta_pmux: rpi-porta-pmux {
 		groups = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4",
 			 "GPIO12", "GPIO13", "GPIO14", "GPIO15",
-			 "GPIO25", "GPIO26", "GPIO29", "GPIO30";
+			 "GPIO29", "GPIO30";
 		function = "gpio";
 	};
 
 	sdio_reset_pmux: sdio-reset-pmux {
 		groups = "GPIO10";
 		function = "gpio";
+	};
+
+	uart5_pmux: uart5-pmux {
+		groups = "GPIO25", "GPIO26";
+		function = "uart5";
+		drive-strength = <7>;
 	};
 
 	wf_disable_pmux: wf-disable-pmux {
@@ -350,7 +360,7 @@
 		"RPi_GPIO_8", "RPi_GPIO_11", "RPi_GPIO_10", "RPi_GPIO_7", "RPi_GPIO_9", "CAM_GPIO0", "CAM_GPIO1", "UART_WAKEn",
 		"BT_DISABLEn", "WF_DISABLEn", "SDIO_RESETn", "SDIO_WAKEn", "RPi_GPIO_19", "RPi_GPIO_18", "RPi_GPIO_21", "RPi_GPIO_20",
 		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "SS1", "", "LED_YELLOW", "LED_GREEN",
-		"LED_RED", "RPi_GPIO_15", "RPi_GPIO_14", "MIPI_SCL", "MIPI_SDA", "RPi_GPIO_27", "RPi_GPIO_17", "";
+		"LED_RED", "RPi_UART5_RXD", "RPi_UART5_TXD", "MIPI_SCL", "MIPI_SDA", "RPi_GPIO_27", "RPi_GPIO_17", "";
 };
 
 &portb {
@@ -442,6 +452,12 @@
 	pinctrl-names = "default";
 	/delete-property/ dmas;
 	/delete-property/ dma-names;
+};
+
+&uart5 {
+	status = "okay";
+	pinctrl-names = "default";
+	pinctrl-0 = <&uart5_pmux>;
 };
 
 &usb0 {
