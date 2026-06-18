@@ -368,9 +368,13 @@
 	};
 
 	rpi_porta_pmux: rpi-porta-pmux {
-		groups = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4",
-			 "GPIO29", "GPIO30";
+		groups = "GPIO29", "GPIO30";
 		function = "gpio";
+	};
+
+	rpi_spi3_pmux: rpi-spi3-pmux {
+		groups = "GPIO0", "GPIO1", "GPIO2", "GPIO3", "GPIO4";
+		function = "spi3";
 	};
 
 	sdio_reset_pmux: sdio-reset-pmux {
@@ -395,7 +399,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_8", "RPi_GPIO_11", "RPi_GPIO_10", "RPi_GPIO_7", "RPi_GPIO_9", "CAM_GPIO0", "CAM_GPIO1", "UART_WAKEn",
+		"RPi_SPI3_CE0n", "RPi_SPI3_SCLK", "RPi_SPI3_MOSI", "RPi_SPI3_CE1n", "RPi_SPI3_MISO", "CAM_GPIO0", "CAM_GPIO1", "UART_WAKEn",
 		"BT_DISABLEn", "WF_DISABLEn", "SDIO_RESETn", "SDIO_WAKEn", "RPi_I2S3_FS", "RPi_I2S3_BCLK", "RPi_I2S3_DOUT", "RPi_I2S3_DIN",
 		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "SS1", "", "LED_YELLOW", "LED_GREEN",
 		"LED_RED", "RPi_UART5_RXD", "RPi_UART5_TXD", "MIPI_SCL", "MIPI_SDA", "RPi_GPIO_27", "RPi_GPIO_17", "";
@@ -475,6 +479,24 @@
 	user_button_pmux: user-button-pmux {
 		groups = "SM_GPIO10";
 		function = "gpio";
+	};
+};
+
+&spi3 {
+	status = "okay";
+	pinctrl-0 = <&rpi_spi3_pmux>;
+	pinctrl-names = "default";
+
+	spidev0: spidev@0 {
+		compatible = "rohm,dh2228fv";
+		reg = <0>;
+		spi-max-frequency = <10000000>;
+	};
+
+	spidev1: spidev@1 {
+		compatible = "rohm,dh2228fv";
+		reg = <1>;
+		spi-max-frequency = <10000000>;
 	};
 };
 
