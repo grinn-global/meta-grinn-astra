@@ -1,0 +1,339 @@
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Subject: [PATCH] isp: dolphin: vvcam: share /proc/vsi ownership across modules
+
+Three sibling modules:
+ * vvcam_isp.ko
+ * vvcam_isp_subdev.ko
+ * vvcam_vb.ko
+
+each create /proc/vsi from their own .probe() callbacks via an unsynchronised
+find_proc_dir_by_name() + proc_mkdir() pair. Under parallel udev-worker module
+loading the TOCTOU races and produces
+
+  proc_dir_entry '/proc/vsi' already registered
+  WARNING: ... proc_register+0x188/0x224
+   vvcam_isp_procfs_register
+   vvcam_isp_probe
+
+on a noticeable fraction of boots on the Astra 1680 (~4% observed in a
+72-iteration reboot loop).
+
+Move the parent directory under a single owner: a small shared object file in
+isp/vvcam/common/ compiled into vvcam_isp.ko, exporting vvcam_proc_vsi_get() /
+vvcam_proc_vsi_put() via EXPORT_SYMBOL_GPL.
+
+The other two modules pull those symbols in, which forces depmod to load
+vvcam_isp.ko first. By the time vvcam_isp_subdev.ko and vvcam_vb.ko probe,
+/proc/vsi already exists and they only bump a refcount under a mutex. The
+directory is torn down on the last put.
+
+The now-unused find_proc_dir_by_name() helper is left in place but marked
+__maybe_unused to satisfy -Werror=unused-function in the Synaptics module build.
+
+Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+---
+--- a/drivers/synaptics/soc/berlin/modules/isp/dolphin/Makefile	2026-06-19 15:42:38.245222799 +0200
++++ b/drivers/synaptics/soc/berlin/modules/isp/dolphin/Makefile	2026-06-19 15:42:58.517367871 +0200
+@@ -83,7 +83,8 @@
+ vvcam_isp-objs += isp/vvcam/isp/vvcam_isp_driver.o \
+ 	isp/vvcam/isp/vvcam_isp_hal.o \
+ 	isp/vvcam/isp/vvcam_isp_procfs.o \
+-	isp/vvcam/common/vvcam_event.o
++	isp/vvcam/common/vvcam_event.o \
++	isp/vvcam/common/vvcam_proc_vsi.o
+ 
+ vvcam_vb-objs += isp/vvcam/vb/vvcam_vb_driver.o \
+ 	isp/vvcam/vb/vvcam_mmz.o \
+diff -urN before/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.c after/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.c
+--- a/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.c	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.c	2026-06-19 15:42:55.646420250 +0200
+@@ -0,0 +1,47 @@
++// SPDX-License-Identifier: GPL-2.0-or-later
++/*
++ * Shared /proc/vsi parent directory for vvcam_isp, vvcam_isp_subdev and
++ * vvcam_vb.  See vvcam_proc_vsi.h for the rationale.
++ */
++#include <linux/module.h>
++#include <linux/mutex.h>
++#include <linux/proc_fs.h>
++
++#include "vvcam_proc_vsi.h"
++
++static DEFINE_MUTEX(vvcam_proc_vsi_lock);
++static struct proc_dir_entry *vvcam_proc_vsi_root;
++static int vvcam_proc_vsi_refcnt;
++
++int vvcam_proc_vsi_get(void)
++{
++	int ret = 0;
++
++	mutex_lock(&vvcam_proc_vsi_lock);
++	if (vvcam_proc_vsi_refcnt == 0) {
++		vvcam_proc_vsi_root = proc_mkdir("vsi", NULL);
++		if (!vvcam_proc_vsi_root) {
++			ret = -ENOMEM;
++			goto out;
++		}
++	}
++	vvcam_proc_vsi_refcnt++;
++out:
++	mutex_unlock(&vvcam_proc_vsi_lock);
++	return ret;
++}
++EXPORT_SYMBOL_GPL(vvcam_proc_vsi_get);
++
++void vvcam_proc_vsi_put(void)
++{
++	mutex_lock(&vvcam_proc_vsi_lock);
++	if (WARN_ON(vvcam_proc_vsi_refcnt == 0))
++		goto out;
++	if (--vvcam_proc_vsi_refcnt == 0) {
++		proc_remove(vvcam_proc_vsi_root);
++		vvcam_proc_vsi_root = NULL;
++	}
++out:
++	mutex_unlock(&vvcam_proc_vsi_lock);
++}
++EXPORT_SYMBOL_GPL(vvcam_proc_vsi_put);
+diff -urN before/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.h after/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.h
+--- a/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.h	1970-01-01 01:00:00.000000000 +0100
++++ b/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/common/vvcam_proc_vsi.h	2026-06-19 15:42:49.121539265 +0200
+@@ -0,0 +1,11 @@
++/* SPDX-License-Identifier: GPL-2.0-or-later */
++/*
++ * Shared owner of /proc/vsi for the VeriSilicon ISP driver modules.
++ */
++#ifndef VVCAM_PROC_VSI_H
++#define VVCAM_PROC_VSI_H
++
++int vvcam_proc_vsi_get(void);
++void vvcam_proc_vsi_put(void);
++
++#endif /* VVCAM_PROC_VSI_H */
+diff -urN before/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/isp/vvcam_isp_procfs.c after/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/isp/vvcam_isp_procfs.c
+--- a/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/isp/vvcam_isp_procfs.c	2026-06-19 15:42:38.248503436 +0200
++++ b/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/isp/vvcam_isp_procfs.c	2026-06-19 15:50:19.315796467 +0200
+@@ -64,6 +64,7 @@
+ #include "vvcam_isp_driver.h"
+ #include "vvcam_isp_procfs.h"
+ #include "vvcam_isp_hal.h"
++#include "vvcam_proc_vsi.h"
+ 
+ #define VVCAM_ISP_PROCFS_BUF_SIZE    256
+ 
+@@ -625,7 +626,7 @@
+ #endif
+ 
+ 
+-static int find_proc_dir_by_name(const char *root,
++static int __maybe_unused find_proc_dir_by_name(const char *root,
+                 const char *name, bool *found, int32_t *files_cnt) {
+     struct file *pfile;
+     int ret = 0;
+@@ -662,7 +663,6 @@
+     struct vvcam_isp_procfs *isp_proc;
+     char isp_proc_name[32];
+     int ret = 0;
+-    bool found = false;
+ 
+     if (!isp_dev)
+         return -1;
+@@ -674,19 +674,17 @@
+     if (!isp_proc)
+         return -ENOMEM;
+ 
+-    ret = find_proc_dir_by_name("/proc", "vsi", &found, NULL);
+-    if (ret == 0) {
+-        if (!found)
+-            proc_mkdir("vsi", NULL);
+-    } else {
+-        return -EFAULT;
+-    }
++    ret = vvcam_proc_vsi_get();
++    if (ret)
++        return ret;
+ 
+     isp_proc->isp_dev = isp_dev;
+     isp_proc->pde = proc_create_data(isp_proc_name, 0664, NULL,
+                                 &vvcam_isp_procfs_ops, isp_proc);
+-    if (!isp_proc->pde)
++    if (!isp_proc->pde) {
++        vvcam_proc_vsi_put();
+         return -EFAULT;
++    }
+     *pde = (unsigned long)&isp_proc->pde;
+ 
+     INIT_LIST_HEAD(&isp_proc->status.cmd_list);
+@@ -696,19 +694,8 @@
+ 
+ void vvcam_isp_procfs_unregister(unsigned long pde)
+ {
+-    int ret = 0;
+-    bool found = false;
+-    int32_t files_cnt;
+     struct vvcam_isp_procfs *isp_proc = (struct vvcam_isp_procfs*)pde;
+ 
+-    ret = find_proc_dir_by_name("/proc", "vsi", &found, NULL);
+-    if (ret == 0) {
+-         if (found) {
+-            proc_remove(isp_proc->pde);
+-            ret = find_proc_dir_by_name("/proc/vsi", "", &found, &files_cnt);
+-            if (files_cnt == 0) {
+-                remove_proc_subtree("vsi", NULL);
+-            }
+-        }
+-    }
++    proc_remove(isp_proc->pde);
++    vvcam_proc_vsi_put();
+ }
+diff -urN before/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/v4l2/isp/vvcam_isp_procfs.c after/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/v4l2/isp/vvcam_isp_procfs.c
+--- a/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/v4l2/isp/vvcam_isp_procfs.c	2026-06-19 15:42:38.252130802 +0200
++++ b/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/v4l2/isp/vvcam_isp_procfs.c	2026-06-19 15:50:21.318770247 +0200
+@@ -62,6 +62,7 @@
+ #include <linux/ctype.h>
+ #include "vvcam_isp_driver.h"
+ #include "vvcam_isp_procfs.h"
++#include "vvcam_proc_vsi.h"
+ 
+ struct vvcam_isp_procfs {
+     struct proc_dir_entry *pde;
+@@ -315,7 +316,7 @@
+ }
+ #endif
+ 
+-static int find_proc_dir_by_name(const char *root,
++static int __maybe_unused find_proc_dir_by_name(const char *root,
+                 const char *name, bool *found, int32_t *files_cnt) {
+     struct file *pfile;
+     int ret = 0;
+@@ -352,7 +353,6 @@
+     struct vvcam_isp_procfs *isp_proc;
+     char isp_proc_name[32];
+     int ret = 0;
+-    bool found = false;
+ 
+     if (!isp_dev)
+         return -1;
+@@ -364,19 +364,17 @@
+     if (!isp_proc)
+         return -ENOMEM;
+ 
+-    ret = find_proc_dir_by_name("/proc", "vsi", &found, NULL);
+-    if (ret == 0) {
+-        if (!found)
+-            proc_mkdir("vsi", NULL);
+-    } else {
+-        return -EFAULT;
+-    }
++    ret = vvcam_proc_vsi_get();
++    if (ret)
++        return ret;
+ 
+     isp_proc->isp_dev = isp_dev;
+     isp_proc->pde = proc_create_data(isp_proc_name, 0664, NULL,
+                                 &vvcam_isp_procfs_ops, isp_proc);
+-    if (!isp_proc->pde)
++    if (!isp_proc->pde) {
++        vvcam_proc_vsi_put();
+         return -EFAULT;
++    }
+     *pde = (unsigned long)&isp_proc->pde;
+ 
+     mutex_init(&(isp_proc->lock));
+@@ -385,19 +383,8 @@
+ 
+ void vvcam_isp_procfs_unregister(unsigned long pde)
+ {
+-    int ret = 0;
+-    bool found = false;
+-    int32_t files_cnt;
+     struct vvcam_isp_procfs *isp_proc = (struct vvcam_isp_procfs*)pde;
+ 
+-    ret = find_proc_dir_by_name("/proc", "vsi", &found, NULL);
+-    if (ret == 0) {
+-        if (found) {
+-            proc_remove(isp_proc->pde);
+-            ret = find_proc_dir_by_name("/proc/vsi", "", &found, &files_cnt);
+-            if (files_cnt == 0) {
+-                remove_proc_subtree("vsi", NULL);
+-            }
+-        }
+-    }
++    proc_remove(isp_proc->pde);
++    vvcam_proc_vsi_put();
+ }
+diff -urN before/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/vb/vvcam_vb_procfs.c after/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/vb/vvcam_vb_procfs.c
+--- a/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/vb/vvcam_vb_procfs.c	2026-06-19 15:42:38.255091141 +0200
++++ b/drivers/synaptics/soc/berlin/modules/isp/dolphin/isp/vvcam/vb/vvcam_vb_procfs.c	2026-06-19 15:50:22.859750050 +0200
+@@ -67,6 +67,7 @@
+ #include "vvcam_cma.h"
+ #include "vvcam_vb_driver.h"
+ #include "vvcam_vb_procfs.h"
++#include "vvcam_proc_vsi.h"
+ 
+ struct mmb_info {
+     char name[32];
+@@ -366,7 +367,7 @@
+ }
+ #endif
+ 
+-static int find_proc_dir_by_name(const char *root,
++static int __maybe_unused find_proc_dir_by_name(const char *root,
+                 const char *name, bool *found, int32_t *files_cnt) {
+     struct file *pfile;
+     int ret = 0;
+@@ -405,7 +406,6 @@
+     struct platform_device *pdev = to_platform_device(vb_dev->dev);
+     char vb_proc_name[32];
+     int ret = 0;
+-    bool found = false;
+ 
+     sprintf(vb_proc_name, "vsi/vb%d", pdev->id);
+     vb_proc = devm_kzalloc(vb_dev->dev,
+@@ -414,19 +414,17 @@
+         return -ENOMEM;
+ 
+     vb_proc->vb_dev = vb_dev;
+-    ret = find_proc_dir_by_name("/proc", "vsi", &found, NULL);
+-    if (ret == 0) {
+-        if (!found)
+-            proc_mkdir("vsi", NULL);
+-    } else {
+-        return -EFAULT;
+-    }
++    ret = vvcam_proc_vsi_get();
++    if (ret)
++        return ret;
+ 
+     vb_proc->vb_dev = vb_dev;
+     *pde = proc_create_data(vb_proc_name, 0664, NULL,
+                                 &vvcam_vb_proc_ops, vb_proc);
+-    if (!*pde)
++    if (!*pde) {
++        vvcam_proc_vsi_put();
+         return -EFAULT;
++    }
+ 
+     vb_proc->pde = *pde;
+     return 0;
+@@ -434,18 +432,6 @@
+ 
+ void vvcam_vb_procfs_unregister(struct proc_dir_entry **pde)
+ {
+-    int ret = 0;
+-    bool found = false;
+-    int32_t files_cnt;
+-
+-    ret = find_proc_dir_by_name("/proc", "vsi", &found, NULL);
+-    if (ret == 0) {
+-        if (found) {
+-            proc_remove(*pde);
+-            ret = find_proc_dir_by_name("/proc/vsi", "", &found, &files_cnt);
+-            if (files_cnt == 0) {
+-                remove_proc_subtree("vsi", NULL);
+-            }
+-        }
+-    }
++    proc_remove(*pde);
++    vvcam_proc_vsi_put();
+ }
