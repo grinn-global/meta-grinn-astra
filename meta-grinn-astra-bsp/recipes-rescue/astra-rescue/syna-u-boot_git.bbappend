@@ -1,14 +1,5 @@
-python __anonymous() {
-    machine = d.getVar("MACHINE")
-    mapping = {
-        "grinn-astra-1680-ada": "dolphin",
-        "grinn-astra-1680-sbc": "dolphin",
-        "grinn-astra-2619-sbc": "klamath",
-    }
-
-    name = mapping.get(machine, "")
-    d.setVar("MACHINE_NAME", name)
-}
+MACHINE_NAME:grinn-astra-1680-platform = "dolphin"
+MACHINE_NAME:grinn-astra-261x-platform = "klamath"
 
 do_configure:prepend() {
     UBOOT_DEFCONFIG="${S}/configs/${MACHINE_NAME}_suboot_defconfig"
