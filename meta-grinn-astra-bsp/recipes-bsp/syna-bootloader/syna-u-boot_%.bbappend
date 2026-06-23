@@ -30,7 +30,7 @@ SRC_URI:append:grinn-astra-2619-som = " \
 	file://memory_1gb.cfg \
 "
 
-SRC_URI:append:grinn-astra-261x-platform = " \
+SRC_URI:append:grinn-astra-2619-sbc = " \
 	file://0001-board-synaptics-klamath-klamath_boardinit-use-default.patch \
 "
 
