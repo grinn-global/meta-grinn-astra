@@ -51,6 +51,7 @@ stages:
           - grinn-astra-1680-ada
           - grinn-astra-1680-sbc
           - grinn-astra-2619-sbc
+          - sl2619-coralboard
         KAS_CONFIG:
           - default
       - KAS_MACHINE:
