@@ -1,5 +1,6 @@
 MACHINE_NAME:grinn-astra-1680-platform = "dolphin"
 MACHINE_NAME:grinn-astra-261x-platform = "klamath"
+MACHINE_NAME:sl2619-coralboard = "klamath"
 
 do_configure:prepend() {
     UBOOT_DEFCONFIG="${S}/configs/${MACHINE_NAME}_suboot_defconfig"
