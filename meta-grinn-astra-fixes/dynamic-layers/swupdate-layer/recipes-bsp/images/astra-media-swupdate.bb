@@ -27,6 +27,7 @@ python __anonymous() {
 # and post.sh are kept in a per-platform subdirectory selected by override.
 FILESEXTRAPATHS:prepend:grinn-astra-1680-platform := "${THISDIR}/${SWU_IMAGE_GENERATION}/grinn-astra-1680:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/${SWU_IMAGE_GENERATION}/grinn-astra-261x:"
+FILESEXTRAPATHS:prepend:sl2619-coralboard := "${THISDIR}/${SWU_IMAGE_GENERATION}/grinn-astra-261x:"
 
 SRC_URI = " \
 	file://sw-description \
