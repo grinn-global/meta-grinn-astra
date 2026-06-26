@@ -1,0 +1,65 @@
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Thu, 26 Jun 2026 00:00:00 +0000
+Subject: [PATCH] OV5647: disable horizontal mirror and fix Bayer phase
+
+The sensor init tables enable the horizontal mirror bit (0x3821 bit1),
+so the image from the CSI camera is delivered flipped left-to-right on
+the grinn-astra boards. The Verisilicon ISP path on SL1680 does not
+expose any mirror or flip control (neither the kernel device tree, the
+/proc/vsi/isp_subdev0 string, the sensor XML/JSON nor the vvcam procfs
+interface), so the orientation is corrected here, at the sensor.
+
+The mirror bit is cleared while the horizontal binning bit (0x3821 bit2)
+is kept. The vertical flip (0x3820 bit1) is left untouched because only
+the left-to-right mirror is wrong.
+
+Clearing the mirror bit shifts the horizontal Bayer phase by one pixel,
+which turns the reported GRBG order into RGGB. The bayerPattern of both
+modes is updated accordingly, otherwise the ISP reads the red and green
+pixels swapped. The bayer order is taken from the driver caps, not from
+the OV5647 XML, so the fix belongs here.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ OV5647/source/OV5647.c            | 4 ++--
+ OV5647/include_priv/OV5647_priv.h | 4 ++--
+ 2 files changed, 4 insertions(+), 4 deletions(-)
+
+diff --git a/OV5647/source/OV5647.c b/OV5647/source/OV5647.c
+--- a/OV5647/source/OV5647.c
++++ b/OV5647/source/OV5647.c
+@@ -46,7 +46,7 @@
+         .fps       = 60 * ISI_FPS_QUANTIZE,
+         .hdrMode  = ISI_SENSOR_MODE_LINEAR,
+         .bitWidth = 10,
+-        .bayerPattern = ISI_BPAT_GRBG,
++        .bayerPattern = ISI_BPAT_RGGB,
+         .afMode = ISI_SENSOR_AF_MODE_NOTSUPP,
+         .mipiLane = ISI_MIPI_2LANES,
+         .dphyFreq = 280000,
+@@ -68,7 +68,7 @@
+         .fps      = 30 * ISI_FPS_QUANTIZE,
+         .hdrMode = ISI_SENSOR_MODE_LINEAR,
+         .bitWidth = 10,
+-        .bayerPattern = ISI_BPAT_GRBG,
++        .bayerPattern = ISI_BPAT_RGGB,
+         .afMode = ISI_SENSOR_AF_MODE_NOTSUPP,
+         .mipiLane = ISI_MIPI_2LANES,
+         .dphyFreq = 408000,
+diff --git a/OV5647/include_priv/OV5647_priv.h b/OV5647/include_priv/OV5647_priv.h
+--- a/OV5647/include_priv/OV5647_priv.h
++++ b/OV5647/include_priv/OV5647_priv.h
+@@ -99,5 +99,5 @@
+     {0x3036, 0x46},
+     {0x303c, 0x11},
+-    {0x3821, 0x07},// mirror
++    {0x3821, 0x05},// mirror off (h-binning kept)
+     {0x3820, 0x42},// flip
+     {0x370c, 0x03},
+@@ -195,5 +195,5 @@
+     {0x303c, 0x11},
+     {0x3106, 0xf5},
+-    {0x3821, 0x06},
++    {0x3821, 0x04},// mirror off (h-binning kept)
+     {0x3820, 0x42},
+     {0x3827, 0xec},
