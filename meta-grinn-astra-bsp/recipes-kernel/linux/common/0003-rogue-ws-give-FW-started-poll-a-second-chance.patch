@@ -1,0 +1,138 @@
+From 0000000000000000000000000000000000000001 Mon Sep 17 00:00:00 2001
+From: Marcin Niestroj <m.niestroj@grinn-global.com>
+Date: Fri, 26 Jun 2026 00:00:00 +0200
+Subject: [PATCH] rogue_ws: rework "FW started" timeout path to avoid SError
+ panic and log safe diagnostics
+
+RGXPostPowerState() polls psRGXFWIfSysInit->bFirmwareStarted with the default
+MAX_HW_TIME_US timeout (500 ms on real HW) the first time weston issues
+drm_pvr_srvkm_init.
+
+On Astra 1680 SBC the GPU firmware handshake intermittently overruns this window
+during cold boot - particularly when userspace bringup is fast (e.g. NFS-rooted
+LAVA jobs), where the kernel reaches the poll before the firmware has finished
+its first cold start.
+
+When the poll times out the driver reacts in two ways that both bite us:
+
+ 1. PVRSRVPollForValueKM() (called with POLL_FLAG_DEBUG_DUMP) issues a
+    PVRSRVDebugRequest(), which ends in OSWarnOn(IMG_TRUE). The resulting
+    WARNING + Call trace is harmless when the FW comes up shortly after, but
+    LAVA's kernel-messages monitor flags it and we get intermittent false
+    failures on test jobs.
+
+ 2. The post-timeout RGXDumpRGXDebugSummary() / RGXDumpRGXRegisters() and
+    RGXCheckFWBootStage() calls read GPU status / SCRATCH registers. The vendor
+    comment next to the first two already warns this is "potentially dangerous
+    if the reason for not booting is the GPU power is not ON". On the current
+    Synaptics SDK (linux_6_12-drivers-synaptics, v2.4.0) the FW boot really can
+    fail with the GPU power-domain still off: those reads then raise an
+    asynchronous SError (impdef code 0xbf000002, AXI bus fault from the SoC/GPU
+    bridge), which arm64 escalates to Kernel panic - 'not syncing: Asynchronous
+    SError Interrupt'.
+
+Bumping MAX_HW_TIME_US globally is not acceptable: it gates ~20 other
+hot-path polls (HWR recovery, TDM transfer, ...) where a longer timeout
+would mask real hardware hangs.
+
+Rework the FW-started path to:
+ * poll once quietly (POLL_FLAG_NONE) so a borderline cold boot doesn't trip the
+   kernel WARN;
+ * on timeout, sleep 100 ms (covers the common "userspace beat the FW" race) and
+   re-poll
+ * on second timeout, log only fields that live in FW shared DDR memory
+   (bFirmwareStarted, ui32MarkerVal, ui32FirmwareStartedTimeStamp,
+   ui32InitialCoreClockSpeed, ui32InitialSOCClockSpeed) and return
+   PVRSRV_ERROR_TIMEOUT. Skip the register-dump path entirely. The DDR reads
+   tell us whether the FW ran at all (markers/timestamps non-zero) or never
+   started (everything still zeroed) without ever touching GPU MMIO.
+
+Callers already cope with PVRSRV_ERROR_TIMEOUT. Userspace loses GPU
+acceleration, but the kernel stays up and reports the failure deterministically
+instead of panicking.
+
+Signed-off-by: Marcin Niestroj <m.niestroj@grinn-global.com>
+---
+ .../soc/berlin/modules/rogue_ws/src/rgxpower.c | 53 +++++++++++++++++-------
+ 1 file changed, 41 insertions(+), 12 deletions(-)
+
+diff --git a/drivers/synaptics/soc/berlin/modules/rogue_ws/src/rgxpower.c b/drivers/synaptics/soc/berlin/modules/rogue_ws/src/rgxpower.c
+--- a/drivers/synaptics/soc/berlin/modules/rogue_ws/src/rgxpower.c
++++ b/drivers/synaptics/soc/berlin/modules/rogue_ws/src/rgxpower.c
+@@ -1269,28 +1269,58 @@ PVRSRV_ERROR RGXPostPowerState(PVRSRV_DEVICE_NODE		*psDeviceNode,
+ 	                         (IMG_UINT32 __iomem *)&psDevInfo->psRGXFWIfSysInit->bFirmwareStarted,
+ 	                         IMG_TRUE,
+ 	                         0xFFFFFFFF,
+-	                         POLL_FLAG_LOG_ERROR | POLL_FLAG_DEBUG_DUMP,
++	                         POLL_FLAG_NONE,
+ 	                         RGXFwSharedMemCacheOpExecPfn) != PVRSRV_OK)
+ 	{
+-		PVR_DPF((PVR_DBG_ERROR, "RGXPostPowerState: Polling for 'FW started' flag failed."));
+-		eError = PVRSRV_ERROR_TIMEOUT;
++		/*
++		 * Cold-boot FW handshake can overrun the default
++		 * MAX_HW_TIME_US (500 ms) when userspace bringup races
++		 * ahead of GPU firmware startup. Give the firmware a
++		 * 100 ms breather and try once more before treating it
++		 * as a real failure.
++		 *
++		 * Keep both polls quiet (POLL_FLAG_NONE) and skip the
++		 * RGXDump*() / RGXCheckFWBootStage() calls below: on
++		 * this SoC a true FW boot failure leaves the GPU AXI
++		 * bridge in a state where reading status/debug or
++		 * SCRATCH registers raises an asynchronous SError that
++		 * the kernel then turns into a panic. The vendor
++		 * comment already warned the dump is "potentially
++		 * dangerous if the GPU power is not ON" - so log only
++		 * fields that live in FW shared DDR memory and return
++		 * the timeout cleanly.
++		 */
++		OSSleepms(100);
++		RGXFwSharedMemCacheOpValue(psDevInfo->psRGXFWIfSysInit->bFirmwareStarted,
++		                           INVALIDATE);
++		if (PVRSRVPollForValueKM(psDeviceNode,
++		                         (IMG_UINT32 __iomem *)&psDevInfo->psRGXFWIfSysInit->bFirmwareStarted,
++		                         IMG_TRUE,
++		                         0xFFFFFFFF,
++		                         POLL_FLAG_NONE,
++		                         RGXFwSharedMemCacheOpExecPfn) == PVRSRV_OK)
++		{
++			goto fw_started;
++		}
+ 
+-#if defined(TRACK_FW_BOOT)
+-		RGXCheckFWBootStage(psDevInfo);
+-#endif
++		/* Whole-struct invalidate so all fields read below are fresh. */
++		RGXFwSharedMemCacheOpValue(*psDevInfo->psRGXFWIfSysInit, INVALIDATE);
++		PVR_LOG(("RGXPostPowerState: FW did not start. SysInit shared: "
++		         "bFirmwareStarted=%u ui32MarkerVal=0x%x "
++		         "ui32FirmwareStartedTimeStamp=0x%x "
++		         "ui32InitialCoreClockSpeed=%u ui32InitialSOCClockSpeed=%u",
++		         (unsigned)psDevInfo->psRGXFWIfSysInit->bFirmwareStarted,
++		         psDevInfo->psRGXFWIfSysInit->ui32MarkerVal,
++		         psDevInfo->psRGXFWIfSysInit->ui32FirmwareStartedTimeStamp,
++		         psDevInfo->psRGXFWIfSysInit->ui32InitialCoreClockSpeed,
++		         psDevInfo->psRGXFWIfSysInit->ui32InitialSOCClockSpeed));
+ 
+-		/*
+-		* When bFirmwareStarted fails some info may be gained by doing the following
+-		* debug dump but unfortunately it could be potentially dangerous if the reason
+-		* for not booting is the GPU power is not ON. However, if we have reached this
+-		* point the System Layer has returned without errors, we assume the GPU power
+-		* is indeed ON.
+-		*/
+-		RGXDumpRGXDebugSummary(NULL, NULL, psDeviceNode->pvDevice, IMG_TRUE);
+-		RGXDumpRGXRegisters(NULL, NULL, psDeviceNode->pvDevice);
++		PVR_DPF((PVR_DBG_ERROR, "RGXPostPowerState: Polling for 'FW started' flag failed."));
++		eError = PVRSRV_ERROR_TIMEOUT;
+ 
+ 		PVR_LOG_GOTO_IF_ERROR(eError, "PVRSRVPollForValueKM(bFirmwareStarted)", fail);
+ 	}
++fw_started:
+ 
+ #if defined(PDUMP)
+ 	PDUMPCOMMENTWITHFLAGS(psDeviceNode, PDUMP_FLAGS_CONTINUOUS, "Wait for the Firmware to start.");
+-- 
+2.43.0
+
