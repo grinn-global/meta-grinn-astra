@@ -32,6 +32,7 @@ SRC_URI:append:grinn-astra-2619-som = " \
 
 SRC_URI:append:grinn-astra-2619-sbc = " \
 	file://0001-board-synaptics-klamath-klamath_boardinit-use-default.patch \
+	file://hdmi_disable.cfg \
 "
 
 do_configure:append:grinn-astra-1680-platform() {
