@@ -1,12 +1,12 @@
-FILESEXTRAPATHS:prepend := "${THISDIR}/grinn-astra-2619-som:"
+FILESEXTRAPATHS:prepend := "${THISDIR}/grinn-astra-2619-sbc:"
 
-SRC_URI:append = " \
-	file://sl2619_poky_aarch64_1gb_defconfig \
-"
+GRINN_SYNASDK_CONFIG_NATIVE_DEFCONFIG ?= ""
+
+SRC_URI:append = "${@' file://' + d.getVar('GRINN_SYNASDK_CONFIG_NATIVE_DEFCONFIG') if d.getVar('GRINN_SYNASDK_CONFIG_NATIVE_DEFCONFIG') else ''}"
 
 do_compile:prepend() {
-	if [ "${GRINN_ASTRA_SOM}" = "grinn-astra-2619-som" ]; then
-		cp ${WORKDIR}/sl2619_poky_aarch64_1gb_defconfig \
-			${S}/configs/product/${SYNA_SDK_CONFIG_NAME}/sl2619_poky_aarch64_rdk_defconfig
+	if [ -n "${GRINN_SYNASDK_CONFIG_NATIVE_DEFCONFIG}" ]; then
+		cp ${WORKDIR}/${GRINN_SYNASDK_CONFIG_NATIVE_DEFCONFIG} \
+			${S}/configs/product/${SYNA_SDK_CONFIG_NAME}/${SYNA_SDK_CONFIG_FILE}
 	fi
 }
