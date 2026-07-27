@@ -1,0 +1,328 @@
+
+#
+# Build Configuration
+#
+
+#
+# Give a Description for VSSDK Configuration
+#
+CONFIG_DESCRIPTION="SL2619 USB Boot Yocto Poky for astra-2619-sbc 1GB DDR4x16 (aarch64 userspace)"
+CONFIG_PRODUCT_NAME="sl2619_usb_poky_aarch64_rdk"
+CONFIG_BOARD_NAME="klamath"
+CONFIG_PRODUCT_IP_LIST="amplitude"
+CONFIG_PRODUCT_IP_MAPPING_LIST=""
+# CONFIG_RDK_SYS is not set
+CONFIG_SM_BOOT=y
+CONFIG_OPEN_TEE=y
+# end of Build Configuration
+
+#
+# Target Options
+#
+# CONFIG_BERLIN_AS470_A0 is not set
+# CONFIG_BERLIN_DOLPHIN_Z1 is not set
+# CONFIG_BERLIN_PLATYPUS_A0 is not set
+# CONFIG_BERLIN_DOLPHIN_A0 is not set
+# CONFIG_BERLIN_MYNA2_A0=y
+CONFIG_BERLIN_KLAMATH=y
+# CONFIG_DVF101 is not set
+# CONFIG_DVF99 is not set
+# CONFIG_DVF9918 is not set
+# CONFIG_DVF9928 is not set
+# CONFIG_DVF97 is not set
+# CONFIG_ANDROID_OS is not set
+CONFIG_LINUX_OS=y
+# CONFIG_JTAG_ENABLE is not set
+
+#
+# Sysroot Filesystem Configuration
+#
+# CONFIG_RUNTIME_ANDROID is not set
+CONFIG_RUNTIME_LINUX_BASELINE_BUILDROOT=y
+# CONFIG_RUNTIME_LINUX_BASELINE_BUILDROOT64 is not set
+# CONFIG_RUNTIME_RDK is not set
+# CONFIG_RUNTIME_OE64 is not set
+# CONFIG_RUNTIME_OE is not set
+CONFIG_SYSROOT=y
+CONFIG_RUNTIME_FILESYSTEMS="ramdisk(xz),system(ext4)"
+# end of Sysroot Filesystem Configuration
+
+# CONFIG_IMAGE_EMMC is not set
+# CONFIG_IMAGE_NAND is not set
+CONFIG_IMAGE_USBBOOT=y
+# CONFIG_PREBOOT_BOOTFLOW_NR is not set
+CONFIG_PREBOOT_BOOTFLOW_AB=y
+
+#
+# Image Generation Configuration
+#
+CONFIG_IMAGE=y
+# end of Image Generation Configuration
+# end of Target Options
+
+#
+# Host Options
+#
+CONFIG_CPU_NUMBER=18
+CONFIG_SYNA_SDK_PATH="$(TOPDIR)"
+CONFIG_SYNA_SDK_PRODUCT_PATH="$(TOPDIR)/configs/product"
+CONFIG_SYNA_SDK_OUT_TARGET_PATH="$(TOPDIR)/out/${OUT_PRODUCT_DIR}/target"
+CONFIG_SYNA_SDK_OUT_HOST_OBJ_PATH="$(TOPDIR)/out/${OUT_PRODUCT_DIR}/host/obj/EXECUTABLES"
+CONFIG_SYNA_SDK_OUT_HOST_REL_PATH="$(TOPDIR)/out/${OUT_PRODUCT_DIR}/host/bin"
+CONFIG_SYNA_SDK_BUILD_PATH="$(TOPDIR)/out/${OUT_PRODUCT_DIR}/build"
+CONFIG_SYNA_SDK_KEY_PATH="$(TOPDIR)/security/keys"
+CONFIG_SYNA_SDK_TA_BUILD_PATH="$(TOPDIR)/ta_app/build"
+CONFIG_SYNA_SDK_OUT_SYSYROOT="build_sysroot"
+CONFIG_SYNA_SDK_OUT_ROOTFS="system"
+
+#
+# Toolchain Configuration
+#
+CONFIG_TOOLCHAIN=y
+CONFIG_TOOLCHAIN_PATH="$(TOPDIR)/toolchain/oe/linux-x64/gcc-13.3.0-poky/sysroots/x86_64-pokysdk-linux/usr/bin/aarch64-poky-linux"
+CONFIG_TOOLCHAIN_TA="aarch64-linux-gnu-"
+CONFIG_TOOLCHAIN_BSP="aarch64-poky-linux-"
+CONFIG_TOOLCHAIN_APPLICATION="aarch64-poky-linux-"
+CONFIG_TOOLCHAIN_APPLICATION_PATH=""
+CONFIG_TOOLCHAIN_APPLICATION_CC="aarch64-poky-linux-gcc"
+CONFIG_LINUX_CROSS_COMPILE="aarch64-poky-linux-"
+CONFIG_LINUX_CROSS_COMPILE_PATH=""
+CONFIG_LINUX_CROSS_COMPILE_CC="aarch64-poky-linux-gcc"
+# end of Toolchain Configuration
+
+CONFIG_TOOLS=y
+CONFIG_TOOLS_REL_PATH="bin"
+CONFIG_TOOLS_BIN_PATH="build/tools/bin"
+CONFIG_SECURITY_TOOL_PATH="release/SECURITY/tools"
+# end of Host Options
+
+#
+# Linux Kernel
+#
+CONFIG_LINUX=y
+CONFIG_HEADER_GIH=y
+# CONFIG_HEADER_KDTB is not set
+# CONFIG_COMPRESS_XZ is not set
+CONFIG_COMPRESS_LZ4=y
+# CONFIG_NO_PREPEND_IMG_INFO is not set
+CONFIG_LINUX_SRC_PATH="linux_6_12/main"
+CONFIG_LINUX_ARCH="arm64"
+CONFIG_LINUX_DEFCONFIG="sl261x_defconfig"
+CONFIG_LINUX_DTS="synaptics/sl2619-rdk"
+CONFIG_LINUX_REL_PATH="linux"
+# CONFIG_LINUX_KASAN_ENABLE is not set
+# CONFIG_LINUX_DEBUG_EXTRA is not set
+# CONFIG_LINUX_KGDB is not set
+# end of Linux Kernel
+
+#
+# Boot
+#
+CONFIG_PREBOOT_PLATFORM="klamath_rdk"
+CONFIG_GENX_ENABLE=y
+CONFIG_GENX_MCU=y
+
+CONFIG_PREBOOT=y
+# CONFIG_EXTERNAL_PREBOOT is not set
+CONFIG_PREBOOT_MARKET_ID=1
+CONFIG_PREBOOT_REL_PATH="preboot"
+CONFIG_PREBOOT_DDR_TYPE="ddr4x16"
+CONFIG_PREBOOT_MEMORY_SPEED=2133
+CONFIG_PREBOOT_MEMORY_SIZE="1GB"
+CONFIG_PREBOOT_MEMORY_VARIANT="rdk"
+# CONFIG_PREBOOT_DDR_PHY_FW is not set
+CONFIG_PREBOOT_TEE_ENABLE=y
+CONFIG_PREBOOT_PROFILE="generic"
+CONFIG_PREBOOT_SECURITY_IMAGE_PATH="boot/security/images"
+
+#
+# Preboot Configuration
+#
+# CONFIG_PREBOOT_MEMORY_MULTIPLE is not set
+# end of Preboot Configuration
+
+# CONFIG_BOOTLOADER is not set
+# CONFIG_EXTERNAL_BOOTLOADER is not set
+CONFIG_UBOOT_SUBOOT=y
+# CONFIG_BL_PRELOAD_TA is not set
+CONFIG_BL_FASTLOGO=n
+
+#
+# Bootloader Configuration
+#
+CONFIG_BL_FASTLOGO_DISPLAY_MODE="0"
+CONFIG_BL_FASTLOGO_RESID="13"
+# CONFIG_BL_SYSTEM_MANAGER is not set
+# end of Bootloader Configuration
+
+CONFIG_UBOOT=y
+CONFIG_UBOOT_SRC_PATH="u-boot"
+CONFIG_UBOOT_ARCH="arm"
+CONFIG_UBOOT_DEFCONFIG="klamath_usb_suboot_defconfig"
+CONFIG_UBOOT_DTS="klamath-rdk"
+CONFIG_UBOOT_REL_PATH="release/uboot"
+# CONFIG_STD_ANDROID_IMAGE is not set
+# end of Boot
+
+#
+# Trusted Environment Options
+#
+
+#
+# TEE
+#
+CONFIG_TEE=y
+CONFIG_TZK_MEM_LAYOUT="stb_1g_cma_poky"
+CONFIG_TZK_SUPPORTED_MEM_LAYOUT="stb_1g_cma stb_4g_cma"
+CONFIG_TZK_MZONE_ENABLE=y
+CONFIG_TZK_REGFW_ENABLE=y
+# CONFIG_TZK_PRELOAD_TA is not set
+CONFIG_TEE_KERNEL_REL_PATH="tee/tzk"
+CONFIG_TEE_CLIENT_REL_PATH="tee/client"
+# CONFIG_TZK is not set
+CONFIG_OPTEE=y
+CONFIG_OPTEE_SAMPLE=y
+CONFIG_OPTEE_TEST=y
+# end of TEE
+
+CONFIG_TEE_DEV=y
+CONFIG_TEE_DEV_REL_PATH="tee_dev"
+CONFIG_TEE_OPENSSL_VERSION="1_0_2p"
+CONFIG_TEE_DEV_TEEI="GPD11_TZK530"
+# end of Trusted Environment Options
+
+#
+# DRM Configuration
+#
+# CONFIG_KEYMASTER is not set
+# CONFIG_GTVCA is not set
+# CONFIG_GTVCALITE is not set
+# CONFIG_GTVCALITE_TEST is not set
+# CONFIG_PLAYREADY_VER_32 is not set
+# CONFIG_PLAYREADY_VER_40 is not set
+# CONFIG_OTP_PROGRAM is not set
+# CONFIG_READ_RKEKID is not set
+# CONFIG_KM_TEST is not set
+# CONFIG_LOAD_HDCP is not set
+# CONFIG_FACTORY_UTIL is not set
+# CONFIG_OEM_COMMAND is not set
+# CONFIG_DRM_GENCRYPTO_TEST is not set
+# end of DRM Configuration
+
+# CONFIG_AMPSDK is not set
+CONFIG_TA_ENC=y
+CONFIG_TA_REL_PATH="ta_enc"
+CONFIG_TA_IMAGE_PATH="ta/enc"
+CONFIG_FW_ENC=y
+CONFIG_FW_REL_PATH="fw_enc"
+CONFIG_FW_IMAGE_PATH="fw/enc"
+
+#
+# DolbyUDC build Configuration
+#
+# CONFIG_DOLBYUDC_CA is not set
+# CONFIG_DOLBYUDC_TA is not set
+# CONFIG_DOLBYUDC_TEST is not set
+# CONFIG_DOLBYUDC_TAREG is not set
+# end of DolbyUDC build Configuration
+
+#
+# Drivers Configuration
+#
+CONFIG_DRIVERS=y
+# CONFIG_DRIVERS_RTL8363NB is not set
+# CONFIG_DRIVERS_DSPG_KEYPAD is not set
+# CONFIG_DRIVERS_DSPG_HOOKSWITCH is not set
+# CONFIG_DRIVERS_TLC5917 is not set
+CONFIG_DRIVERS_AXI_METER=y
+CONFIG_DRIVERS_FXL6408=y
+CONFIG_DRIVERS_HWMON=y
+CONFIG_DRIVERS_BLUETOOTH_LPM=y
+CONFIG_DRIVERS_BLUETOOTH_RFKILL=y
+# CONFIG_DRIVERS_SM is not set
+CONFIG_DRIVERS_REGULATORS=y
+CONFIG_DRIVERS_I2C_DYNDMX_PINCTRL=y
+CONFIG_DRIVERS_DWC3_SYNA=y
+# CONFIG_DRIVERS_SUNPLUS is not set
+# CONFIG_DRIVERS_CADENCE_HPNFC is not set
+CONFIG_DRIVERS_SYNAPTICS_PHY=y
+CONFIG_DRIVERS_PINCTRL=y
+CONFIG_DRIVERS_CLK=y
+# CONFIG_DRIVERS_PCIE_BERLIN is not set
+# end of Drivers Configuration
+
+#
+# SYNAP Configuration
+#
+# CONFIG_SYNAP is not set
+# CONFIG_PRODUCTION_BUILD is not set
+# CONFIG_SYNAP_TOOLS is not set
+# end of SYNAP Configuration
+
+#
+# Target Packages
+#
+
+#
+# Application Configuration
+#
+# CONFIG_POWERMANAGED is not set
+# CONFIG_TEST_SPI is not set
+# CONFIG_VOICECAPTURE is not set
+# CONFIG_V4L2_CODEC is not set
+# CONFIG_OTA_API is not set
+# CONFIG_TEST_OTA is not set
+# CONFIG_VOIPSDK_VS6X0 is not set
+# CONFIG_DEMOS is not set
+# CONFIG_VOIPSDK_DVFXX is not set
+# CONFIG_GSTREAMER_PLUGINS_SYNA is not set
+# CONFIG_BOOTCTRL is not set
+# end of Application Configuration
+
+#
+# External Packages Configuration
+#
+CONFIG_FFMPEG=y
+CONFIG_CURL=y
+# CONFIG_ALSA is not set
+# CONFIG_GDB is not set
+# CONFIG_EXPAT is not set
+# CONFIG_DBUS is not set
+# CONFIG_PULSEAUDIO is not set
+# CONFIG_GLIB2 is not set
+# CONFIG_LIBFFI is not set
+# CONFIG_ZLIB is not set
+# CONFIG_EUDEV is not set
+# CONFIG_READLINE is not set
+# CONFIG_NCURSES is not set
+# CONFIG_LIBTOOL is not set
+# CONFIG_LIBSNDFILE is not set
+# CONFIG_SBC is not set
+# CONFIG_TINYXML2 is not set
+# CONFIG_BOOST is not set
+# CONFIG_JSONCPP is not set
+# CONFIG_CPPNETLIB is not set
+# CONFIG_OPENCV is not set
+# CONFIG_SOUNDTOUCH is not set
+# end of External Packages Configuration
+
+#
+# TA_APP Configuration
+#
+CONFIG_TA_STATIC_LIB_PATH="ta/lib"
+CONFIG_TA_STATIC_INC_PATH="ta/inc"
+CONFIG_TA_BUILD_PATH="ta/intermediate"
+# CONFIG_TA_CPPCHECK is not set
+# CONFIG_TA_CALC is not set
+# CONFIG_TA_GFX_IMG is not set
+# CONFIG_TA_GFX_IMG_LINUX is not set
+# CONFIG_TA_CAF is not set
+# CONFIG_DRM_COMMON_TA is not set
+# CONFIG_NETFLIX_MGK is not set
+# CONFIG_TA_IMAGEPROC is not set
+# end of TA_APP Configuration
+# end of Target Packages
+
+CONFIG_SECURITY=y
+CONFIG_SECURITY_KEY_PATH="release/SECURITY/keys"
+CONFIG_SECURITY_VERSION_PATH="release/SECURITY/version"
