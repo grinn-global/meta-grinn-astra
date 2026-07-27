@@ -5,11 +5,16 @@ FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc
 FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/grinn-astra-261x/common:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-som := "${THISDIR}/grinn-astra-261x/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
+FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc-usb := "${THISDIR}/grinn-astra-261x/sbc:"
 
 DT_DIR = "${S}/arch/arm64/boot/dts/synaptics"
 
+# USB machine share the base board device tree.
+# Needed to provide ${MACHINE}.dts device tree for machines containing `-usb` suffix.
+GRINN_MACHINE = "${@d.getVar('MACHINE').removesuffix('-usb')}"
+
 SRC_URI:append:grinn-astra-platform = " \
-	file://${MACHINE}.dts;subdir=${DT_DIR} \
+	file://${GRINN_MACHINE}.dts;subdir=${DT_DIR} \
 	file://0001-linux-add-dwmac-support-for-TXC-90-degree-phase-shif.patch \
 	file://gpiolib.cfg \
 	file://nfs.cfg \
@@ -46,7 +51,7 @@ SRC_URI:append:grinn-astra-2619-som = " \
 	file://grinn-astra-2619-som.dtsi;subdir=${DT_DIR} \
 "
 
-SRC_URI:append:grinn-astra-261x-sbc = " \
+GRINN_ASTRA_2619_SBC_COMMON_FILES = " \
 	file://bcmdhd.cfg \
 	file://eth.cfg \
 	file://gpio-keys.cfg \
@@ -56,6 +61,9 @@ SRC_URI:append:grinn-astra-261x-sbc = " \
 	file://spi.cfg \
 	file://waveshare-7inch-panel-overlay.dtso;subdir=${DT_DIR} \
 "
+
+SRC_URI:append:grinn-astra-261x-sbc = "${GRINN_ASTRA_2619_SBC_COMMON_FILES}"
+SRC_URI:append:grinn-astra-2619-sbc-usb = "${GRINN_ASTRA_2619_SBC_COMMON_FILES}"
 
 # kernel-yocto applies patches via kgit-s2q on the main kernel index, which
 # does not track drivers/synaptics/. Mark patches as apply=no so kgit skips
