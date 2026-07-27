@@ -6,15 +6,20 @@ FILESEXTRAPATHS:prepend:grinn-astra-1680-sbc := "${THISDIR}/grinn-astra-1680/sbc
 FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/grinn-astra-261x/common:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-som := "${THISDIR}/grinn-astra-261x/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
+FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc-usb := "${THISDIR}/grinn-astra-261x/sbc:"
 
 DT_DIR = "${S}/arch/arm/dts"
 CFG_DIR = "${S}/configs"
+
+# USB machine share the base board device tree.
+# Needed to provide ${MACHINE}.dts device tree for machines containing `-usb` suffix.
+GRINN_MACHINE = "${@d.getVar('MACHINE').removesuffix('-usb')}"
 
 SRC_URI:append:grinn-astra-platform = " \
 	file://0001-uboot-add-mac-support-for-TXC-90-degree-phase-shift.patch \
 	file://eth.cfg \
 	file://misc.cfg \
-	file://${MACHINE}.dts \
+	file://${GRINN_MACHINE}.dts \
 "
 
 SRC_URI:append:grinn-astra-1680-som = " \
@@ -42,5 +47,5 @@ do_configure:append:grinn-astra-1680-platform() {
 }
 
 do_configure:append:grinn-astra-261x-platform() {
-	cp ${WORKDIR}/${MACHINE}.dts ${DT_DIR}/klamath-rdk.dts
+	cp ${WORKDIR}/${GRINN_MACHINE}.dts ${DT_DIR}/klamath-rdk.dts
 }
