@@ -49,3 +49,15 @@ do_configure:append:grinn-astra-1680-platform() {
 do_configure:append:grinn-astra-261x-platform() {
 	cp ${WORKDIR}/${GRINN_MACHINE}.dts ${DT_DIR}/klamath-rdk.dts
 }
+
+# Generate the manifest for non-USB machines and regenerate the upstream USB
+# manifest with Grinn board name. Manifest is used by astra-update tool.
+do_deploy:append:grinn-astra-261x-platform() {
+	python3 ${WORKDIR}/generate_boot_manifest.py \
+		--uboot_binary ${B}/../../uboot_en.bin \
+		--sdk_config ${STAGING_DATADIR_NATIVE}/syna/build/.config \
+		--uboot_config ${B}/.config \
+		--board ${MACHINE} \
+		--output ${WORKDIR}/manifest.yaml
+	install -m 0644 ${WORKDIR}/manifest.yaml ${DEPLOYDIR}/manifest.yaml
+}
