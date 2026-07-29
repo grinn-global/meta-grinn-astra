@@ -1,12 +1,11 @@
 header:
   version: 14
-
-env:
-  NETBOOT_SERVER_IP: ""
-  NETBOOT_SERVER_SUBDIR: ""
+  includes:
+    - repo: meta-grinn-common-netboot
+      file: kas/netboot.yml
 
 repos:
   meta-grinn-common-netboot:
     url: https://github.com/grinn-global/meta-grinn-common-netboot
-    commit: 5b1d04adf0a2f19e3a44d22e76a5564a3ab21c80
+    commit: d4b47e930bddfd3f3647649049907fcbb865876b
     branch: scarthgap
