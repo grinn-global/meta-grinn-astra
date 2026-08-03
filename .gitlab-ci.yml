@@ -57,6 +57,10 @@ stages:
           - grinn-astra-1680-sbc
         KAS_CONFIG:
           - default:deepx
+      - KAS_MACHINE:
+          - sl2619-coralboard
+        KAS_CONFIG:
+          - default:oobe
 
 .ci_test_matrix: &ci_test_matrix
   parallel:
