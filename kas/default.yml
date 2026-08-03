@@ -118,8 +118,8 @@ repos:
 
   meta-synaptics:
     url: https://github.com/synaptics-astra/meta-synaptics
-    commit: 554163e823c71112d851ffaca7a68e55b7c71cca
-    branch: scarthgap_6.12_v2.4.0
+    commit: dff2ee3f04193b309000bef2640450d0b9a08bfd
+    branch: scarthgap_6.12_v2.5.0
 
   meta-grinn-astra:
     layers:
