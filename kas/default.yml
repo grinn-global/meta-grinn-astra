@@ -54,8 +54,6 @@ local_conf_header:
     DISTRO_FEATURES:remove = " x11"
     DISTRO_FEATURES_NATIVESDK:remove = "x11"
 
-    PREFERRED_VERSION_libgpiod = "1.6.4"
-
   meta-grinn-astra_qt-selection: |
     QT_MAJOR = "6"
 
