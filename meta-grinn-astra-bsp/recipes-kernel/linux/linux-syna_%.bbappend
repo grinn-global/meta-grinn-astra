@@ -52,6 +52,7 @@ SRC_URI:append:grinn-astra-261x-sbc = " \
 	file://gpio-keys.cfg \
 	file://gpio-led.cfg \
 	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
+	file://ov5647-camera-overlay.dtso;subdir=${DT_DIR} \
 	file://spi.cfg \
 	file://waveshare-7inch-panel-overlay.dtso;subdir=${DT_DIR} \
 "

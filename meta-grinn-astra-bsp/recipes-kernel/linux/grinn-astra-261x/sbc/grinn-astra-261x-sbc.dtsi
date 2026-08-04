@@ -160,22 +160,6 @@
 	status = "okay";
 };
 
-&camera_video {
-	status = "okay";
-};
-
-&csi {
-	status = "okay";
-
-	ports {
-		port@0 {
-			csi_input: endpoint@0 {
-				remote-endpoint = <&cam_endpoint>;
-			};
-		};
-	};
-};
-
 &ethernet0 {
 	status = "okay";
 	pinctrl-0 = <&eth_mdio_pmux>, <&eth0_pmux>;
@@ -222,26 +206,6 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c3_pmux>;
 	clock-frequency = <100000>;
-
-	cam_node: ov5647@36 {
-		compatible = "ovti,ov5647";
-		reg = <0x36>;
-		status = "okay";
-
-		clocks = <&osc>;
-
-		rotation = <0>;
-		orientation = <2>;
-
-		port {
-			cam_endpoint: endpoint {
-				clock-lanes = <0>;
-				data-lanes = <1 2>;
-				clock-noncontinuous;
-				remote-endpoint = <&csi_input>;
-			};
-		};
-	};
 };
 
 &i2s3_dai {
@@ -250,10 +214,6 @@
 	pinctrl-names = "default";
 	clk_src = "APLL";
 	clk_feed = "I2S3_DI";
-};
-
-&isp {
-	status = "okay";
 };
 
 &klamath_asoc {
