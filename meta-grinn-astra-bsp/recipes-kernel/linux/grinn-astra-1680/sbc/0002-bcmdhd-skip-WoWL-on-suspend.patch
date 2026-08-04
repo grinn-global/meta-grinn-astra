@@ -1,0 +1,59 @@
+From 0000000000000000000000000000000000000002 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Mon, 25 May 2026 00:00:00 +0200
+Subject: [PATCH] bcmdhd: skip WoWL on suspend
+
+On non-Android builds dhd_pm_callback() calls dhd_set_wowl_active(TRUE)
+and msleep(1000) on PM_SUSPEND_PREPARE, and dhd_set_wowl_active(FALSE)
+on PM_POST_SUSPEND. On this board WiFi is not associated with any AP at
+suspend time, so wowl_activate always fails and clutters dmesg on every
+suspend:
+
+  dhd_set_wowl_active: force wowl suspend setting
+  dhd_set_wowl_active wowl_activate failed -1
+
+The 1 s msleep is paid either way.
+
+Wake-on-WLAN is not a use case on this board (suspend is driven from
+local input, RTC or GPIO, not from network packets). Remove the WoWL
+calls in dhd_pm_callback() so it becomes a no-op for WoWL and only
+handles the SDIO wl_wdwake release path added by the companion patch.
+
+Historically this was done by masking DHD_WOWL_IN_SUSPEND_SDIO in the
+Makefile (the guard used by v2.4.0). Upstream v2.5.0 renamed the guard
+in the source to DHD_ANDROID_IMG_BUILD and flipped its polarity, so the
+Makefile route no longer disables anything. The change is now applied
+directly on dhd_linux.c and depends on the companion stop-watchdog
+patch being applied first (context is post-companion).
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c | 7 -------
+ 1 file changed, 7 deletions(-)
+
+diff --git a/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c b/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c
+--- a/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c
++++ b/drivers/synaptics/net/wireless/bcmdhd/dhd_linux.c
+@@ -1109,10 +1109,6 @@ static int dhd_pm_callback(struct notifier_block *nfb, unsigned long action, void
+ 	switch (action) {
+ 	case PM_HIBERNATION_PREPARE:
+ 	case PM_SUSPEND_PREPARE:
+-#ifndef DHD_ANDROID_IMG_BUILD
+-	dhd_set_wowl_active(TRUE);
+-	msleep(1000);
+-#endif /* DHD_ANDROID_IMG_BUILD */
+ #ifdef BCMSDIO
+ 		/* Release wl_wdwake before SDIO suspend so that
+ 		 * dhd_os_check_wakelock() does not abort with -EBUSY. */
+@@ -1124,9 +1120,6 @@ static int dhd_pm_callback(struct notifier_block *nfb, unsigned long action, void
+
+ 	case PM_POST_HIBERNATION:
+ 	case PM_POST_SUSPEND:
+-#ifndef DHD_ANDROID_IMG_BUILD
+-	dhd_set_wowl_active(FALSE);
+-#endif /* DHD_ANDROID_IMG_BUILD */
+ #ifdef BCMSDIO
+ 		dhdinfo = container_of(nfb, dhd_info_t, pm_notifier);
+ 		dhd_os_wd_timer(&dhdinfo->pub, dhd_watchdog_ms);
+--
+2.43.0

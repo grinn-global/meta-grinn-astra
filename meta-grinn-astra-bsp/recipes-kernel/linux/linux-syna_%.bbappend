@@ -38,7 +38,7 @@ SRC_URI:append:grinn-astra-1680-ada = " \
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
 	file://0001-bcmdhd-stop-watchdog-on-suspend-to-release-SDIO-wake.patch;apply=no \
-	file://0002-bcmdhd-disable-DHD_WOWL_IN_SUSPEND_SDIO.patch;apply=no \
+	file://0002-bcmdhd-skip-WoWL-on-suspend.patch;apply=no \
 	file://bcmdhd.cfg \
 	file://gpio-led.cfg \
 	file://eth.cfg \
@@ -76,5 +76,5 @@ do_patch:append:grinn-astra-1680-platform() {
 
 do_patch:append:grinn-astra-1680-sbc() {
 	patch -d ${S} -p1 < ${WORKDIR}/0001-bcmdhd-stop-watchdog-on-suspend-to-release-SDIO-wake.patch
-	patch -d ${S} -p1 < ${WORKDIR}/0002-bcmdhd-disable-DHD_WOWL_IN_SUSPEND_SDIO.patch
+	patch -d ${S} -p1 < ${WORKDIR}/0002-bcmdhd-skip-WoWL-on-suspend.patch
 }
