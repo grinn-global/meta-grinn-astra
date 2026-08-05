@@ -22,8 +22,8 @@ get_video_devices() {
 }
 
 enable_sensor() {
-    gpioset $(gpiofind CAM_GPIO0)=1
-    gpioset $(gpiofind CAM_GPIO1)=1
+    gpioset --toggle 0 CAM_GPIO0=1
+    gpioset --toggle 0 CAM_GPIO1=1
 }
 
 start_pipeline() {

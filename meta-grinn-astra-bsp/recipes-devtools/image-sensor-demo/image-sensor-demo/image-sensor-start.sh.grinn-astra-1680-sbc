@@ -22,8 +22,8 @@ get_video_devices() {
 }
 
 enable_sensor() {
-    gpioset `gpiofind CAM_POWER_EN`=1
-    gpioset `gpiofind CAM_LED_EN`=1
+    gpioset --toggle 0 CAM_POWER_EN=1
+    gpioset --toggle 0 CAM_LED_EN=1
 }
 
 start_pipeline() {

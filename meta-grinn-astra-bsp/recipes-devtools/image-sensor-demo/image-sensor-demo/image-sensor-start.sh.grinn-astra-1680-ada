@@ -68,8 +68,8 @@ enable_sensor() {
         PWR_GPIO="PWR_ON_CSI1"
     fi
 
-    gpioset `gpiofind $PWR_GPIO`=1
-    gpioset `gpiofind $LED_GPIO`=1
+    gpioset --toggle 0 "$PWR_GPIO=1"
+    gpioset --toggle 0 "$LED_GPIO=1"
 }
 
 start_pipeline() {
