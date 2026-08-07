@@ -90,6 +90,15 @@ build:
   <<: *ci_build_artifacts
   <<: *ci_build_matrix
 
+build-usb:
+  extends: build
+  parallel:
+    matrix:
+      - KAS_MACHINE:
+          - grinn-astra-2619-sbc-usb
+        KAS_CONFIG:
+          - default
+
 build-download:
   <<: *ci_build_artifacts
   <<: *ci_build_matrix
