@@ -1,3 +1,21 @@
+# [3.1.0]
+
+## Added
+- Support for `grinn-astra-2619-sbc-usb`
+- USB flashing of `grinn-astra-2619-sbc` images through the `astra-update` tool
+
+## Changed
+- Bump `meta-deepx-m1`: dx-rt v3.3.2, dx-driver v2.4.1, dx-stream v3.0.1
+- Take netboot configuration from `meta-grinn-common-netboot`
+- Update `grinn-astra-2619-sbc` preboot to v1.5.0
+- Switch to latest `libgpiod` version
+- Move OV5647 CSI camera device-tree configuration on `grinn-astra-2619-sbc`
+  into a separate overlay and apply it by default
+
+## Fixed
+- `image-sensor-start.sh` demo pipeline on `grinn-astra-2619-sbc`
+- `/proc/vsi` TOCTOU race between vvcam modules on `grinn-astra-1680-platform`
+
 # [3.0.0]
 
 ## Added
