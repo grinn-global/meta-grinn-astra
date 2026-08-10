@@ -4,6 +4,14 @@ export XDG_RUNTIME_DIR=/var/run/user/0
 export WAYLAND_DISPLAY=wayland-1
 
 CSI0_DEV="none"
+SINK="${1:-file}"
+CAPTURE_PATH="/tmp/camera.avi"
+
+usage() {
+    echo "Usage: $0 [file|display]"
+    echo "  file    (default) record to $CAPTURE_PATH"
+    echo "  display preview on the Wayland compositor"
+}
 
 get_video_devices() {
     eval "$(v4l2-ctl --list-devices | awk '
@@ -32,9 +40,23 @@ start_pipeline() {
         exit 1
     fi
 
-    gst-launch-1.0 v4l2src device="$CSI0_DEV" ! \
-        'video/x-raw, format=NV12, width=640, height=480, framerate=30/1' \
-        ! waylandsink
+    CAPS='video/x-raw, format=NV12, width=640, height=480, framerate=30/1'
+
+    case "$SINK" in
+        file)
+            gst-launch-1.0 -e v4l2src device="$CSI0_DEV" ! \
+                "$CAPS" ! jpegenc ! avimux ! \
+                filesink location="$CAPTURE_PATH"
+            ;;
+        display)
+            gst-launch-1.0 v4l2src device="$CSI0_DEV" ! \
+                "$CAPS" ! waylandsink
+            ;;
+        *)
+            usage
+            exit 1
+            ;;
+    esac
 }
 
 get_video_devices
