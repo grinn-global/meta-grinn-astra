@@ -1,0 +1,12 @@
+header:
+  version: 14
+
+local_conf_header:
+  meta-grinn-common-demo: |
+    IMAGE_INSTALL:append = " llama-cpp gemma-4-e2b"
+
+repos:
+  meta-grinn-common-demo:
+    url: https://github.com/grinn-global/meta-grinn-common-demo
+    commit: 589dd819beb7b2046d6d5fc4ce0f3ff027d0b283
+    branch: scarthgap
