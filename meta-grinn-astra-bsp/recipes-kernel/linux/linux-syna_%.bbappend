@@ -24,6 +24,7 @@ SRC_URI:append:grinn-astra-1680-platform = " \
 	file://0002-avio-dhub-rate-limit-spurious-interrupt-log.patch;apply=no \
 	file://0003-rogue-ws-give-FW-started-poll-a-second-chance.patch;apply=no \
 	file://0004-isp-dolphin-vvcam-share-proc-vsi-ownership.patch;apply=no \
+	file://0005-drm-panel-dsi-check-cmdsize-is-positive-before-alloc.patch;apply=no \
 	file://modem.cfg \
 "
 
@@ -72,6 +73,7 @@ do_patch:append:grinn-astra-1680-platform() {
 	patch -d ${S} -p1 < ${WORKDIR}/0002-avio-dhub-rate-limit-spurious-interrupt-log.patch
 	patch -d ${S} -p1 < ${WORKDIR}/0003-rogue-ws-give-FW-started-poll-a-second-chance.patch
 	patch -d ${S} -p1 < ${WORKDIR}/0004-isp-dolphin-vvcam-share-proc-vsi-ownership.patch
+	patch -d ${S} -p1 < ${WORKDIR}/0005-drm-panel-dsi-check-cmdsize-is-positive-before-alloc.patch
 }
 
 do_patch:append:grinn-astra-1680-sbc() {

@@ -1,0 +1,47 @@
+From 0000000000000000000000000000000000000005 Mon Sep 17 00:00:00 2001
+From: Lukasz Madej <l.madej@grinn-global.com>
+Date: Wed, 12 Aug 2026 00:00:00 +0200
+Subject: [PATCH] drm: panel_dsi: check cmdsize is positive before alloc
+
+syna_panel_dsi_init() reads the "command" byte array from the
+device-tree node bound to compatible "syna,drm-dsi" and stores the
+element count in synaPanelInfo.cmdsize.
+
+of_property_count_u8_elems() returns a negative error code (typically
+-EINVAL) when the property is missing. cmdsize is an int, so the check
+"if (cmdsize)" treats the negative value as truthy and falls through to
+devm_kzalloc() with a negative size. That size is cast to size_t on the
+allocator boundary, overflows into a huge value, kzalloc fails, and
+syna_panel_dsi_init() returns -ENOMEM.
+
+Before v2.5.0 the return value of syna_panel_dsi_init() was ignored by
+the caller in drm_syna_drv.c and this went unnoticed. Since v2.5.0 the
+caller checks the error and aborts the whole synaptics DRM probe. On a
+board that keeps the base upstream dsi_panel node (compatible
+"syna,drm-dsi", status = "disabled", no "command" property), the DRM
+driver now fails to probe with -ENOMEM and HDMI stops working:
+
+  synaptics soc:drm: probe with driver synaptics failed with error -12
+
+The matching check five lines below for "standby-cmds" is already
+"if (standby_cmdsize > 0)" — apply the same fix here.
+
+Signed-off-by: Lukasz Madej <l.madej@grinn-global.com>
+---
+ drivers/synaptics/soc/berlin/modules/drm/panel/panel_dsi.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/drivers/synaptics/soc/berlin/modules/drm/panel/panel_dsi.c b/drivers/synaptics/soc/berlin/modules/drm/panel/panel_dsi.c
+--- a/drivers/synaptics/soc/berlin/modules/drm/panel/panel_dsi.c
++++ b/drivers/synaptics/soc/berlin/modules/drm/panel/panel_dsi.c
+@@ -344,7 +344,7 @@ int syna_panel_dsi_init(struct platform_device *pdev)
+
+ 	synaPanelInfo.cmdsize = of_property_count_u8_elems(mipi_dev->of_node, "command");
+
+-	if (synaPanelInfo.cmdsize ) {
++	if (synaPanelInfo.cmdsize > 0) {
+ 		synaPanelInfo.cmd = devm_kzalloc(&pdev->dev, synaPanelInfo.cmdsize, GFP_KERNEL);
+ 		if (!synaPanelInfo.cmd)
+ 			return -ENOMEM;
+--
+2.43.0
