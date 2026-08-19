@@ -56,22 +56,6 @@ get_video_devices() {
     ')"
 }
 
-enable_sensor() {
-    local LED_GPIO
-    local PWR_GPIO
-
-    if [ "$CSI_SEL" = "CSI0" ]; then
-        LED_GPIO="GPIO_CSI0"
-        PWR_GPIO="PWR_ON_CSI0"
-    else
-        LED_GPIO="GPIO_CSI1"
-        PWR_GPIO="PWR_ON_CSI1"
-    fi
-
-    gpioset --toggle 0 "$PWR_GPIO=1"
-    gpioset --toggle 0 "$LED_GPIO=1"
-}
-
 start_pipeline() {
     local VIDEO_DEV
 
@@ -105,5 +89,4 @@ echo "CSI0_DEV=$CSI0_DEV"
 echo "CSI1_DEV=$CSI1_DEV"
 echo "CSI_SEL=$CSI_SEL"
 
-enable_sensor
 start_pipeline

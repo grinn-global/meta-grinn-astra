@@ -29,11 +29,6 @@ get_video_devices() {
     ')"
 }
 
-enable_sensor() {
-    gpioset --toggle 0 CAM_GPIO0=1
-    gpioset --toggle 0 CAM_GPIO1=1
-}
-
 start_pipeline() {
     if [ "$CSI0_DEV" = "none" ]; then
         echo "Video device not available - cannot start pipeline"
@@ -63,5 +58,4 @@ get_video_devices
 
 echo "CSI0_DEV=$CSI0_DEV"
 
-enable_sensor
 start_pipeline

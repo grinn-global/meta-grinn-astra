@@ -21,11 +21,6 @@ get_video_devices() {
     ')"
 }
 
-enable_sensor() {
-    gpioset --toggle 0 CAM_POWER_EN=1
-    gpioset --toggle 0 CAM_LED_EN=1
-}
-
 start_pipeline() {
     local VIDEO_DEV="$CSI0_DEV"
 
@@ -43,5 +38,4 @@ get_video_devices
 
 echo "CSI0_DEV=$CSI0_DEV"
 
-enable_sensor
 start_pipeline
