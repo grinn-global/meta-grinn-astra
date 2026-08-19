@@ -57,6 +57,7 @@ stages:
           - grinn-astra-1680-sbc
         KAS_CONFIG:
           - default:deepx
+          - default:deepx:demo
       - KAS_MACHINE:
           - sl2619-coralboard
         KAS_CONFIG:
@@ -75,6 +76,7 @@ stages:
           - grinn-astra-1680-sbc
         KAS_CONFIG:
           - default:deepx
+          - default:deepx:demo
 
 .ci_build_artifacts: &ci_build_artifacts
   artifacts:
