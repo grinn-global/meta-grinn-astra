@@ -683,8 +683,8 @@
 		reg = <0x44>;
 		gpio-controller;
 		#gpio-cells = <2>;
-		gpio-line-names = "GPIO_CSI0", "M2_PCIe_RST", "M2_SDIO_DISABLE1", "M2_SDIO_HOST_WAKE",
-				  "PWR_ON_CSI0", "M2_SDIO_HOST_DISABLE2", "GPIO_CSI1", "PWR_ON_CSI1";
+		gpio-line-names = "", "M2_PCIe_RST", "M2_SDIO_DISABLE1", "M2_SDIO_HOST_WAKE",
+				  "", "M2_SDIO_HOST_DISABLE2", "", "";
 	};
 };
 
@@ -747,6 +747,11 @@
 
 &isp_vsi {
 	status = "okay";
+	/* Use reset GPIOs to enable the camera LEDs. */
+	reset-gpios = <&expander1 0 GPIO_ACTIVE_HIGH>,
+		      <&expander1 6 GPIO_ACTIVE_HIGH>;
+	enable-gpios = <&expander1 4 GPIO_ACTIVE_HIGH>,
+		       <&expander1 7 GPIO_ACTIVE_HIGH>;
 };
 
 &isp_vsi_mipi {
