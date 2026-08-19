@@ -23,6 +23,8 @@
  * TO ANY PARTY SHALL NOT EXCEED ONE HUNDRED U.S. DOLLARS.
  */
 
+#include <dt-bindings/gpio/gpio.h>
+
 /dts-v1/;
 /plugin/;
 
@@ -44,6 +46,7 @@
 		reg = <0x36>;
 		status = "okay";
 
+		pwdn-gpios = <&porta 5 GPIO_ACTIVE_LOW>;
 		clocks = <&osc>;
 
 		rotation = <0>;

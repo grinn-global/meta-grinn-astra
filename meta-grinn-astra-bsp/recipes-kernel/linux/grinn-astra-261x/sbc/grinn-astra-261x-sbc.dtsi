@@ -364,7 +364,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_SPI3_CE0n", "RPi_SPI3_SCLK", "RPi_SPI3_MOSI", "RPi_SPI3_CE1n", "RPi_SPI3_MISO", "CAM_GPIO0", "CAM_GPIO1", "UART_WAKEn",
+		"RPi_SPI3_CE0n", "RPi_SPI3_SCLK", "RPi_SPI3_MOSI", "RPi_SPI3_CE1n", "RPi_SPI3_MISO", "", "CAM_LED_EN", "UART_WAKEn",
 		"BT_DISABLEn", "WF_DISABLEn", "SDIO_RESETn", "SDIO_WAKEn", "RPi_I2S3_FS", "RPi_I2S3_BCLK", "RPi_I2S3_DOUT", "RPi_I2S3_DIN",
 		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "SS1", "", "LED_YELLOW", "LED_GREEN",
 		"LED_RED", "RPi_UART5_RXD", "RPi_UART5_TXD", "MIPI_SCL", "MIPI_SDA", "RPi_GPIO_27", "RPi_GPIO_17", "";
