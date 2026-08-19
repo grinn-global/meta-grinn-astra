@@ -441,6 +441,9 @@
 
 &isp_vsi {
 	status = "okay";
+	/* Use the reset GPIO to enable the camera LED. */
+	reset-gpios = <&portd 16 GPIO_ACTIVE_HIGH>;
+	enable-gpios = <&portd 17 GPIO_ACTIVE_HIGH>;
 };
 
 &isp_vsi_mipi {
@@ -585,7 +588,7 @@
 	gpio-line-names =
 		"RPi_GPIO_24", "RPi_GPIO_25", "", "", "", "", "OPTIGA_RSTn", "ETH_INTn",
 		"ETH_RESETn", "", "", "RPi_GPIO_16", "", "", "", "",
-		"CAM_LED_EN", "CAM_POWER_EN", "", "", "", "", "", "",
+		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
 };
 
