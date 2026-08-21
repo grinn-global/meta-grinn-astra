@@ -6,6 +6,7 @@ FILESEXTRAPATHS:prepend:grinn-astra-261x-platform := "${THISDIR}/grinn-astra-261
 FILESEXTRAPATHS:prepend:grinn-astra-261x-som := "${THISDIR}/grinn-astra-261x/som:"
 FILESEXTRAPATHS:prepend:grinn-astra-261x-sbc := "${THISDIR}/grinn-astra-261x/sbc:"
 FILESEXTRAPATHS:prepend:grinn-astra-2619-sbc-usb := "${THISDIR}/grinn-astra-261x/sbc:"
+FILESEXTRAPATHS:prepend:sl2619-coralboard := "${THISDIR}/sl2619-coralboard:"
 
 DT_DIR = "${S}/arch/arm64/boot/dts/synaptics"
 
@@ -65,6 +66,10 @@ GRINN_ASTRA_2619_SBC_COMMON_FILES = " \
 
 SRC_URI:append:grinn-astra-261x-sbc = "${GRINN_ASTRA_2619_SBC_COMMON_FILES}"
 SRC_URI:append:grinn-astra-2619-sbc-usb = "${GRINN_ASTRA_2619_SBC_COMMON_FILES}"
+
+SRC_URI:append:sl2619-coralboard = " \
+	file://test-add-on-overlay.dtso;subdir=${DT_DIR} \
+"
 
 # kernel-yocto applies patches via kgit-s2q on the main kernel index, which
 # does not track drivers/synaptics/. Mark patches as apply=no so kgit skips
