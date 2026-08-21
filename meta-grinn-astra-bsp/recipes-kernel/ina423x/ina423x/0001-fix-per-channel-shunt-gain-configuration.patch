@@ -1,0 +1,29 @@
+From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
+Date: Fri, 28 Aug 2026 14:30:00 +0200
+Subject: [PATCH] ina423x: use each channel's shunt gain
+
+The CONFIG2 setup loop always checks channel 0, causing all ADC range bits
+to follow the first channel's gain. Use the loop index so every channel is
+configured from its own shunt-gain value.
+
+Upstream-Status: Pending
+Signed-off-by: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
+---
+ ina423x.c | 2 +-
+ 1 file changed, 1 insertion(+), 1 deletion(-)
+
+diff --git a/ina423x.c b/ina423x.c
+index fa7db48..922d127 100644
+--- a/ina423x.c
++++ b/ina423x.c
+@@ -1128,7 +1128,7 @@ static int ina423x_probe(struct i2c_client *client)
+ 	config2 = data->config->config2_default;
+ 
+ 	for(i = 0; i < INA423x_NUM_CHANNELS; i++) {
+-		if (data->gain[0] == 1) {
++		if (data->gain[i] == 1) {
+ 			config2 |= INA423x_CONFIG2_RANGE(i+1); /* ADCRANGE = 1 is /1 */
+ 		}
+ 	}
+-- 
+2.50.1

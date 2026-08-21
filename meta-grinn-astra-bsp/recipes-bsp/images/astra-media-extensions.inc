@@ -23,3 +23,7 @@ IMAGE_INSTALL:append:grinn-astra-261x-sbc = " \
 	i2c-utils-optiga-trust \
 	image-sensor-demo \
 "
+
+IMAGE_INSTALL:append:sl2619-coralboard = " \
+	ina423x \
+"
