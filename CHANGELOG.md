@@ -1,3 +1,14 @@
+# [3.2.0]
+
+## Added
+- Kas configuration for building demos
+
+## Changed
+- Move camera power and LED GPIO control into the kernel drivers
+
+## Fixed
+- Bluetooth HCI UART configuration on `grinn-astra-2619-sbc`
+
 # [3.1.0]
 
 ## Added
