@@ -1,0 +1,10 @@
+header:
+  version: 14
+
+local_conf_header:
+  sd-image: |
+    MACHINE_FEATURES:append:sl2619-coralboard = " sd-image"
+    IMAGE_CLASSES:remove = "${@bb.utils.contains('MACHINE_FEATURES', 'sd-image', 'image_synaimg_tar image_synaimg_bootloader_tar', '', d)}"
+    IMAGE_FSTYPES:remove = "${@bb.utils.contains('MACHINE_FEATURES', 'sd-image', 'synaimg.tar.zst synaimg.tar.zst.sha256sum synaimg_bootloader.tar.zst tar.zst ext4.gz', '', d)}"
+    IMAGE_CLASSES += "${@bb.utils.contains('MACHINE_FEATURES', 'sd-image', 'image_synaimg_sd', '', d)}"
+    IMAGE_FSTYPES += "${@bb.utils.contains('MACHINE_FEATURES', 'sd-image', 'synaimg.sd.zst synaimg.sd.zst.sha256sum', '', d)}"
