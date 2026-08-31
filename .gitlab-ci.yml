@@ -105,6 +105,23 @@ build-usb:
         KAS_CONFIG:
           - default
 
+build-sd-img:
+  extends: build
+  rules:
+    - when: manual
+      allow_failure: true
+  parallel:
+    matrix:
+      - KAS_MACHINE:
+          - sl2619-coralboard
+        KAS_CONFIG:
+          - default:sd-image
+  artifacts:
+    expire_in: 4h
+    paths:
+      - build/tmp/deploy/images/*/*.rootfs.synaimg.sd.zst
+      - build/tmp/deploy/images/*/*.rootfs.synaimg.sd.zst.sha256sum
+
 build-download:
   <<: *ci_build_artifacts
   <<: *ci_build_matrix
