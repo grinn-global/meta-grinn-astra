@@ -403,6 +403,25 @@
 		"RPi_GPIO_24", "M2E_RTSn", "M2E_CTSn", "M2E_TXD", "M2E_RXD", "RPi_GPIO_12", "RPi_GPIO_13", "";
 };
 
+&pwm0 {
+	status = "okay";
+	pinctrl-0 = <&pwm0_pmux>;
+	pinctrl-names = "default";
+	syna,clkdiv-id = <5>;
+	#address-cells = <1>;
+	#size-cells = <0>;
+
+	channel@6 {
+		reg = <6>;
+		syna,output-select = <6>;
+	};
+
+	channel@7 {
+		reg = <7>;
+		syna,output-select = <7>;
+	};
+};
+
 &sdhci1 {
 	status = "okay";
 	bus-width = <4>;
@@ -430,6 +449,11 @@
 		drive-strength = <7>;
 	};
 
+	pwm0_pmux: pwm0-pmux {
+		groups = "SM_GPIO37", "SM_GPIO38";
+		function = "pwm";
+	};
+
 	rpi_porte_pmux: rpi-porte-pmux {
 		groups = "SM_GPIO24", "SM_GPIO25", "SM_GPIO26", "SM_GPIO27",
 			 "SM_GPIO28", "SM_GPIO29", "SM_GPIO30", "SM_GPIO31";
@@ -437,7 +461,7 @@
 	};
 
 	rpi_portf_pmux: rpi-portf-pmux {
-		groups = "SM_GPIO32", "SM_GPIO37", "SM_GPIO38";
+		groups = "SM_GPIO32";
 		function = "gpio";
 	};
 
