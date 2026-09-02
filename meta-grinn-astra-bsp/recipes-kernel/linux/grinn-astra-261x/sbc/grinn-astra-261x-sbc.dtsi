@@ -364,10 +364,10 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_SPI3_CE0n", "RPi_SPI3_SCLK", "RPi_SPI3_MOSI", "RPi_SPI3_CE1n", "RPi_SPI3_MISO", "", "CAM_LED_EN", "UART_WAKEn",
-		"BT_DISABLEn", "WF_DISABLEn", "SDIO_RESETn", "SDIO_WAKEn", "RPi_I2S3_FS", "RPi_I2S3_BCLK", "RPi_I2S3_DOUT", "RPi_I2S3_DIN",
+		"40PIN_GPIO8", "40PIN_GPIO11", "40PIN_GPIO10", "40PIN_GPIO7", "40PIN_GPIO9", "", "CAM_LED_EN", "UART_WAKEn",
+		"BT_DISABLEn", "WF_DISABLEn", "SDIO_RESETn", "SDIO_WAKEn", "40PIN_GPIO19", "40PIN_GPIO18", "40PIN_GPIO21", "40PIN_GPIO20",
 		"ETH1_RSTn", "ETH1_INTn", "ETH2_INTn", "ETH2_RSTn", "SS1", "", "LED_YELLOW", "LED_GREEN",
-		"LED_RED", "RPi_UART5_RXD", "RPi_UART5_TXD", "MIPI_SCL", "MIPI_SDA", "RPi_GPIO_27", "RPi_GPIO_17", "";
+		"LED_RED", "40PIN_GPIO15", "40PIN_GPIO14", "MIPI_SCL", "MIPI_SDA", "40PIN_GPIO27", "40PIN_GPIO17", "";
 };
 
 &portb {
@@ -383,8 +383,8 @@
 
 &portc {
 	gpio-line-names =
-		"SM_TMS", "SM_TDI", "SM_TDO", "OPTIGA_SCL", "OPTIGA_SDA", "VCORE_ONn", "DISPLAY_GPIO0", "DEBUG_RXD",
-		"DEBUG_TXD", "BOOTn", "USER_BUTTON", "", "RPi_I2C0_SCL", "RPi_I2C0_SDA", "CAN0_RX", "CAN0_TX";
+		"SM_TMS", "SM_TDI", "SM_TDO", "40PIN_GPIO1", "40PIN_GPIO0", "VCORE_ONn", "DISPLAY_GPIO0", "DEBUG_RXD",
+		"DEBUG_TXD", "BOOTn", "USER_BUTTON", "", "40PIN_GPIO3", "40PIN_GPIO2", "CAN0_RX", "CAN0_TX";
 };
 
 &porte {
@@ -392,7 +392,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_6", "RPi_GPIO_16", "RPi_GPIO_26", "RPi_GPIO_22", "RPi_GPIO_25", "RPi_GPIO_5", "RPi_GPIO_4", "RPi_GPIO_23";
+		"40PIN_GPIO6", "40PIN_GPIO16", "40PIN_GPIO26", "40PIN_GPIO22", "40PIN_GPIO25", "40PIN_GPIO5", "40PIN_GPIO4", "40PIN_GPIO23";
 };
 
 &portf {
@@ -400,7 +400,7 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_24", "M2E_RTSn", "M2E_CTSn", "M2E_TXD", "M2E_RXD", "RPi_GPIO_12", "RPi_GPIO_13", "";
+		"40PIN_GPIO24", "M2E_RTSn", "M2E_CTSn", "M2E_TXD", "M2E_RXD", "40PIN_GPIO12", "40PIN_GPIO13", "";
 };
 
 &pwm0 {
