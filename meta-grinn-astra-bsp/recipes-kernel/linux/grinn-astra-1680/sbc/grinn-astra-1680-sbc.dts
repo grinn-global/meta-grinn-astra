@@ -557,8 +557,8 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "RPi_GPIO_6", "", "", "RPi_GPIO_27",
-		"PCIE_RSTn", "PCIE_WAKEn", "WIFI1_BT_DISABLEn", "PCIE_CLKREQn", "WIFI1_WF_DISABLEn", "RPi_GPIO_26", "RPi_GPIO_5", "USER_BUTTON",
+		"40PIN_GPIO20", "40PIN_GPIO21", "40PIN_GPIO18", "40PIN_GPIO19", "40PIN_GPIO6", "", "", "40PIN_GPIO27",
+		"PCIE_RSTn", "PCIE_WAKEn", "WIFI1_BT_DISABLEn", "PCIE_CLKREQn", "WIFI1_WF_DISABLEn", "40PIN_GPIO26", "40PIN_GPIO5", "40PIN_GPIO17",
 		"", "SDIO_WAKEn", "LED_RED", "", "LED_YELLOW", "LED_GREEN", "", "",
 		"", "", "", "", "", "", "", "";
 };
@@ -568,9 +568,9 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"", "", "", "", "RPi_GPIO_4", "HDMI_TX_5V_EN", "", "",
-		"", "", "", "", "RPi_GPIO_0", "RPi_GPIO_1", "", "",
-		"", "", "", "", "", "", "", "USB_HUB_RESET",
+		"", "", "", "", "40PIN_GPIO4", "HDMI_TX_5V_EN", "40PIN_GPIO13", "40PIN_GPIO12",
+		"40PIN_GPIO23", "40PIN_GPIO22", "40PIN_GPIO14", "40PIN_GPIO15", "40PIN_GPIO0", "40PIN_GPIO1", "", "",
+		"40PIN_GPIO9", "40PIN_GPIO11", "40PIN_GPIO10", "", "", "40PIN_GPIO7", "40PIN_GPIO8", "USB_HUB_RESET",
 		"", "", "", "", "", "", "", "";
 
 	disable_usb_hub_reset {
@@ -586,8 +586,8 @@
 	pinctrl-names = "default";
 
 	gpio-line-names =
-		"RPi_GPIO_24", "RPi_GPIO_25", "", "", "", "", "OPTIGA_RSTn", "ETH_INTn",
-		"ETH_RESETn", "", "", "RPi_GPIO_16", "", "", "", "",
+		"40PIN_GPIO24", "40PIN_GPIO25", "", "", "", "", "OPTIGA_RSTn", "ETH_INTn",
+		"ETH_RESETn", "40PIN_GPIO3", "40PIN_GPIO2", "40PIN_GPIO16", "", "", "", "",
 		"", "", "", "", "", "", "", "",
 		"", "", "", "", "", "", "", "";
 };
