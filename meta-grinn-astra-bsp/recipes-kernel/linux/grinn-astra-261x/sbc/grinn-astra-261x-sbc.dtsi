@@ -160,6 +160,13 @@
 	status = "okay";
 };
 
+&can0 {
+	status = "okay";
+	arasan,ssp = <17>;
+	pinctrl-0 = <&can0_pmux>;
+	pinctrl-names = "default";
+};
+
 &ethernet0 {
 	status = "okay";
 	pinctrl-0 = <&eth_mdio_pmux>, <&eth0_pmux>;
@@ -442,6 +449,11 @@
 };
 
 &sm_pinctrl {
+	can0_pmux: can0-pmux {
+		groups = "SM_GPIO14", "SM_GPIO15";
+		function = "can0";
+	};
+
 	i2c0_pmux: i2c0-pmux {
 		groups = "SM_GPIO12", "SM_GPIO13";
 		function = "tw0";
