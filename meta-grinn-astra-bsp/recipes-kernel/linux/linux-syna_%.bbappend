@@ -53,6 +53,7 @@ SRC_URI:append:grinn-astra-2619-som = " \
 "
 
 GRINN_ASTRA_2619_SBC_COMMON_FILES = " \
+	file://can.cfg \
 	file://bcmdhd.cfg \
 	file://eth.cfg \
 	file://gpio-keys.cfg \
