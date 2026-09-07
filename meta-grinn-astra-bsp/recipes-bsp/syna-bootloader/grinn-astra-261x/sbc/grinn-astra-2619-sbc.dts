@@ -151,9 +151,7 @@
 &sysmgr_pinctrl {
 	xspi0_pmux: xspi0-pmux {
 		groups = "SM_GPIO18", "SM_GPIO19", "SM_GPIO20", "SM_GPIO21",
-			 "SM_GPIO22", "SM_GPIO23", "SM_GPIO24", "SM_GPIO25",
-			 "SM_GPIO26", "SM_GPIO27", "SM_GPIO28", "SM_GPIO29",
-			 "SM_GPIO30";
+			 "SM_GPIO22", "SM_GPIO23";
 		function = "xspi";
 	};
 };
