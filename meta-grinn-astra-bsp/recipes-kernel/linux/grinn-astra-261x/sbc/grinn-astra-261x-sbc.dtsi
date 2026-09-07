@@ -461,7 +461,7 @@
 
 	rpi_porte_pmux: rpi-porte-pmux {
 		groups = "SM_GPIO24", "SM_GPIO25", "SM_GPIO26", "SM_GPIO27",
-			 "SM_GPIO28", "SM_GPIO29", "SM_GPIO30", "SM_GPIO31";
+			 "SM_GPIO28", "SM_GPIO29", "SM_GPIO31";
 		function = "gpio";
 	};
 
