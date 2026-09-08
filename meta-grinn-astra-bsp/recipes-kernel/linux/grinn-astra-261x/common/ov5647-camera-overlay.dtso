@@ -40,7 +40,7 @@
 	remote-endpoint = <&cam_endpoint>;
 };
 
-&i2c3 {
+&i2c2 {
 	cam_node: ov5647@36 {
 		compatible = "ovti,ov5647";
 		reg = <0x36>;
