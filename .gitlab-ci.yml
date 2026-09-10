@@ -104,6 +104,12 @@ build-usb:
           - grinn-astra-2619-sbc-usb
         KAS_CONFIG:
           - default
+  artifacts:
+    expire_in: 4h
+    paths:
+      - build.env
+      - build.log
+      - build/tmp/deploy/images/*/SYNAIMG/*
 
 build-sd-img:
   extends: build
