@@ -20,8 +20,12 @@ inherit image_types synaimg_common
 IMAGE_TYPES:append = " synaimg_bootloader.tar"
 IMAGE_TYPEDEP:synaimg_bootloader.tar = "synaimg"
 
+# The update tool on SL261x requires manifest.yaml (chip name and boot image ID)
+SYNAIMG_BOOTLOADER_MANIFEST ?= ""
+SYNAIMG_BOOTLOADER_MANIFEST:grinn-astra-261x-platform = "manifest.yaml"
+
 # Files to include in the bootloader archive (space-separated list)
-SYNAIMG_BOOTLOADER_FILES ?= "bl.subimg.gz key.subimg.gz tzk.subimg.gz preboot.subimg.gz fastlogo.subimg.gz emmc_part_list"
+SYNAIMG_BOOTLOADER_FILES ?= "bl.subimg.gz key.subimg.gz tzk.subimg.gz preboot.subimg.gz fastlogo.subimg.gz emmc_part_list ${SYNAIMG_BOOTLOADER_MANIFEST}"
 
 # Custom emmc_image_list content for bootloader flashing
 # This defines the partition layout used for flashing
