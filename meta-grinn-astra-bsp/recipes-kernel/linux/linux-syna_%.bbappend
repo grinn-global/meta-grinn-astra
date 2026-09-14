@@ -58,6 +58,7 @@ GRINN_ASTRA_2619_SBC_COMMON_FILES = " \
 	file://eth.cfg \
 	file://gpio-keys.cfg \
 	file://gpio-led.cfg \
+	file://gpio-m2-expander.cfg \
 	file://grinn-astra-261x-sbc.dtsi;subdir=${DT_DIR} \
 	file://ov5647-camera-overlay.dtso;subdir=${DT_DIR} \
 	file://spi.cfg \

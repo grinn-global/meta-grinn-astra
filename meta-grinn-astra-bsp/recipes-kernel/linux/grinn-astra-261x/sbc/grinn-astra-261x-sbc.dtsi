@@ -213,6 +213,20 @@
 	pinctrl-names = "default";
 	pinctrl-0 = <&i2c2_pmux>;
 	clock-frequency = <100000>;
+
+	m2_expander: gpio@49 {
+		compatible = "nxp,pca9537";
+		reg = <0x49>;
+		gpio-controller;
+		#gpio-cells = <2>;
+		gpio-line-names = "M2_VENDOR_1", "M2_VENDOR_2", "M2_VENDOR_3", "M2_ALERT";
+		interrupt-controller;
+		#interrupt-cells = <2>;
+		pinctrl-names = "default";
+		pinctrl-0 = <&m2_int_exp_pmux>;
+		interrupt-parent = <&porta>;
+		interrupts = <20 IRQ_TYPE_LEVEL_LOW>;
+	};
 };
 
 &i2s3_dai {
@@ -331,6 +345,11 @@
 
 	led_yellow_pmux: led-yellow-pmux {
 		groups = "GPIO22";
+		function = "gpio";
+	};
+
+	m2_int_exp_pmux: m2-int-exp-pmux {
+		groups = "GPIO20";
 		function = "gpio";
 	};
 
