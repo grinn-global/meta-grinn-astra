@@ -27,7 +27,6 @@ SRC_URI:append:grinn-astra-1680-som = " \
 "
 
 SRC_URI:append:grinn-astra-1680-sbc = " \
-	file://0001-board-dolphin-disable-rescue-mode-gpio-trigger.patch \
 	file://display_disable.cfg \
 "
 
