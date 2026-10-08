@@ -1,3 +1,25 @@
+# [4.1.0]
+
+## Added
+- `grinn-astra-2619-sbc` revision C support
+- CAN0 on `grinn-astra-2619-sbc`
+- PWM6 and PWM7 on the `grinn-astra-2619-sbc` 40-pin header
+- SD card image generation for `sl2619-coralboard`
+
+## Changed
+- Update `grinn-astra-2619-sbc` preboot binaries: runtime DDR4 topology
+  detection, user button as the wakeup source
+- Rename 40-pin header GPIO lines to `40PIN_GPIOx` (BCM numbering) on
+  `grinn-astra-1680-sbc` and `grinn-astra-2619-sbc`
+
+## Removed
+- `grinn-astra-2619-sbc` revision A support
+
+## Fixed
+- XSPI pinmux conflicting with 40-pin header GPIOs on `grinn-astra-2619-sbc`
+- `astra-update` failure caused by missing `manifest.yml` in
+  `grinn-astra-261x` bootloader images
+
 # [4.0.0]
 
 ## Changed
