@@ -18,23 +18,18 @@ python () {
 
     # Use the SL2619 USB branches in Synaptics image tasks for the Grinn USB
     # machine too. do_image_synausbimg is generated later from IMAGE_CMD:synausbimg.
-    for var in ("IMAGE_CMD:synausbimg", "do_swuimage", "do_rescueota"):
-        deploy_body = d.getVar(var, False)
-        if not deploy_body:
-            # do_swuimage and do_rescueota come from optional SWUpdate layers,
-            # so builds without those layers do not have to define them.
-            if var == "IMAGE_CMD:synausbimg":
-                bb.fatal(
-                    "astra-media: expected %s to exist for USB image flow - "
-                    "refactor astra-media-usb-boot.inc." % var
-                )
-            continue
+    deploy_body = d.getVar("IMAGE_CMD:synausbimg", False)
+    if not deploy_body:
+        bb.fatal(
+            "astra-media: expected IMAGE_CMD:synausbimg to exist for USB image flow - "
+            "refactor astra-media-usb-boot.inc."
+        )
 
-        if "sl2619usb" not in deploy_body:
-            bb.fatal(
-                "astra-media: upstream %s no longer contains the "
-                "'sl2619usb' machine gate - refactor astra-media-usb-boot.inc." % var
-            )
+    if "sl2619usb" not in deploy_body:
+        bb.fatal(
+            "astra-media: upstream IMAGE_CMD:synausbimg no longer contains the "
+            "'sl2619usb' machine gate - refactor astra-media-usb-boot.inc."
+        )
 
-        d.setVar(var, deploy_body.replace("sl2619usb", "grinn-astra-2619-sbc-usb"))
+    d.setVar("IMAGE_CMD:synausbimg", deploy_body.replace("sl2619usb", "grinn-astra-2619-sbc-usb"))
 }
