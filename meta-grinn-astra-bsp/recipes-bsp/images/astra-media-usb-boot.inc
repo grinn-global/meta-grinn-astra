@@ -1,36 +1,8 @@
-# Upstream Synaptics image tasks gates the SL2619 USB image flow on literal
-# shell checks for sl2619usb. Grinn machine name differs, so the checks would
-# fail and the SL2619-specific USB image handling would be skipped. Rewrite the
-# literal at parse time so the gates trip for grinn-astra-2619-som-usb and
-# grinn-astra-2619-som-xspi-usb. bb.fatal guards against silent breakage if the
-# sl2619usb literal is ever renamed or removed upstream.
+# The USB image packs the initramfs file, so make sure it is built first.
 python () {
     if d.getVar("MACHINE") not in ("grinn-astra-2619-som-usb",
                                    "grinn-astra-2619-som-xspi-usb"):
         return
 
-    # The USB image needs the initramfs file, so make sure it is built first.
     d.appendVarFlag("do_image_synausbimg", "depends", " core-image-initramfs-boot:do_image_complete")
-
-    # This machine only packages already deployed files into the USB image.
-    # It does not need the regular rootfs and generic image tasks.
-    bb.build.deltask("do_rootfs", d)
-    bb.build.deltask("do_image", d)
-
-    # Use the SL2619 USB branches in Synaptics image tasks for the Grinn USB
-    # machine too. do_image_synausbimg is generated later from IMAGE_CMD:synausbimg.
-    deploy_body = d.getVar("IMAGE_CMD:synausbimg", False)
-    if not deploy_body:
-        bb.fatal(
-            "astra-media: expected IMAGE_CMD:synausbimg to exist for USB image flow - "
-            "refactor astra-media-usb-boot.inc."
-        )
-
-    if "sl2619usb" not in deploy_body:
-        bb.fatal(
-            "astra-media: upstream IMAGE_CMD:synausbimg no longer contains the "
-            "'sl2619usb' machine gate - refactor astra-media-usb-boot.inc."
-        )
-
-    d.setVar("IMAGE_CMD:synausbimg", deploy_body.replace("sl2619usb", d.getVar("MACHINE")))
 }
