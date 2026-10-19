@@ -34,8 +34,8 @@
 
 &sdhci0 {
 	status = "okay";
-	pad_sn = <10>;
-	pad_sp = <10>;
+	pad_sn = <12>;
+	pad_sp = <12>;
 	mmc-ddr-1_8v;
 	mmc-hs200-1_8v;
 	mmc-hs400-1_8v;
