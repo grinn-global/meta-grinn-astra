@@ -1,19 +1,47 @@
-From 36e995bfead239f5d9b3738332b0630537bf77a0 Mon Sep 17 00:00:00 2001
+From 22996b1022baea059c3a18d913f734b62e21a23a Mon Sep 17 00:00:00 2001
 From: Lukasz Smurawski <lukasz.smurawski@grinn-global.com>
 Date: Wed, 18 Mar 2026 16:32:07 +0100
 Subject: [PATCH] board: synaptics: klamath: klamath_boardinit: use default
  RGMII0 MDIO
 
-Use default RGMII0 MDIO for MAC-PHY communication instead of RGMII1 MDIO
+Use default RGMII0 MDIO for MAC-PHY communication instead of RGMII1 MDIO.
+
+Remove tw_init_mdio() as well. It has no other users, and with
+CONFIG_CC_WERROR the unused static function stops the build.
 ---
- board/synaptics/klamath/klamath_boardinit.c | 1 -
- 1 file changed, 1 deletion(-)
+ board/synaptics/klamath/klamath_boardinit.c | 12 ------------
+ 1 file changed, 12 deletions(-)
 
 diff --git a/board/synaptics/klamath/klamath_boardinit.c b/board/synaptics/klamath/klamath_boardinit.c
-index a194bf0319..6466eb140a 100644
+index bcf3c1b750..9e64ec269a 100644
 --- a/board/synaptics/klamath/klamath_boardinit.c
 +++ b/board/synaptics/klamath/klamath_boardinit.c
-@@ -244,1 +244,0 @@ int board_init(void)
+@@ -274,17 +274,6 @@ static void set_pin_status(void)
+ 	writel(val, (void __iomem *)(uintptr_t)(MEMMAP_CHIP_CTRL_REG_BASE + RA_Gbl_GPIO21Cntl));
+ }
+ 
+-static void tw_init_mdio(void)
+-{
+-	u32 val;
+-
+-	/* set to RGMII1 MDIO */
+-	val = readl((void __iomem *)(uintptr_t)(MEMMAP_CHIP_CTRL_REG_BASE + RA_Gbl_PERIF + RA_PERIF_TW_PORT_CTRL));
+-	val |=  (1 << LSb32PERIF_TW_PORT_CTRL_RGMII_MDIO_MDC_SEL);
+-	writel(val, (void __iomem *)(uintptr_t)(MEMMAP_CHIP_CTRL_REG_BASE + RA_Gbl_PERIF + RA_PERIF_TW_PORT_CTRL));
+-	udelay(1);
+-}
+-
+ static void init_sdio2_lpclk(void)
+ {
+ 	u32 val;
+@@ -325,7 +314,6 @@ int board_init(void)
+ 
+ 	set_drive_strength();
+ 	set_pin_status();
 -	tw_init_mdio();
---
-2.47.3
+ 	init_sdio2_lpclk();
+ 
+ 	return 0;
+-- 
+2.39.5
+
