@@ -9,7 +9,7 @@ local_conf_header:
   meta-grinn-astra: |
     DISTRO ?= "poky"
     PACKAGE_CLASSES ?= "package_deb"
-    EXTRA_IMAGE_FEATURES ?= "debug-tweaks"
+    EXTRA_IMAGE_FEATURES ?= "debug-tweaks tools-debug"
     USER_CLASSES ?= "buildstats"
     PATCHRESOLVE = "noop"
 
