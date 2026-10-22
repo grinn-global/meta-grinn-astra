@@ -1,0 +1,7 @@
+header:
+  version: 14
+
+local_conf_header:
+  sd-image: |
+    MACHINE_FEATURES:append:sl2619-coralboard = " sd-image"
+    IMAGE_FSTYPES += "${@bb.utils.contains('MACHINE_FEATURES', 'sd-image', 'wic.zip wic.zip.sha256sum', '', d)}"
