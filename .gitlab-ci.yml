@@ -130,8 +130,8 @@ build-sd-img:
   artifacts:
     expire_in: 4h
     paths:
-      - build/tmp/deploy/images/*/*.rootfs.synaimg.sd.zst
-      - build/tmp/deploy/images/*/*.rootfs.synaimg.sd.zst.sha256sum
+      - build/tmp/deploy/images/*/*.rootfs.wic.zip
+      - build/tmp/deploy/images/*/*.rootfs.wic.zip.sha256sum
 
 build-download:
   <<: *ci_build_artifacts
