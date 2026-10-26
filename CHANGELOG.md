@@ -1,3 +1,12 @@
+# [4.3.0]
+
+## Added
+- Waveshare 10.1" DSI panel overlay on `grinn-astra-2619-sbc`
+
+## Fixed
+- Corrupted rootfs after USB flashing of `grinn-astra-1680-platform` images with
+  more than 4 GiB of rootfs data
+
 # [4.2.0]
 
 ## Added
