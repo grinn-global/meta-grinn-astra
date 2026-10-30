@@ -4,13 +4,13 @@ header:
 local_conf_header:
   deepx: |
     MACHINE_FEATURES:append = " deepx"
-    PREFERRED_VERSION_dx-rt = "3.3.2"
-    PREFERRED_VERSION_dx-driver = "2.4.1"
-    PREFERRED_VERSION_dx-stream = "3.0.1"
+    PREFERRED_VERSION_dx-rt = "3.4.1"
+    PREFERRED_VERSION_dx-driver = "2.6.0"
+    PREFERRED_VERSION_dx-stream = "3.1.1"
     PREFERRED_VERSION_dx-stream-sample = "1.0.1"
 
 repos:
   meta-deepx-m1:
-    url: https://github.com/grinn-global/meta-deepx-m1
-    commit: efdf72511d798d7d33f3fd8641c8f96e0eac0f18
+    url: https://github.com/DEEPX-AI/meta-deepx-m1
+    commit: 6b62b84097c8ac5923d83210f69cfffd1a65690e
     branch: scarthgap
