@@ -507,6 +507,10 @@
 	};
 };
 
+&smmu {
+	status = "okay";
+};
+
 &spi3 {
 	status = "okay";
 	pinctrl-0 = <&rpi_spi3_pmux>;
@@ -523,6 +527,11 @@
 		reg = <1>;
 		spi-max-frequency = <10000000>;
 	};
+};
+
+&synpu {
+	status = "okay";
+	npu-supply = <&vcore>;
 };
 
 &uart0 {
