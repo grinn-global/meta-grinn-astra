@@ -1,0 +1,149 @@
+mainmenu "Grinn Astra"
+
+config KAS_BUILD_SYSTEM
+	string
+	default "openembedded"
+
+choice
+	prompt "Machine"
+	help
+	  Yocto machine to build the image for. Only the extensions supported
+	  by the selected machine are shown in the menu.
+
+config MACHINE_GRINN_ASTRA_1680_ADA
+	bool "grinn-astra-1680-ada"
+
+config MACHINE_GRINN_ASTRA_1680_SBC
+	bool "grinn-astra-1680-sbc"
+
+config MACHINE_GRINN_ASTRA_2619_SBC
+	bool "grinn-astra-2619-sbc"
+
+config MACHINE_GRINN_ASTRA_2619_SOM_USB
+	bool "grinn-astra-2619-som-usb"
+	help
+	  USB boot image for products based on the Grinn Astra 2619 SOM.
+
+config MACHINE_GRINN_ASTRA_2619_SOM_XSPI_USB
+	bool "grinn-astra-2619-som-xspi-usb"
+	help
+	  USB boot image with XSPI flash support for products based on the
+	  Grinn Astra 2619 SOM.
+
+config MACHINE_SL2619_CORALBOARD
+	bool "sl2619-coralboard"
+
+endchoice
+
+config MACHINE
+	string
+	default "grinn-astra-1680-ada" if MACHINE_GRINN_ASTRA_1680_ADA
+	default "grinn-astra-1680-sbc" if MACHINE_GRINN_ASTRA_1680_SBC
+	default "grinn-astra-2619-sbc" if MACHINE_GRINN_ASTRA_2619_SBC
+	default "grinn-astra-2619-som-usb" if MACHINE_GRINN_ASTRA_2619_SOM_USB
+	default "grinn-astra-2619-som-xspi-usb" if MACHINE_GRINN_ASTRA_2619_SOM_XSPI_USB
+	default "sl2619-coralboard" if MACHINE_SL2619_CORALBOARD
+
+comment "Image Configuration"
+
+config KAS_INCLUDE_DEFAULT
+	string
+	default "kas/default.yml"
+
+config RAM_2GB
+	bool "2 GB RAM variant"
+	depends on MACHINE_GRINN_ASTRA_2619_SBC
+	help
+	  Select if the board is equipped with 2 GB of RAM. By default, the
+	  image is built for the 1 GB RAM variant.
+
+config KAS_INCLUDE_RAM_2GB
+	string
+	default "kas/ram-2gb.yml"
+	depends on RAM_2GB
+
+config OOBE
+	bool "OOBE extension"
+	depends on MACHINE_GRINN_ASTRA_1680_ADA || MACHINE_GRINN_ASTRA_1680_SBC || \
+		   MACHINE_GRINN_ASTRA_2619_SBC || MACHINE_SL2619_CORALBOARD
+	help
+	  Builds the out-of-box experience image (astra-media-oobe), which adds
+	  extra features to showcase the capabilities of the platform.
+
+config KAS_INCLUDE_OOBE
+	string
+	default "kas/oobe.yml"
+	depends on OOBE
+
+config DEEPX
+	bool "DEEPX extension"
+	depends on MACHINE_GRINN_ASTRA_1680_SBC
+	help
+	  Adds support for DEEPX DX-M1 AI inference accelerators.
+
+config KAS_INCLUDE_DEEPX
+	string
+	default "kas/deepx.yml"
+	depends on DEEPX
+
+config DEMO
+	bool "Demo extension"
+	depends on MACHINE_GRINN_ASTRA_1680_SBC
+	help
+	  Adds demo applications to showcase the capabilities of the hardware.
+
+config KAS_INCLUDE_DEMO
+	string
+	default "kas/demo.yml"
+	depends on DEMO
+
+config SD_IMAGE
+	bool "SD card image"
+	depends on MACHINE_SL2619_CORALBOARD
+	help
+	  Additionally generates a bootable SD card image (.wic.zip).
+
+config KAS_INCLUDE_SD_IMAGE
+	string
+	default "kas/sd-image.yml"
+	depends on SD_IMAGE
+
+menuconfig NETBOOT
+	bool "Netboot extension"
+	depends on MACHINE_GRINN_ASTRA_1680_ADA || MACHINE_GRINN_ASTRA_1680_SBC || \
+		   MACHINE_GRINN_ASTRA_2619_SBC
+	help
+	  Configures U-Boot to load the kernel over TFTP and mount the root
+	  filesystem over NFS from the build host. The board must be flashed
+	  once with this image.
+
+if NETBOOT
+
+config KAS_INCLUDE_NETBOOT
+	string
+	default "kas/netboot.yml"
+
+config NETBOOT_SERVER_IP
+	string "Netboot server IP address"
+	default "$(NETBOOT_SERVER_IP)"
+	help
+	  IP address of the host running the TFTP and NFS servers, as seen
+	  from the board. Required: the build fails if it is empty. To find
+	  it, run on the host:
+
+	    ip -4 route get 1.1.1.1 | awk '{print $7}'
+
+	  Defaults to the NETBOOT_SERVER_IP environment variable, if set.
+
+config NETBOOT_SERVER_SUBDIR
+	string "Netboot server subdirectory"
+	default "$(NETBOOT_SERVER_SUBDIR)"
+	help
+	  Subdirectory of the TFTP and NFS roots holding the boot files, for
+	  example your user name (output of "whoami"). It must match the
+	  --subdir argument of the netboot sync script. Required: the build
+	  fails if it is empty.
+
+	  Defaults to the NETBOOT_SERVER_SUBDIR environment variable, if set.
+
+endif
