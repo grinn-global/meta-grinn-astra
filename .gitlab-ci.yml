@@ -85,7 +85,7 @@ stages:
 
 .ci_build_artifacts: &ci_build_artifacts
   artifacts:
-    expire_in: 4h
+    expire_in: 8h
     paths:
       - build.env
       - build.log
